@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Services\EmailService;
 use App\Notifications\CommonMailNotification;
+use Illuminate\Support\Facades\Storage;
 
 
 class LoginController extends Controller
@@ -49,7 +50,8 @@ class LoginController extends Controller
 
     public function profile()
     {
-        return view('admin.profile');
+        $user = auth()->user();
+        return view('admin.profile', compact('user'));
     }
     
     public function forgotPassword()
@@ -98,6 +100,7 @@ class LoginController extends Controller
                 ->with('error', 'Something went wrong! Unable to send reset link.');
         }
     }
+    
     public function generateResetToken($email)
     {
         $token = Str::random(60);
@@ -127,9 +130,8 @@ class LoginController extends Controller
             return redirect()->route('admin.password.expired');
         }
 
-        // 🔥 Expire after 1 hour
+        // Expire after 1 hour
         if ($record->created_at < now()->subHour()) {
-        // if ($record->created_at < now()->subMinutes(2)) {
 
             DB::table('password_reset_tokens')
                 ->where('email', $request->email)
@@ -167,10 +169,7 @@ class LoginController extends Controller
         if (!$admin) {
             return back()->withErrors(['email' => 'Admin not found.']);
         }
-        if($request->password == $request->confirm_password){
-            
-        }
-
+     
         $admin->password = Hash::make($request->password);
         $admin->save();
         DB::table('password_reset_tokens')
@@ -180,11 +179,52 @@ class LoginController extends Controller
         return redirect()->route('admin.login')
             ->with('success', 'Password reset successfully.');
     }
+
     public function expireLink()
     {
         return view('admin.link-expired');
     }
     
+    public function profileUpdate(Request $request)
+    {
+        
+        $admin = Auth::guard('admin')->user();
+
+        // Validation
+        $request->validate([
+            'name'   => 'required|string|max:255',
+            'number' => 'required|string|min:10|max:15',
+            'image' => 'image|mimes:jpg,jpeg,png|max:2048',
+        ]);
+
+        // Update fields
+        $admin->name = $request->name;
+        $admin->phone_number = $request->number;
+
+        // If email is readonly, no need to update
+        if ($request->filled('email')) {
+            $admin->email = $request->email;
+        }
+        // Handle image upload
+        if ($request->hasFile('image')) {
+
+        // Delete old image
+        if ($admin->profile_image && Storage::disk('public')->exists('profile/' . $admin->profile_image)) {
+            Storage::disk('public')->delete('profile/' . $admin->profile_image);
+        }
+
+        // Store image (auto generate name)
+        $path = $request->file('image')->store('profile', 'public');
+
+        // Save only filename
+        $admin->profile_image = basename($path);
+    }
+
+        $admin->save();
+
+        return redirect()->back()->with('success', 'Profile updated successfully!');
+        
+    }
     public function logout()
     {
         Auth::guard('admin')->logout();

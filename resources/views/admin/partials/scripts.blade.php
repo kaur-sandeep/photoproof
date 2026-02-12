@@ -4,6 +4,7 @@
 <script src="{{ asset('admin/js/adminlte.js') }}"></script>
 <script src="{{ asset('admin/js/jquery-3.7.1.min.js') }}"></script>
 <script src="{{ asset('admin/js/common.js') }}"></script>
+<script src="{{ asset('admin/js/datatable.js') }}"></script>
 
 
 
