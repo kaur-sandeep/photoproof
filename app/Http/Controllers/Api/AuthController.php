@@ -207,4 +207,76 @@ class AuthController extends Controller
             'photo' => $photo
         ]);
     }
+ public function getPhotos(Request $request)
+{
+    $search = $request->search;
+    $user   = $request->user();
+
+    /*
+    |--------------------------------------------------------------------------
+    | 1️⃣ Exact random_id match (Public Access)
+    |--------------------------------------------------------------------------
+    */
+    if (!empty($search)) {
+
+        $exactPhoto = PhotoDetail::where('random_id', $search)
+                        ->where('state', 1)
+                        ->first();
+
+        if ($exactPhoto) {
+            return response()->json([
+                'status' => true,
+                'photo' => $exactPhoto
+            ]);
+        }
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 2️⃣ Logged-in user data with LIKE search + filters
+    |--------------------------------------------------------------------------
+    */
+
+    $query = PhotoDetail::where('state', 1)
+                ->where('user_id', $user->id);
+
+    /*
+    |--------------------------------------------------------------------------
+    | 🔎 LIKE Search (ONLY inside logged-in user data)
+    |--------------------------------------------------------------------------
+    */
+    if (!empty($search)) {
+        $query->where(function ($q) use ($search) {
+            $q->where('random_id', 'LIKE', "%$search%")
+              ->orWhere('name', 'LIKE', "%$search%")
+              ->orWhere('location', 'LIKE', "%$search%");
+        });
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 🔎 Additional Filters
+    |--------------------------------------------------------------------------
+    */
+    if ($request->filled('name')) {
+        $query->where('name', 'LIKE', "%" . $request->name . "%");
+    }
+
+    if ($request->filled('location')) {
+        $query->where('location', 'LIKE', "%" . $request->location . "%");
+    }
+
+    /*
+    |--------------------------------------------------------------------------
+    | 📄 Pagination (10 per page)
+    |--------------------------------------------------------------------------
+    */
+    $photos = $query->latest()->paginate(10);
+
+    return response()->json([
+        'status' => true,
+        'photos' => $photos
+    ]);
+}
+
 }
