@@ -18,6 +18,17 @@
                 </li>
 
             </ul>
+             <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.dashboard') }}"
+                       class="nav-link text-white">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Users
+                    </a>
+                </li>
+
+            </ul>
         </nav>
 
     </div>

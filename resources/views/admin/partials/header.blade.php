@@ -7,8 +7,14 @@
                 data-lte-toggle="sidebar">
             <i class="bi bi-list"></i>
         </button>
-
+        <div class="profile">
+           
+        </div>
         <div class="ms-auto">
+             <a href="{{ route('admin.profile') }}" class="btn btn-warning btn-sm">
+                Profile
+            </a>
+
             <a href="{{ route('admin.logout') }}" class="btn btn-danger btn-sm">
                 Logout
             </a>

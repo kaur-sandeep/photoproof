@@ -12,14 +12,9 @@
 
         <div class="card-body">
 
-            <h4 class="text-center mb-4">Admin Login</h4>
+            <h4 class="text-center mb-4">You forgot your password? Here you can easily retrieve a new password.</h4>
 
-            @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
-
+            
          @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">
@@ -30,7 +25,7 @@
             </div>
         @endif
 
-            <form id="adminLoginForm" method="POST" action="{{ route('admin.login') }}">
+            <form id="adminLoginForm" method="POST" action="{{ route('admin.send-password-reset-link') }}">
                 @csrf
 
                 <div class="input-group mb-3">
@@ -38,15 +33,10 @@
                 </div>
                 <span class="text-danger small" id="emailError"></span>
                 <div class="input-group mb-3">
-                    <input type="password" name="password" id="password" class="form-control" placeholder="Password" >
-                </div>
-                <span class="text-danger small" id="passwordError"></span>
-                <div class="input-group mb-3">
                     <button type="submit" class="btn btn-primary btn-block">
-                        Login
+                        Request New Password
                     </button>
                 </div>
-                <p class="mb-1"><a href="{{ route('admin.forgot-password') }}">Forgot Password</a></p>
             </form>
 
         </div>
@@ -59,14 +49,3 @@
 
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-

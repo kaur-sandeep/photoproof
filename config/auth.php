@@ -99,15 +99,24 @@ return [
     |
     */
 
+    // 'passwords' => [
+    //     'users' => [
+    //         'provider' => 'users',
+    //         'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
+    //         'expire' => 60,
+    //         'throttle' => 60,
+    //     ],
+    // ],
+
+
     'passwords' => [
-        'users' => [
-            'provider' => 'users',
-            'table' => env('AUTH_PASSWORD_RESET_TOKEN_TABLE', 'password_reset_tokens'),
-            'expire' => 60,
-            'throttle' => 60,
+        'admins' => [
+            'provider' => 'admins',  // We'll use the 'admins' provider (it will refer to the 'admins' table)
+            'table' => 'password_reset_tokens',  // Table where password reset tokens will be stored
+            'expire' => 60,  // Token expiration in minutes
+            'throttle' => 60,  // Throttle time to prevent too many reset requests
         ],
     ],
-
     /*
     |--------------------------------------------------------------------------
     | Password Confirmation Timeout
