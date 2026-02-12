@@ -10,6 +10,9 @@ use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Hash;
+use App\Services\EmailService;
+use App\Notifications\CommonMailNotification;
 
 
 class LoginController extends Controller
@@ -55,46 +58,49 @@ class LoginController extends Controller
     }
 
 
-public function sendPasswordRestLink(Request $request)
-{
-    $request->validate([
-        'email' => 'required|email|exists:admins,email',
-    ]);
+    public function sendPasswordRestLink(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:admins,email',
+        ]);
 
-    try {
-        $email = $request->email;
+        try {
+            $email = $request->email;
+            $token = $this->generateResetToken($email);
+            $resetUrl = url("/password/reset/{$token}?email={$email}");
+            // Mail::send('admin.emails.passwordreset', ['url' => $resetUrl], function ($message) use ($email) {
+            //     $message->to($email)
+            //             ->subject('Password Reset Link');
+            // });
+            $admin = Admin::where('email', $request->email)->first();
+            $slot = '
+            <p>Hello '.$email.',</p>
+            <p>Please click the button below to Reset your Password:</p>
+            <p>
+                <a href="'.$resetUrl.'" class="button">Reset Password</a>
+            </p>
+            <p>If button does not work, copy this link:</p>
+            <p>'.$resetUrl.'</p>
+        ';
 
-        // Generate token
-        $token = $this->generateResetToken($email);
-
-        // Build reset URL
-        $resetUrl = url("/password/reset/{$token}?email={$email}");
-
-        // Send mail
-        Mail::send('admin.emails.passwordreset', ['url' => $resetUrl], function ($message) use ($email) {
-            $message->to($email)
-                    ->subject('Password Reset Link');
-        });
-
-
-        // If mail sent successfully
+        $admin->notify(new CommonMailNotification(
+            'Reset Your Password',
+            $slot
+        ));
         return redirect()->route('admin.login')
             ->with('success', 'Password reset link sent successfully to your email.');
 
-    } catch (\Exception $e) {
+        } catch (\Exception $e) {
 
-        Log::error('Password reset mail failed: ' . $e->getMessage());
+            Log::error('Password reset mail failed: ' . $e->getMessage());
 
-        return redirect()->back()
-            ->with('error', 'Something went wrong! Unable to send reset link.');
+            return redirect()->back()
+                ->with('error', 'Something went wrong! Unable to send reset link.');
+        }
     }
-}
     public function generateResetToken($email)
     {
-        // Generate a random reset token
         $token = Str::random(60);
-
-        // Insert the token into the password_resets table
         DB::table('password_reset_tokens')->insert([
             'email' => $email,
             'token' => $token,
@@ -103,8 +109,81 @@ public function sendPasswordRestLink(Request $request)
 
         return $token;
     }
-    
-    
+
+    public function showResetForm(Request $request, $token)
+    {
+   
+        if (!$request->has('email')) {
+            return redirect()->route('admin.login')
+                ->with('error', 'Invalid password reset link.');
+        }
+        
+        $record = DB::table('password_reset_tokens')
+        ->where('email', $request->email)
+        ->where('token', $token)
+        ->first();
+
+        if (!$record) {
+            return redirect()->route('admin.password.expired');
+        }
+
+        // 🔥 Expire after 1 hour
+        if ($record->created_at < now()->subHour()) {
+        // if ($record->created_at < now()->subMinutes(2)) {
+
+            DB::table('password_reset_tokens')
+                ->where('email', $request->email)
+                ->delete();
+
+            return redirect()->route('admin.password.expired');
+        }
+
+        return view('admin.reset-password', [
+            'token' => $token,
+            'email' => $request->query('email'),
+        ]);
+    }
+
+    public function resetPassword(Request $request)
+    {
+        $request->validate([
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:6',
+            'confirm_password' => 'required|same:password',
+        ]);
+
+        $record = DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->where('token', $request->token)
+            ->first();
+
+        if (!$record) {
+            return back()->withErrors(['email' => 'Invalid reset token.']);
+        }
+
+        $admin = Admin::where('email', $request->email)->first();
+
+        if (!$admin) {
+            return back()->withErrors(['email' => 'Admin not found.']);
+        }
+        if($request->password == $request->confirm_password){
+            
+        }
+
+        $admin->password = Hash::make($request->password);
+        $admin->save();
+        DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->delete();
+
+        return redirect()->route('admin.login')
+            ->with('success', 'Password reset successfully.');
+    }
+    public function expireLink()
+    {
+        return view('admin.link-expired');
+    }
     
     public function logout()
     {

@@ -50,10 +50,6 @@ class User extends Authenticatable implements MustVerifyEmail
             'password' => 'hashed',
         ];
     }
-    public function sendEmailVerificationNotification()
-    {
-        $this->notify(new VerifyEmailCustom());
-    }
     public function plan()
     {
         return $this->belongsTo(\App\Models\Plan::class);

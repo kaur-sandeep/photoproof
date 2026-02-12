@@ -19,5 +19,10 @@ Route::prefix('admin')->group(function () {
 });
 Route::get('/forgot-password', [LoginController::class, 'forgotPassword'])->name('admin.forgot-password');
 Route::post('/send-password-reset-link', [LoginController::class, 'sendPasswordRestLink'])->name('admin.send-password-reset-link');
-Route::get('admin/reset-password/{token}/{email}', [LoginController::class, 'showResetForm'])->name('password.reset');
+Route::get('/password/reset/{token}', [LoginController::class, 'showResetForm'])->name('admin.password.reset');
+Route::post('/reset/password', [LoginController::class, 'resetPassword'])->name('admin.reset.password');
+Route::get('/link/expired', [LoginController::class, 'expireLink'])->name('admin.password.expired');
+
+
+
 
