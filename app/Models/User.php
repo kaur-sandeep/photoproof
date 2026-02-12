@@ -24,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'password',
         'profile_image',
         'phone_number',
+        'plan_id',
         'state',
     ];
 
@@ -52,5 +53,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function sendEmailVerificationNotification()
     {
         $this->notify(new VerifyEmailCustom());
+    }
+    public function plan()
+    {
+        return $this->belongsTo(\App\Models\Plan::class);
     }
 }

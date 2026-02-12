@@ -31,11 +31,13 @@ class AuthController extends Controller
                 'message' => $validator->errors()->first()
             ], 422);
         }
-
+        $freePlan = \App\Models\Plan::where('name', 'Free')->first();
+     
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'plan_id' => $freePlan->id
         ]);
 
         // 👇 Send verification email
@@ -154,7 +156,15 @@ class AuthController extends Controller
         }
 
         $user = $request->user(); // Assuming auth:sanctum
+        $photoCount = \App\Models\PhotoDetail::where('user_id', $user->id)->count();
+        $plan = $user->plan;
 
+        if ($photoCount >= $plan->photo_limit) {
+            return response()->json([
+                'status' => false,
+                'message' => 'You have reached your photo upload limit.'
+            ], 403);
+        }
         // Upload photo
         $path = $request->file('photo')->store('photos', 'public'); // storage/app/public/photos
 
