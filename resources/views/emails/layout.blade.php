@@ -15,7 +15,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <h2>{{ $header ?? 'Photo Proof' }}</h2>
+            <!-- <h2>{{ $header ?? 'Photo Proof' }}</h2> -->
         </div>
 
         <!-- Dynamic content will go here -->

@@ -8,12 +8,12 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Auth\Events\Registered;
-use Illuminate\Foundation\Auth\EmailVerificationRequest;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use App\Models\PhotoDetail;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Carbon;
+use App\Notifications\CommonMailNotification;
 class AuthController extends Controller
 {
     // Register API
@@ -41,7 +41,30 @@ class AuthController extends Controller
         ]);
 
         // 👇 Send verification email
-        event(new Registered($user));
+        //event(new Registered($user));
+        $verificationUrl = URL::temporarySignedRoute(
+            'verification.verify',
+            Carbon::now()->addMinutes(60),
+            [
+                'id' => $user->id,
+                'hash' => sha1($user->email)
+            ]
+        );
+
+        $slot = '
+            <p>Hello '.$user->name.',</p>
+            <p>Please click the button below to verify your email address:</p>
+            <p>
+                <a href="'.$verificationUrl.'" class="button">Verify Email</a>
+            </p>
+            <p>If button does not work, copy this link:</p>
+            <p>'.$verificationUrl.'</p>
+        ';
+
+        $user->notify(new CommonMailNotification(
+            'Verify Your Email Address',
+            $slot
+        ));
 
         return response()->json([
             'status' => true,
