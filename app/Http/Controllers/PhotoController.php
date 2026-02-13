@@ -24,12 +24,17 @@ class PhotoController extends Controller
     
     public function show(Request $request, $random_id)
     {
-        $photo = PhotoDetail::with('user')
-                    ->where('random_id', $random_id)
-                    ->first();
-
+        // $photo = PhotoDetail::with('user')
+        //             ->where('random_id', $random_id)
+        //             ->first();
+        $photo = PhotoDetail::with(['user', 'uploadTrack'])
+            ->where('random_id', $random_id)
+            ->first();
+     
         if (!$photo) {
-            abort(404);
+            return redirect()->route('photo.search.form')
+        ->with('error', 'No record found')
+        ->withInput(['random_id' => $random_id]);
         }
 
        // $ip = $request->ip();
