@@ -330,6 +330,50 @@ public function forgotPassword(Request $request)
     ]);
 }
 
+public function updateProfile(Request $request)
+{
+    $user = $request->user();
+
+    // Update name
+    if ($request->has('name')) {
+        $user->name = $request->name;
+    }
+
+    // Update email
+    if ($request->has('email')) {
+        $user->email = $request->email;
+    }
+
+    // Update password
+    if ($request->has('password')) {
+        $user->password = \Hash::make($request->password);
+    }
+
+    // Update phone number
+    if ($request->has('phone_number')) {
+        $user->phone_number = $request->phone_number;
+    }
+
+    // Update profile image
+    if ($request->hasFile('profile_image')) {
+
+        // Optional: delete old image
+        if ($user->profile_image && \Storage::disk('public')->exists($user->profile_image)) {
+            \Storage::disk('public')->delete($user->profile_image);
+        }
+
+        $imagePath = $request->file('profile_image')->store('profiles', 'public');
+        $user->profile_image = $imagePath;
+    }
+
+    $user->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Profile updated successfully',
+        'user' => $user
+    ]);
+}
 
 
 
