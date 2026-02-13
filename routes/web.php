@@ -37,8 +37,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/password/reset/{token}', [LoginController::class, 'showResetForm'])->name('admin.password.reset');
     Route::post('/reset/password', [LoginController::class, 'resetPassword'])->name('admin.reset.password');
     Route::get('/link/expired', [LoginController::class, 'expireLink'])->name('admin.password.expired');
-
-
+    Route::get('/reset-password', [LoginController::class, 'showUserResetForm'])->name('password.reset');
+    Route::post('/reset-password', [LoginController::class, 'resetPasswordUser'])->name('password.update');
 
 
 

@@ -279,4 +279,59 @@ class AuthController extends Controller
     ]);
 }
 
+public function forgotPassword(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email|exists:users,email'
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => $validator->errors()->first()
+        ], 422);
+    }
+
+    $user = User::where('email', $request->email)->first();
+
+    // Generate token
+    $token = Str::random(60);
+
+    // Store token in password_reset_tokens table
+    \DB::table('password_reset_tokens')->updateOrInsert(
+        ['email' => $user->email],
+        [
+            'token' => bcrypt($token),
+            'created_at' => now()
+        ]
+    );
+
+    // Create reset link (frontend URL)
+    $resetUrl = url('/reset-password?token='.$token.'&email='.$user->email);
+
+    $slot = '
+        <p>Hello '.$user->name.',</p>
+        <p>Click below button to reset your password:</p>
+        <p>
+            <a href="'.$resetUrl.'" class="button">Reset Password</a>
+        </p>
+        <p>If button does not work, copy this link:</p>
+        <p>'.$resetUrl.'</p>
+    ';
+
+    $user->notify(new CommonMailNotification(
+        'Reset Your Password',
+        $slot
+    ));
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Password reset link sent to your email'
+    ]);
+}
+
+
+
+
+
 }
