@@ -34,11 +34,11 @@
                   </div>
                   <div class="form-group">
                     <label for="email">Email</label>
-                    <input type="email" name ="email" class="form-control" id="email" placeholder="Enter Email"  value = "{{ $user->email }}">
+                    <input type="email" name ="email" class="form-control" id="email" placeholder="Enter Email"  value = "{{ $user->email }}" readonly>
                   </div>
                    <div class="form-group">
                     <label for="number">Number</label>
-                    <input type="text" name ="number" class="form-control" id="number" placeholder="Enter Numnber"  value = "{{ $user->phone_number }}">
+                    <input type="text" name ="number" class="form-control" id="number" placeholder="Enter Number"  value = "{{ $user->phone_number }}">
                   </div>
 
                     <div class="mb-3">

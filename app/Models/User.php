@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\VerifyEmailCustom;
+use App\Models\PhotoDetail;
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -53,5 +54,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function plan()
     {
         return $this->belongsTo(\App\Models\Plan::class);
+    }
+
+    public function photos()
+    {
+        return $this->hasMany(PhotoDetail::class, 'user_id');  
     }
 }

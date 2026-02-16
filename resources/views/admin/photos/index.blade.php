@@ -15,11 +15,11 @@
         ['label' => 'Name', 'field' => 'name'],
         ['label' => 'Email', 'field' => 'email'],
         ['label' => 'Number', 'field' => 'phone_number'],
-        ['label' => 'Photo Count', 'field' => 'photo_count']
+        ['label' => 'Photo Count', 'field' => 'photos_count']
         
    
     ]"
-    route="{{ route('admin.users.list') }}"
+    route="{{ route('admin.users.') }}"
     addRoute="{{ route('admin.users.create') }}"
     addLabel="User"
 />

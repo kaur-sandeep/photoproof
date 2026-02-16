@@ -2,6 +2,8 @@
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\PhotoController;
+use App\Http\Controllers\DataTableController;
 Route::get('/', function () {
     return redirect()->route('admin.login');
 });
@@ -20,8 +22,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/users/update-status', [UserController::class, 'admin.user.updateStatus']);
         Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
         Route::post('/users/store', [UserController::class, 'store'])->name('admin.users.store');
-        Route::get('/users/edit/{userId}', [UserController::class, 'edit'])->name('admin.users.edit');
+        Route::get('/user/edit/{userId}', [UserController::class, 'edit'])->name('admin.users.edit');
         Route::post('/users/update/{userId}', [UserController::class, 'update'])->name('admin.users.update');
+        Route::get('/user/photos/{userId}', [PhotoController::class, 'list']);
+
+
         Route::post('/user/update/status', [UserController::class, 'updateStatus']);
         
        

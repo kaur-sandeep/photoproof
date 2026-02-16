@@ -42,7 +42,7 @@
                   </div>
                    <div class="form-group">
                     <label for="number">Number</label>
-                    <input type="text" name ="number" class="form-control" id="number" placeholder="Enter Numnber">
+                    <input type="text" name ="number" class="form-control" id="number" placeholder="Enter Number">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputFile">File input</label>
