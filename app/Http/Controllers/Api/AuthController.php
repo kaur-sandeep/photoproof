@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -14,6 +14,8 @@ use App\Models\PhotoDetail;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Notifications\CommonMailNotification;
+use App\Models\PhotoUploadTrack;
+use Jenssegers\Agent\Agent;
 class AuthController extends Controller
 {
     // Register API
@@ -178,7 +180,26 @@ class AuthController extends Controller
             ], 422);
         }
 
-        $user = $request->user(); // Assuming auth:sanctum
+       // $user = $request->user(); // Assuming auth:sanctum
+       $user = null;
+
+        // If logged in
+        if ($request->user()) {
+            $user = $request->user();
+        } else {
+            // If guest - check email parameter
+            $user = User::where('email', $request->email)->first();
+
+            // If not found → create new guest user
+            if (!$user) {
+                $user = User::create([
+                    'name' => 'Guest',
+                    'email' => $request->email,
+                    'password' => bcrypt('guest123'), // temporary password
+                    'plan_id' => \App\Models\Plan::where('name', 'Free')->first()->id
+                ]);
+            }
+        }
         $photoCount = \App\Models\PhotoDetail::where('user_id', $user->id)->count();
         $plan = $user->plan;
 
@@ -199,6 +220,42 @@ class AuthController extends Controller
             'location' => $request->location,
             'photo' => $path,
             'state' => 1
+        ]);
+        $ip = $request->ip();
+        $ip ='202.164.57.197';
+        $userAgent = $request->header('User-Agent');
+        $referer = $request->headers->get('referer');
+        $agent = new Agent();
+        $browser = $agent->browser();
+        $platform = $agent->platform();
+        $device = $agent->device();
+        $deviceType = $agent->isMobile() ? 'Mobile' : 'Desktop';
+
+        $location = $this->getLocationFromIp($ip);
+
+        PhotoUploadTrack::create([
+            'photo_detail_id' => $photo->id,
+            'user_id' => $user->id,
+            'ip_address' => $ip,
+            'browser' => $browser,
+            'platform' => $platform,
+            'device' => $device,
+            'device_type' => $deviceType,
+            'user_agent' => $userAgent,
+            'referer' => $referer,
+            'country' => $location['country'] ?? null,
+            'country_code' => $location['countryCode'] ?? null,
+            'region' => $location['region'] ?? null,
+            'region_name' => $location['regionName'] ?? null,
+            'city' => $location['city'] ?? null,
+            'zip' => $location['zip'] ?? null,
+            'latitude' => $location['lat'] ?? null,
+            'longitude' => $location['lon'] ?? null,
+            'timezone' => $location['timezone'] ?? null,
+            'isp' => $location['isp'] ?? null,
+            'org' => $location['org'] ?? null,
+            'as_name' => $location['as'] ?? null,
+            'ip_query' => $location['query'] ?? null,
         ]);
 
         return response()->json([
@@ -278,5 +335,129 @@ class AuthController extends Controller
         'photos' => $photos
     ]);
 }
+
+public function forgotPassword(Request $request)
+{
+    $validator = Validator::make($request->all(), [
+        'email' => 'required|email|exists:users,email'
+    ]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'status' => false,
+            'message' => $validator->errors()->first()
+        ], 422);
+    }
+
+    $user = User::where('email', $request->email)->first();
+
+    // Generate token
+    $token = Str::random(60);
+
+    // Store token in password_reset_tokens table
+    \DB::table('password_reset_tokens')->updateOrInsert(
+        ['email' => $user->email],
+        [
+            'token' => bcrypt($token),
+            'created_at' => now()
+        ]
+    );
+
+    // Create reset link (frontend URL)
+    $resetUrl = url('/reset-password?token='.$token.'&email='.$user->email);
+
+    $slot = '
+        <p>Hello '.$user->name.',</p>
+        <p>Click below button to reset your password:</p>
+        <p>
+            <a href="'.$resetUrl.'" class="button">Reset Password</a>
+        </p>
+        <p>If button does not work, copy this link:</p>
+        <p>'.$resetUrl.'</p>
+    ';
+
+    $user->notify(new CommonMailNotification(
+        'Reset Your Password',
+        $slot
+    ));
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Password reset link sent to your email'
+    ]);
+}
+
+public function updateProfile(Request $request)
+{
+    $user = $request->user();
+
+    // Update name
+    if ($request->has('name')) {
+        $user->name = $request->name;
+    }
+
+    // Update email
+    if ($request->has('email')) {
+        $user->email = $request->email;
+    }
+
+    // Update password
+    if ($request->has('password')) {
+        $user->password = \Hash::make($request->password);
+    }
+
+    // Update phone number
+    if ($request->has('phone_number')) {
+        $user->phone_number = $request->phone_number;
+    }
+
+    // Update profile image
+    if ($request->hasFile('profile_image')) {
+
+        // Optional: delete old image
+        if ($user->profile_image && \Storage::disk('public')->exists($user->profile_image)) {
+            \Storage::disk('public')->delete($user->profile_image);
+        }
+
+        $imagePath = $request->file('profile_image')->store('profiles', 'public');
+        $user->profile_image = $imagePath;
+    }
+
+    $user->save();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Profile updated successfully',
+        'user' => $user
+    ]);
+}
+
+    private function getLocationFromIp($ip)
+    {
+        if ($ip == '127.0.0.1' || str_starts_with($ip, '192.168')) {
+            return null;
+        }
+
+        try {
+
+            $response = Http::get("http://ip-api.com/json/{$ip}");
+
+            if ($response->successful()) {
+
+                $data = $response->json();
+
+                if ($data['status'] == 'success') {
+                    return $data; // return full array
+                }
+            }
+
+        } catch (\Exception $e) {
+            return null;
+        }
+
+        return null;
+    }
+
+
 
 }

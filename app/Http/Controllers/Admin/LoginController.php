@@ -230,4 +230,41 @@ class LoginController extends Controller
         Auth::guard('admin')->logout();
         return redirect()->route('admin.login');
     }
+    public function showUserResetForm(Request $request)
+    {
+        $token = $request->query('token');
+        $email = $request->query('email');
+
+        if (!$token || !$email) {
+            abort(404);
+        }
+
+        return view('user.reset-password', compact('token', 'email'));
+    }
+    public function resetPasswordUser(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email',
+            'token' => 'required',
+            'password' => 'required|min:6|confirmed'
+        ]);
+
+        $record = \DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->first();
+
+        if (!$record || !\Hash::check($request->token, $record->token)) {
+            return redirect('/link/expired');
+        }
+
+        $user = \App\Models\User::where('email', $request->email)->first();
+        $user->password = \Hash::make($request->password);
+        $user->save();
+
+        \DB::table('password_reset_tokens')
+            ->where('email', $request->email)
+            ->delete();
+
+         return back()->with('success', 'Password reset successfully. You can now login from your app.');
+    }
 }

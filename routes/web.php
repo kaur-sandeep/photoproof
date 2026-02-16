@@ -2,8 +2,7 @@
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\PhotoController;
-use App\Http\Controllers\DataTableController;
+use App\Http\Controllers\PhotoController;
 Route::get('/', function () {
     return redirect()->route('admin.login');
 });
@@ -29,9 +28,6 @@ Route::prefix('admin')->group(function () {
 
         Route::post('/user/update/status', [UserController::class, 'updateStatus']);
         
-       
-
-        
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
 
     });
@@ -42,8 +38,9 @@ Route::prefix('admin')->group(function () {
     Route::get('/password/reset/{token}', [LoginController::class, 'showResetForm'])->name('admin.password.reset');
     Route::post('/reset/password', [LoginController::class, 'resetPassword'])->name('admin.reset.password');
     Route::get('/link/expired', [LoginController::class, 'expireLink'])->name('admin.password.expired');
-
-
-
-
+    Route::get('/reset-password', [LoginController::class, 'showUserResetForm'])->name('password.reset');
+    Route::post('/reset-password', [LoginController::class, 'resetPasswordUser'])->name('password.update');
+    Route::get('/photo-search', [PhotoController::class, 'searchForm'])->name('photo.search.form');
+    Route::post('/photo-search', [PhotoController::class, 'search'])->name('photo.search');
+    Route::get('/photo/{random_id}', [PhotoController::class, 'show'])->name('photo.show');
 

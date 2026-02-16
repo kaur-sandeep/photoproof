@@ -35,5 +35,12 @@ class PhotoDetail extends Model
     {
         return $this->belongsTo(User::class);
     }
-    
+    public function views()
+    {
+        return $this->hasMany(PhotoView::class, 'photo_detail_id');
+    }
+  public function uploadTrack()
+    {
+        return $this->hasOne(PhotoUploadTrack::class, 'photo_detail_id');
+    }
 }
