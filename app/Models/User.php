@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\VerifyEmailCustom;
 use App\Models\PhotoDetail;
+use App\Models\photo_upload_tracks;
+
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -59,5 +61,10 @@ class User extends Authenticatable implements MustVerifyEmail
     public function photos()
     {
         return $this->hasMany(PhotoDetail::class, 'user_id');  
+    }
+
+     public function photo_upload_tracks()
+    {
+        return $this->hasMany(PhotoUploadTrack::class); // Adjust this if it's a different type of relationship
     }
 }

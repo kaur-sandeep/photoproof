@@ -1,3 +1,9 @@
+@extends('user.layouts.master')
+
+@section('title', 'Dashboard')
+
+@section('content')
+
 <h2>Photo</h2>
 
 <img src="{{ $photo->photo_url }}" width="400">
@@ -65,3 +71,4 @@
 @endif
 
 
+@endsection

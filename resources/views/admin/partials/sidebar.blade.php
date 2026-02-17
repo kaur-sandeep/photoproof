@@ -18,7 +18,7 @@
                 </li>
 
             </ul>
-             <ul class="nav flex-column">
+             <!-- <ul class="nav flex-column">
 
                 <li class="nav-item">
                     <a href="{{ route('admin.users') }}"
@@ -28,14 +28,26 @@
                     </a>
                 </li>
 
-            </ul>
-                         <ul class="nav flex-column">
+            </ul> -->
+            <ul class="nav flex-column">
 
                 <li class="nav-item">
-                    <a href="{{ route('admin.users.list') }}"
+                    <a href="{{ route('admin.users') }}"
                        class="nav-link text-white">
-                        <i class="bi bi-speedometer2 me-2"></i>
-                        Users List
+                        <i class="bi bi-people me-2"></i>
+                        Users
+                    </a>
+                </li>
+
+            </ul>
+
+              <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.photos') }}"
+                       class="nav-link text-white">
+                        <i class="bi bi-images me-2"></i>
+                        Photos
                     </a>
                 </li>
 

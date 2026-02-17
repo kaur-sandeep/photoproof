@@ -5,19 +5,23 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
-use App\Traits\DataTableTrait;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PhotoDetail;
+use Yajra\DataTables\DataTables;
 
 
 
 class UserController extends Controller
 {
-    use DataTableTrait;
+
     
-   public function index()
-    {
+//    public function index()
+//     {
+//         return view('admin.users.index');
+//     }
+
+    public function index(){
         return view('admin.users.index');
     }
     
@@ -31,23 +35,39 @@ class UserController extends Controller
     //     );
     // }
 
+    public function list(Request $request){
+    $users = User::withCount('photos')->get();
+    return DataTables::of($users)
+        ->addIndexColumn()
+        ->addColumn('profile_image', function ($user) {
+            return $user->profile_image
+                ? '<img src="'.asset('storage/profile/'.$user->profile_image).'" width="40" height="40" class="rounded-circle">'
+                : '<span class="text-muted">No Image</span>';
+        })
+        ->addColumn('photo_count', function ($user) {
 
-    public function list(Request $request)
-    {
-       $users = $this->getData(
-        $request,
-        User::class,
-        ['name', 'email', 'profile_image', 'phone_number'], // searchable fields
-        ['photos'] // this adds photos_count automatically
-        );
+            return '<span class="badge bg-info" ><a href="'.route('admin.users.show.imagedata', $user->id).'" class="badge bg-info">
+        '.$user->photos_count.'
+    </a></span>';
 
-        // Map photos_count → photo_count for front-end
-        $users->getCollection()->transform(function ($user) {
-            $user->photo_count = $user->photos_count;
-            return $user;
-        });
-
-        return $users; // paginated collection
+        })
+    ->addColumn('status', function ($user) {
+            if ($user->status == 1) {
+                return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$user->id.'" data-status="0">Inactive</button>';
+            }
+            if ($user->status == 0) {
+                return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$user->id.'" data-status="1">Active</button>';
+                
+            }
+            return '<span class="badge bg-danger">Deleted</span>';
+    })
+        ->addColumn('actions', function ($user) {
+            return '<a href="'.route('admin.users.show.imagedata', $user->id).'" class="btn btn-sm btn-primary">View</a>
+                    <a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
+                    <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
+        })
+        ->rawColumns(['profile_image', 'photo_count', 'status', 'actions'])
+        ->make(true);
     }
     public function create(){
         return view('admin/users/add');
@@ -114,6 +134,8 @@ class UserController extends Controller
     }
 
     public function updateStatus(Request $request){
+    $id = $request->input('id');
+    $status = $request->input('status');
         $request->validate([
             'id' => 'required|exists:users,id',
             'status' => 'required|in:-1,0,1'
@@ -137,5 +159,240 @@ class UserController extends Controller
         ]);
     }
 
- 
+
+  
+     public function viewImages()
+    {
+        return view('admin.users.showImages');
+    }
+
+public function getUsersWithImages(Request $request)
+{
+    $users = User::with('photos.views', 'photos.uploadTrack', 'photo_upload_tracks.photo')
+        ->when($request->name, function ($query) use ($request) {
+            return $query->where('name', 'like', '%' . $request->name . '%');
+        })
+        ->when($request->user_id, function ($query) use ($request) {
+            return $query->where('id', $request->user_id);  // Filter by user_id
+        })
+        ->get();
+
+    return DataTables::of($users)
+
+        // ✅ Upload Track Column
+        ->addColumn('upload_track_details', function ($user) {
+            if ($user->photo_upload_tracks->isEmpty()) {
+                return 'No Upload Data';
+            }
+
+            $html = '';
+
+            foreach ($user->photo_upload_tracks as $track) {
+                $html .= "<div style='font-size:13px; margin-bottom:8px'>";
+                $html .= "<b>IP:</b> {$track->ip_address}<br>";
+                $html .= "<b>City:</b> {$track->city}<br>";
+                $html .= "<b>Country:</b> {$track->country}<br>";
+                $html .= "<b>Device:</b> {$track->device_type}<br>";
+                $html .= "<b>ISP:</b> {$track->isp}<br>";
+                $html .= "<hr></div>";
+            }
+
+            return $html;
+        })
+
+        // ✅ Images Column
+        ->addColumn('images', function ($user) {
+            if ($user->photos->isEmpty()) {
+                return 'No Images';
+            }
+
+            $html = '';
+
+            foreach ($user->photos as $photo) {
+                // Ensure the photo exists before rendering
+                if (!empty($photo->photo)) {
+                    $html .= '<img src="' . asset('storage/profile/' . $photo->photo) . '" 
+                                width="60" height="60" 
+                                style="margin:5px; border-radius:5px;">';
+                }
+            }
+
+            // Return HTML with fallback if no images
+            return $html ?: 'No Images';
+        })
+        
+        // Remove the actions column from the backend as well
+        ->rawColumns(['upload_track_details', 'images']) // Only rawColumns for the existing columns
+        ->make(true);
+}
+
+
+public function showImagedatawithid(Request $request,$id){
+    
+    return view('admin.users.showphotos',compact('id'));
+}
+
+public function getUsersWithImageswithId(Request $request,$id)
+{
+//    $users = User::with('photos.uploadTrack') // Load the relationships
+//     ->when($request->name, function ($query) use ($request) {
+//         return $query->where('name', 'like', '%' . $request->name . '%');
+//     })
+//     ->when($request->user_id, function ($query) use ($request) {
+//         return $query->where('id', $request->user_id);  // Filter by user_id
+//     })
+//     ->get();
+
+// return DataTables::of($users)
+//     ->addColumn('images', function ($user) {
+//         // Check if the user has photos
+//         if ($user->photos->isEmpty()) {
+//             return 'No Images'; // Return if no images
+//         }
+
+//         $html = '';
+//         foreach ($user->photos as $photo) {
+//             // Image display
+//             if (!empty($photo->photo)) {
+//                 $html .= '<img src="' . asset('storage/profile/' . $photo->photo) . '" 
+//                             width="80" height="80" 
+//                             style="margin-bottom:5px; border-radius:5px;"><br>';
+//             }
+//         }
+//         return $html;
+//     })
+//     ->addColumn('upload_track_details', function ($user) {
+//         $html = '';
+//         // Iterate over each photo to display its upload track details
+//         foreach ($user->photos as $photo) {
+//             $track = $photo->uploadTrack;
+
+//             if ($track) {
+//                 $html .= "<div style='border:1px solid #ddd; padding:10px; margin-bottom:10px;'>";
+//                 $html .= "<b>IP:</b> {$track->ip_address}<br>";
+//                 $html .= "<b>City:</b> {$track->city}<br>";
+//                 $html .= "<b>Country:</b> {$track->country}<br>";
+//                 $html .= "<b>Device:</b> {$track->device_type}<br>";
+//                 $html .= "<b>ISP:</b> {$track->isp}<br>";
+//                 $html .= "<b>Upload Time:</b> " . $track->created_at->format('Y-m-d H:i:s') . "<br>";  // Add upload time
+//                 $html .= "</div>";
+//             } else {
+//                 $html .= "<span style='color:red;'>No Upload Track Found</span><br>";
+//             }
+//         }
+
+//         return $html;
+//     })
+//     ->rawColumns(['images', 'upload_track_details']) // Ensure raw HTML is returned for both columns
+//     ->make(true);
+
+// $users = User::with('photos.uploadTrack') // Load the relationships
+//     ->when($request->name, function ($query) use ($request) {
+//         return $query->where('name', 'like', '%' . $request->name . '%');
+//     })
+//     ->when($request->user_id, function ($query) use ($request) {
+//         return $query->where('id', $request->user_id);  // Filter by user_id
+//     })
+//     ->get();
+
+// $data = [];  // Initialize an empty array to store all the rows
+
+// // Iterate over each user and create separate rows for each photo
+// foreach ($users as $user) {
+//     foreach ($user->photos as $photo) {
+//         $track = $photo->uploadTrack;
+        
+//         // Add a row for each photo
+//         $data[] = [
+//             'user_id' => $user->id,
+//             'user_name' => $user->name,
+//             'user_email' => $user->email,
+//             'image' => $photo->photo ? asset('storage/profile/' . $photo->photo) : 'No Image Available',
+//             'upload_track_details' => $track ? 
+//                 "<div style='border:1px solid #ddd; padding:10px; margin-bottom:10px;'>
+//                     <b>IP:</b> {$track->ip_address}<br>
+//                     <b>City:</b> {$track->city}<br>
+//                     <b>Country:</b> {$track->country}<br>
+//                     <b>Latitude:</b> {$track->latitude}<br>
+//                     <b>Longitude:</b> {$track->longitude}<br>
+//                     <b>Device:</b> {$track->device_type}<br>
+//                     <b>ISP:</b> {$track->isp}<br>
+//                     <b>Upload Time:</b> " . $track->created_at."<br>
+//                 </div>" : 
+//                 "<span style='color:red;'>No Upload Track Found</span>"
+//         ];
+//     }
+// }
+// return DataTables::of($data)
+//     ->addColumn('images', function ($row) {
+//         return $row['image'] ? '<img src="' . $row['image'] . '" width="80" height="80" style="margin-bottom:5px; border-radius:5px;">' : 'No Image Available';
+//     })
+//     ->addColumn('upload_track_details', function ($row) {
+//         return $row['upload_track_details'];
+//     })
+//     ->rawColumns(['images', 'upload_track_details']) // Ensure raw HTML is returned for both columns
+//     ->make(true);
+
+
+$users = User::with('photos.uploadTrack') // Load the relationships
+    ->when($request->name, function ($query) use ($request) {
+        return $query->where('name', 'like', '%' . $request->name . '%');
+    })
+    ->when($request->user_id, function ($query) use ($request) {
+        return $query->where('id', $request->user_id);  // Filter by user_id
+    })
+    ->get();
+
+$data = [];  // Initialize an empty array to store all the rows
+
+$serialNumber = 1;  // Initialize the serial number
+
+// Iterate over each user and create separate rows for each photo
+foreach ($users as $user) {
+    foreach ($user->photos as $photo) {
+        $track = $photo->uploadTrack;
+        
+        // Add a row for each photo
+        $data[] = [
+            'serial_number' => $serialNumber++, // Increment serial number for each row
+            'user_id' => $user->id,
+            'user_name' => $user->name,
+            'user_email' => $user->email,
+            'image' => $photo->photo ? asset('storage/profile/' . $photo->photo) : 'No Image Available',
+            'upload_track_details' => $track ? 
+                "<div style='border:1px solid #ddd; padding:10px; margin-bottom:10px;'>
+                    <b>IP:</b> {$track->ip_address}<br>
+                    <b>City:</b> {$track->city}<br>
+                    <b>Country:</b> {$track->country}<br>
+                    <b>Latitude:</b> {$track->latitude}<br>
+                    <b>Longitude:</b> {$track->longitude}<br>
+                     <b>Zip:</b> {$track->zip}<br>
+                    <b>Device:</b> {$track->device_type}<br>
+                    <b>ISP:</b> {$track->isp}<br>
+                    <b>Upload Time:</b> " . $track->created_at->format('Y-m-d H:i:s') . "<br>
+                </div>" : 
+                "<span style='color:red;'>No Upload Track Found</span>"
+        ];
+    }
+}
+
+return DataTables::of($data)
+    ->addColumn('serial_number', function ($row) {
+        return $row['serial_number'];  // Return the serial number
+    })
+    ->addColumn('images', function ($row) {
+        return $row['image'] ? '<img src="' . $row['image'] . '" width="80" height="80" style="margin-bottom:5px; border-radius:5px;">' : 'No Image Available';
+    })
+    ->addColumn('upload_track_details', function ($row) {
+        return $row['upload_track_details'];
+    })
+    ->rawColumns(['images', 'upload_track_details']) // Ensure raw HTML is returned for both columns
+    ->make(true);
+
+
+
+}
+
+
+
 }

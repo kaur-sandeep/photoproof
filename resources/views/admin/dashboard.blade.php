@@ -12,7 +12,7 @@
             <div class="card text-bg-primary">
                 <div class="card-body">
                     <h5>Total Users</h5>
-                    <h3>100</h3>
+                    <h3>{{$totalUsers}}</h3>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
             <div class="card text-bg-success">
                 <div class="card-body">
                     <h5>Total Photos</h5>
-                    <h3>250</h3>
+                    <h3>{{$totalPhotos}}</h3>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Photos List')
+@section('title', 'Users List')
 
 @section('content')
 
@@ -16,7 +16,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Photos List</h3>
+            <h3 class="card-title">Users List</h3>
         </div>
 
         <div class="card-body">
@@ -24,12 +24,11 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Photo</th>
-                        <th>Random ID</th>
+                        <th>Profile</th>
                         <th>Name</th>
-                        <th>Location</th>
-                        <th>User Name</th>
-                        <th>View Count</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Photos</th>
                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
@@ -55,33 +54,31 @@ $j(document).ready(function() {
     let table = $j('#userTableList').DataTable({
         processing: true,
         serverSide: true,
-        ajax: "{{ route('admin.photos.list') }}",  // Ensure this URL is correct
+        ajax: "{{ route('admin.users.photos') }}",  // Ensure this URL is correct
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'photo', name: 'photo', orderable: false, searchable: false },
-            { data: 'random_id', name: 'random_id' },
+            { data: 'profile_image', name: 'profile_image', orderable: false, searchable: false },
             { data: 'name', name: 'name' },
-            { data: 'location', name: 'location' },
-            { data: 'user_name', name: 'user_name' },
-            { data: 'view_count', name: 'view_count', orderable: false, searchable: false },
-            { data:'status', name:'status'},
+            { data: 'email', name: 'email' },
+            { data: 'phone_number', name: 'phone_number' },
+            { data: 'photo_count', name: 'photo_count', orderable: false, searchable: false },
+            { data: 'status', name: 'status', orderable: false, searchable: false },
             { data: 'actions', name: 'actions', orderable: false, searchable: false }
-            
         ]
     });
 
-        // STATUS TOGGLE
-$j('#userTableList').on('click', '.toggle-state', function () {
+    // STATUS TOGGLE
+$j('#userTableList').on('click', '.toggle-status', function () {
     let id = $j(this).data('id');
-    let state = $j(this).data('state');
+    let status = $j(this).data('status');
     if (confirm("Are you sure?")) {
        $j.ajax({
-    url: "{{ route('admin.photos.update.status') }}",
+    url: "{{ route('admin.users.update.data') }}",
     type: "get",
     data: {
         id: id,
-        state: state
+        status: status
     },
     success: function (response) {
         console.log("SUCCESS:", response);
@@ -95,20 +92,26 @@ $j('#userTableList').on('click', '.toggle-state', function () {
 });
     }
 });
+
+
+
+
+
     // DELETE USER
     $j('#userTableList').on('click', '.delete-user', function () {
         let id = $j(this).data('id');
+        alert(id);
+
         if (confirm("Are you sure you want to delete this user?")) {
-            $j.get("{{ route('admin.photos.update.status') }}", {
+            $j.get("{{ route('admin.users.update.data') }}", {
                 _token: "{{ csrf_token() }}",
                 id: id,
-                state: -1
+                status: -1
             }, function () {
                 table.ajax.reload(null, false);
             });
         }
     });
-
 });
 
 

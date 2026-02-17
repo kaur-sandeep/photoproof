@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\Hash;
 use App\Services\EmailService;
 use App\Notifications\CommonMailNotification;
 use Illuminate\Support\Facades\Storage;
+use App\Models\User;
+use App\Models\PhotoDetail;
 
 
 class LoginController extends Controller
@@ -45,7 +47,9 @@ class LoginController extends Controller
 
     public function dashboard()
     {
-        return view('admin.dashboard');
+        $totalUsers = User::count();
+        $totalPhotos = PhotoDetail::count();
+        return view('admin.dashboard',compact('totalUsers','totalPhotos'));
     }
 
     public function profile()
