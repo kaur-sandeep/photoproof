@@ -39,21 +39,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/photos/showdata/{id}', [PhotosController::class, 'showdata'])->name('admin.photos.showdata');
         Route::get('/photos/update/data', [PhotosController::class, 'updateStatus'])->name('admin.photos.update.status');
         Route::post('/photos/update/{photId}', [PhotosController::class, 'update'])->name('admin.photo.update');
-        
-
-       
         Route::get('/photos/edit/{id}', [PhotosController::class, 'edit'])->name('admin.photos.edit');
         Route::post('/photo/update/{id}', [PhotosController::class, 'update'])->name('admin.photo.update');
-        
-        
-
-
-
-
-
-
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
-
     });
 
 });
