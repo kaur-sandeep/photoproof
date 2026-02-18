@@ -29,6 +29,7 @@ class PhotoController extends Controller
         //             ->first();
         $photo = PhotoDetail::with(['user', 'uploadTrack'])
             ->where('random_id', $random_id)
+            ->where('state', 1)
             ->first();
      
         if (!$photo) {
