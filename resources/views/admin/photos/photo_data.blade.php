@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Photo Details')
+@section('title', 'Viewers Details')
 
 @section('content')
 
@@ -30,7 +30,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Photo Details</h3>
+            <h3 class="card-title">Viewers Details</h3>
         </div>
 
         <div class="card-body">
@@ -75,6 +75,7 @@
 <!-- Bootstrap JS (optional but recommended) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+    
     var $j = jQuery.noConflict();
 $j(document).ready(function() {
     let table = $j('#userTableList').DataTable({

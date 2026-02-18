@@ -17,7 +17,7 @@
 <!-- AdminLTE v4 -->
 <link rel="stylesheet" href="{{ asset('admin/css/adminlte.css') }}">
 <style>
-        .dataTables_wrapper .pagination .page-item {
+.dataTables_wrapper .pagination .page-item {
     margin: 0 6px;
 }
 

@@ -338,8 +338,8 @@ $users = User::with('photos.uploadTrack') // Load the relationships
     ->when($request->name, function ($query) use ($request) {
         return $query->where('name', 'like', '%' . $request->name . '%');
     })
-    ->when($request->user_id, function ($query) use ($request) {
-        return $query->where('id', $request->user_id);  // Filter by user_id
+    ->when($id, function ($query) use ($id) {
+        return $query->where('id', $id);  // Filter by user_id
     })
     ->get();
 
