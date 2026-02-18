@@ -15,8 +15,24 @@ class PhotoDetail extends Model
         'name',
         'location',
         'photo',
-        'state'
+        'state',
+        'word_api_date_time',
+        'latitude',
+        'longitude',
+        'device_type',
+        'device_brand',
+        'device_model',
+        'device_name',
+        'device_manufacturer',
+        'android_version',
+        'android_sdk',
+        'ios_system_version',
+        'ios_identifier',
     ];
+
+
+
+    // id =  random_id ,word_api_date_time,latitude,longitude,device_type,device_brand,device_model,device_name,device_manufacturer,android_version,android_sdk,ios_system_version,ios_identifier
 
     // 👇 Add this
     protected $appends = ['photo_url'];

@@ -168,7 +168,7 @@ class AuthController extends Controller
     public function uploadPhoto(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
+            'display_name' => 'required|string|max:255',
             'photo' => 'required|image|mimes:jpg,jpeg,png|max:5120', // max 5MB
             'location' => 'nullable|string|max:255'
         ]);
@@ -214,12 +214,25 @@ class AuthController extends Controller
 
         // Create record
         $photo = PhotoDetail::create([
-            'random_id' => Str::uuid(), // generate unique random id
+            //'random_id' => Str::uuid(), // generate unique random id
+            'random_id' =>$request->id, // generate unique random id
             'user_id' => $user->id,
-            'name' => $request->name,
+            'name' => $request->display_name,
             'location' => $request->location,
             'photo' => $path,
-            'state' => 1
+            'state' => 1,
+            'word_api_date_time' => $request->word_api_date_time,
+            'latitude' => $request->latitude,
+            'longitude' => $request->longitude,
+            'device_type' => $request->device_type,
+            'device_brand' => $request->device_brand,
+            'device_model' => $request->device_model,
+            'device_name' => $request->device_name,
+            'device_manufacturer' => $request->device_manufacturer,
+            'android_version' => $request->android_version,
+            'android_sdk' => $request->android_sdk,
+            'ios_system_version' => $request->ios_system_version,
+            'ios_identifier' => $request->ios_identifier,
         ]);
         $ip = $request->ip();
         $ip ='202.164.57.197';
