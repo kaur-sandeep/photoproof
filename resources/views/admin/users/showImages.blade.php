@@ -122,8 +122,9 @@ $j(document).ready(function() {
     $j('#search-name').on('keyup', function() {
         table.draw();
     });
-});
+});   
 
     </script>
 
 @endsection
+  
