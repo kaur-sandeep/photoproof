@@ -24,7 +24,7 @@ return DataTables::of($photos)
 
     ->addColumn('photo', function ($photo) {
         if ($photo->photo) {
-            return '<img src="'.asset('storage/profile/'.$photo->photo).'" width="50" height="50">';
+            return '<img src="'.asset('storage/photos/'.$photo->photo).'" width="50" height="50">';
         }
         return 'No Image';
     })

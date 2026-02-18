@@ -357,7 +357,7 @@ foreach ($users as $user) {
             'user_id' => $user->id,
             // 'user_name' => $user->name,
             'user_email' => $user->email,
-            'image' => $photo->photo ? asset('storage/profile/' . $photo->photo) : 'No Image Available',
+            'image' => $photo->photo ? asset('storage/photos/' . $photo->photo) : 'No Image Available',
             'upload_track_details' => $track ? 
                 "<div style='border:1px solid #ddd; padding:10px; margin-bottom:10px;'>
                  <b>Random Id:</b> {$photo->random_id}<br>
