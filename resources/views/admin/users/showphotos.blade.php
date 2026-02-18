@@ -16,7 +16,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">Users List</h3>
+            <h3 class="card-title">{{$user->email}}</h3>
         </div>
 
         <div class="card-body">
@@ -50,7 +50,7 @@ $j(document).ready(function() {
         processing: true,
         serverSide: true,
        ajax: {
-            url: "{{ route("admin.user.images.by.id", ["id" => $id])  }}",
+            url: "{{ route("admin.user.images.by.id", ["id" => $user->id])  }}",
 
             
             type: 'GET',
