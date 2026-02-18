@@ -59,7 +59,7 @@
                         Login
                     </button>
                 </div>
-                <p class="mb-1"><a href="{{ route('admin.forgot-password') }}">Forgot Password</a></p>
+                <p class="mb-1"><a href="{{ route('admin.forgot-password') }}">Forgot Password ?</a></p>
             </form>
 
         </div>
