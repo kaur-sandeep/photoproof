@@ -228,8 +228,8 @@ public function getUsersWithImages(Request $request)
 
 
 public function showImagedatawithid(Request $request,$id){
-    
-    return view('admin.users.showphotos',compact('id'));
+     $user = User::findOrFail($request->id);
+    return view('admin.users.showphotos',compact('user'));
 }
 
 public function getUsersWithImageswithId(Request $request,$id)
