@@ -29,8 +29,8 @@
                         <th>Email</th>
                         <!-- <th>Phone</th> -->
                         <th>Photos</th>
-                        <th>Status</th>
-                        <th>Actions</th>
+                        <!-- <th>Status</th>
+                        <th>Actions</th> -->
                     </tr>
                 </thead>
             </table>
@@ -39,7 +39,7 @@
 
 </div>
 
-@endsection
+
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -63,8 +63,8 @@ $j(document).ready(function() {
             { data: 'email', name: 'email' },
             //{ data: 'phone_number', name: 'phone_number' },
             { data: 'photo_count', name: 'photo_count', orderable: false, searchable: false },
-            { data: 'status', name: 'status', orderable: false, searchable: false },
-            { data: 'actions', name: 'actions', orderable: false, searchable: false }
+            // { data: 'status', name: 'status', orderable: false, searchable: false },
+            // { data: 'actions', name: 'actions', orderable: false, searchable: false }
         ]
     });
 
@@ -110,3 +110,4 @@ $j('#userTableList').on('click', '.toggle-status', function () {
 
 </script>
 
+@endsection

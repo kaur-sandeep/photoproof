@@ -25,6 +25,7 @@
                     <tr>
                         <th>S.No</th>
                         <th>Images</th>
+                        <th>View</th>
                         <th>Upload Track Details</th>
                     </tr>
                 </thead>
@@ -34,7 +35,6 @@
 
 </div>
 
-@endsection
 
 
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -75,6 +75,7 @@ $j(document).ready(function() {
                     }
                 }
             },
+            {data:'view_count', name:'view_count'},
             {
                 data: 'upload_track_details',
                 name: 'upload_track_details',
@@ -110,3 +111,4 @@ $j(document).ready(function() {
 
 </script>
 
+@endsection

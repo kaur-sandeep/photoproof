@@ -49,24 +49,25 @@ class UserController extends Controller
              '.$user->photos_count.'
             </a></span>';
         })
-    ->addColumn('status', function ($user) {
-            if ($user->status == 1) {
-                return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$user->id.'" data-status="0">Inactive</button>';
-            }
-            if ($user->status == 0) {
-                return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$user->id.'" data-status="1">Active</button>';
+    // ->addColumn('status', function ($user) {
+    //         if ($user->status == 1) {
+    //             return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$user->id.'" data-status="0">Inactive</button>';
+    //         }
+    //         if ($user->status == 0) {
+    //             return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$user->id.'" data-status="1">Active</button>';
                 
-            }
-            return '<span class="badge bg-danger">Deleted</span>';
-    })
-        ->addColumn('actions', function ($user) {
-            // return '<a href="'.route('admin.users.show.imagedata', $user->id).'" class="btn btn-sm btn-primary">View</a>
-            //         <a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
-            //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
-            return '<a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
-                    <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
-        })
-        ->rawColumns(['profile_image', 'photo_count', 'status', 'actions'])
+    //         }
+    //         return '<span class="badge bg-danger">Deleted</span>';
+    // })
+        // ->addColumn('actions', function ($user) {
+        //     // return '<a href="'.route('admin.users.show.imagedata', $user->id).'" class="btn btn-sm btn-primary">View</a>
+        //     //         <a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
+        //     //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
+        //     return '<a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
+        //             <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
+        // })
+        // ->rawColumns(['profile_image', 'photo_count', 'status', 'actions'])
+        ->rawColumns(['profile_image', 'photo_count'])
         ->make(true);
     }
     public function create(){
@@ -341,6 +342,8 @@ $users = User::with('photos.uploadTrack') // Load the relationships
         return $query->where('id', $request->user_id);  // Filter by user_id
     })
     ->get();
+
+
 // dd($users);
 $data = [];  // Initialize an empty array to store all the rows
 
@@ -355,8 +358,10 @@ foreach ($users as $user) {
         $data[] = [
             'serial_number' => $serialNumber++, // Increment serial number for each row
             'user_id' => $user->id,
+            'photo_id'=>$photo->id,
             // 'user_name' => $user->name,
             'user_email' => $user->email,
+            'view_count'    => $photo->view_count ?? 0, 
             'image' => $photo->photo ? asset('storage/' . $photo->photo) : 'No Image Available',
             'upload_track_details' => $track ? 
                 "<div style='border:1px solid #ddd; padding:10px; margin-bottom:10px;'>
@@ -383,10 +388,15 @@ return DataTables::of($data)
     ->addColumn('images', function ($row) {
         return $row['image'] ? '<img src="' . $row['image'] . '" width="80" height="80" style="margin-bottom:5px; border-radius:5px;">' : 'No Image Available';
     })
+    ->addColumn('view_count', function ($row) {
+        return '<span class="badge bg-info" ><a href="'.route('admin.photos.show',  $row['photo_id']).'" class="badge bg-info">
+             '.$row['view_count'].'
+            </a></span>';
+    })
     ->addColumn('upload_track_details', function ($row) {
         return $row['upload_track_details'];
     })
-    ->rawColumns(['images', 'upload_track_details']) // Ensure raw HTML is returned for both columns
+    ->rawColumns(['images', 'upload_track_details','view_count']) // Ensure raw HTML is returned for both columns
     ->make(true);
 
 
