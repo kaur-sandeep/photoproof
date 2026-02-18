@@ -1,7 +1,7 @@
 <aside class="app-sidebar bg-dark text-white shadow">
 
     <div class="sidebar-brand p-3 text-center">
-        <h5>PhotoProof Admin</h5>
+        <img src="/user/images/logo-white.png" width="200" height="" alt="header-logo">
     </div>
 
     <div class="sidebar-wrapper px-2">

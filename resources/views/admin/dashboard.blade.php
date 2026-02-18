@@ -4,6 +4,9 @@
 
 @section('content')
 
+<style>
+    .col-lg-3.col-6 {padding-bottom: 25px};
+</style>
 <div class="container-fluid">
 
     <div class="row">
@@ -29,6 +32,41 @@
                 </a>
             </div>
         </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="card text-bg-primary">
+                <a href="#" style="text-decoration: none; color: inherit;">
+                <div class="card-body">
+                    <h5>Total Iphone Installations</h5>
+                    <h3>0</h3>
+                </div>
+            </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="card text-bg-success">
+                 <a href="#" style="text-decoration: none; color: inherit;">
+                <div class="card-body">
+                    <h5>Total Android Installations</h5>
+                    <h3>0</h3>
+                </div>
+                </a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <div class="card text-bg-success">
+                 <a href="#" style="text-decoration: none; color: inherit;">
+                <div class="card-body">
+                    <h5>Photos Verified / Viewed</h5>
+                    <h3>0</h3>
+                </div>
+                </a>
+            </div>
+        </div>
+
+
 
     </div>
 

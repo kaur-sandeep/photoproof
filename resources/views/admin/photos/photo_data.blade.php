@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Photo Details')
+@section('title', 'Viewers Details')
 
 @section('content')
 <style>

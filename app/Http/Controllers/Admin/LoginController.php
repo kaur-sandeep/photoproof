@@ -30,20 +30,30 @@ class LoginController extends Controller
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
-        ],[
+        ], [
             'email.required' => 'Email is required.',
             'password.required' => 'Password is required.',
         ]);
 
-        if (Auth::guard('admin')->attempt([
+        // ✅ Step 1: Check if email exists
+        $admin = Admin::where('email', $request->email)->first();
+
+        if (!$admin) {
+            return back()->withInput()->with('error', 'Email not exist.');
+        }
+
+        // ✅ Step 2: Check password
+        if (!Auth::guard('admin')->attempt([
             'email' => $request->email,
             'password' => $request->password,
         ])) {
-            return redirect()->route('admin.dashboard');
+            return back()->withInput()->with('error', 'Invalid Credentials');
         }
 
-        return back()->with('error', 'Invalid Credentials');
+        // ✅ Step 3: Login success
+        return redirect()->route('admin.dashboard');
     }
+
 
     public function dashboard()
     {
