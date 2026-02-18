@@ -1,0 +1,7 @@
+.dataTables_wrapper .pagination .page-item {
+    margin: 0 6px;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+    padding-right: 15px;
+}

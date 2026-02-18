@@ -39,13 +39,25 @@ class UserController extends Controller
     $users = User::withCount('photos')->get();
     return DataTables::of($users)
         ->addIndexColumn()
-        // ->addColumn('profile_image', function ($user) {
-        //     return $user->profile_image
-        //         ? '<img src="'.asset('storage/profile/'.$user->profile_image).'" width="40" height="40" class="rounded-circle">'
-        //         : '<span class="text-muted">No Image</span>';
-        // })
+        ->addColumn('profile_image', function ($user) {
+            return $user->profile_image
+                ? '<img src="'.asset('storage/profile/'.$user->profile_image).'" width="40" height="40" class="rounded-circle">'
+                : '<span class="text-muted">No Image</span>';
+        })
+       ->addColumn('device', function ($user) {
+            return $user->device ?? '--'; // if device is null, show --
+        })
+        ->addColumn('created_at', function ($user) {
+            return $user->created_at ?? '--'; // if device is null, show --
+        })
         ->addColumn('photo_count', function ($user) {
-            return '<span class="badge bg-info" ><a href="'.route('admin.users.show.imagedata', $user->id).'" class="badge bg-info">
+            return '<span class="badge bg-info" style="
+                  font-size: 1.2rem; 
+                  padding: 0.6em 1em; 
+                  text-decoration: none; 
+                  border-radius: 0.5rem;
+                  display: inline-block;
+              " ><a href="'.route('admin.users.show.imagedata', $user->id).'" class="badge bg-info">
              '.$user->photos_count.'
             </a></span>';
         })
@@ -234,6 +246,7 @@ public function showImagedatawithid(Request $request,$id){
 
 public function getUsersWithImageswithId(Request $request,$id)
 {
+   
 //    $users = User::with('photos.uploadTrack') // Load the relationships
 //     ->when($request->name, function ($query) use ($request) {
 //         return $query->where('name', 'like', '%' . $request->name . '%');
@@ -338,8 +351,8 @@ $users = User::with('photos.uploadTrack') // Load the relationships
     ->when($request->name, function ($query) use ($request) {
         return $query->where('name', 'like', '%' . $request->name . '%');
     })
-    ->when($request->user_id, function ($query) use ($request) {
-        return $query->where('id', $request->user_id);  // Filter by user_id
+    ->when($id, function ($query) use ($id) {
+        return $query->where('id', $id);  // Filter by user_id
     })
     ->get();
 
@@ -389,7 +402,13 @@ return DataTables::of($data)
         return $row['image'] ? '<img src="' . $row['image'] . '" width="80" height="80" style="margin-bottom:5px; border-radius:5px;">' : 'No Image Available';
     })
     ->addColumn('view_count', function ($row) {
-        return '<span class="badge bg-info" ><a href="'.route('admin.photos.show',  $row['photo_id']).'" class="badge bg-info">
+        return '<span class="badge bg-info" style="
+                  font-size: 1.2rem; 
+                  padding: 0.6em 1em; 
+                  text-decoration: none; 
+                  border-radius: 0.5rem;
+                  display: inline-block;
+              "><a href="'.route('admin.photos.show',  $row['photo_id']).'" class="badge bg-info">
              '.$row['view_count'].'
             </a></span>';
     })

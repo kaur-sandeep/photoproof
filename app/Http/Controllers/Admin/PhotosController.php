@@ -13,11 +13,12 @@ class PhotosController extends Controller
 {
 
     public function index(){
+     
         return view('admin.photos.index');
     }
 
   public function list(Request $request){
-    $photos = PhotoDetail::with('user')->get();
+   $photos = PhotoDetail::with('user')->where('state', '!=', -1)->get();
     
 return DataTables::of($photos)
     ->addIndexColumn()
@@ -52,18 +53,24 @@ return DataTables::of($photos)
 
     ->addColumn('view_count', function ($photo) {
 $count=  $photo->view_count ?? 0;
-            return '<span class="badge bg-info" ><a href="'.route('admin.photos.show', $photo->id).'" class="badge bg-info">
+            return '<span class="badge bg-info" style="
+                  font-size: 1.2rem; 
+                  padding: 0.6em 1em; 
+                  text-decoration: none; 
+                  border-radius: 0.5rem;
+                  display: inline-block;
+              "><a href="'.route('admin.photos.show', $photo->id).'" class="badge bg-info">
         '.$count.'
     </a></span>';
 
         })
 
 ->addColumn('status', function ($photo) {
-    if ($photo->state == 0) {
-        return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$photo->id.'" data-state="0">Inactive</button>';
-    }
     if ($photo->state == 1) {
-        return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$photo->id.'" data-state="1">Active</button>';
+        return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$photo->id.'" data-state="0">Set Inactive</button>';
+    }
+    if ($photo->state == 0) {
+        return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$photo->id.'" data-state="1">Set Active</button>';
         
     }
 })
@@ -80,7 +87,12 @@ $count=  $photo->view_count ?? 0;
     }
 
     public function show(Request $request,$id){
-        return view('admin.photos.photo_data',compact('id'));
+        $photos = PhotoDetail::with('user')->find($id);
+        $count = $photos->view_count;
+// $count = $user->photos_count;
+
+
+        return view('admin.photos.photo_data',compact('id','count'));
     }
 
     public function showdata(Request $request,$id){
@@ -260,27 +272,19 @@ public function update(Request $request, $photo_id)
 
     public function updateStatus(Request $request){
     $id = $request->input('id');
-    $status = $request->input('status');
+    $status = $request->input('state');
+    // dd($id,$status);
         $request->validate([
             'id' => 'required|exists:users,id',
             'state' => 'required|in:-1,0,1'
         ]);
 
-        $state = (string) $request->state;
-        $photo = PhotoDetail::findOrFail($request->id);
-        if ($state == -1) {
-            $photo->delete();
-            return response()->json([
-                'success' => true,
-                'message' => 'User deleted successfully'
-            ]);
-        }else{
-            $photo->state = $state;
-            $photo->save();
-        }
+        $photo = PhotoDetail::findOrFail($id);
+        $photo->state = $status;
+        $photo->save();
         return response()->json([
             'success' => true,
-            'message' => 'User status updated successfully'
+            'message' => 'Photo status updated successfully'
         ]);
     }
 

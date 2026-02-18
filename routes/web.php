@@ -28,10 +28,10 @@ Route::prefix('admin')->group(function () {
         
         Route::get('/users/list/two', [UserController::class, 'list'])->name('admin.users.list');
         Route::get('/users/update/data', [UserController::class, 'updateStatus'])->name('admin.users.update.data');
-        Route::get('/admin/users/show/imagedata/{id}', [UserController::class, 'showImagedatawithid'])->name('admin.users.show.imagedata');
+        Route::get('/users/show/imagedata/{id}', [UserController::class, 'showImagedatawithid'])->name('admin.users.show.imagedata');
         Route::get('/user/viewImages', [UserController::class, 'viewImages'])->name('admin.users.viewimages');  // Show the users and images
         Route::get('/fetch-users-images', [UserController::class, 'getUsersWithImages'])->name('admin.user.images');
-        Route::get('/fetch-users-images-by-id/{id}', [UserController::class, 'getUsersWithImageswithId'])->name('admin.user.images.by.id');
+        Route::get('/fetch/users/images/{userId}', [UserController::class, 'getUsersWithImageswithId'])->name('admin.user.images.by.id');
 
         Route::get('/photos', [PhotosController::class, 'index'])->name('admin.photos');
         Route::get('/photos/list', [PhotosController::class, 'list'])->name('admin.photos.list');
