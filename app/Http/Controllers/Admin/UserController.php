@@ -39,17 +39,15 @@ class UserController extends Controller
     $users = User::withCount('photos')->get();
     return DataTables::of($users)
         ->addIndexColumn()
-        ->addColumn('profile_image', function ($user) {
-            return $user->profile_image
-                ? '<img src="'.asset('storage/profile/'.$user->profile_image).'" width="40" height="40" class="rounded-circle">'
-                : '<span class="text-muted">No Image</span>';
-        })
+        // ->addColumn('profile_image', function ($user) {
+        //     return $user->profile_image
+        //         ? '<img src="'.asset('storage/profile/'.$user->profile_image).'" width="40" height="40" class="rounded-circle">'
+        //         : '<span class="text-muted">No Image</span>';
+        // })
         ->addColumn('photo_count', function ($user) {
-
             return '<span class="badge bg-info" ><a href="'.route('admin.users.show.imagedata', $user->id).'" class="badge bg-info">
-        '.$user->photos_count.'
-    </a></span>';
-
+             '.$user->photos_count.'
+            </a></span>';
         })
     ->addColumn('status', function ($user) {
             if ($user->status == 1) {
@@ -62,8 +60,10 @@ class UserController extends Controller
             return '<span class="badge bg-danger">Deleted</span>';
     })
         ->addColumn('actions', function ($user) {
-            return '<a href="'.route('admin.users.show.imagedata', $user->id).'" class="btn btn-sm btn-primary">View</a>
-                    <a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
+            // return '<a href="'.route('admin.users.show.imagedata', $user->id).'" class="btn btn-sm btn-primary">View</a>
+            //         <a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
+            //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
+            return '<a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
                     <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
         })
         ->rawColumns(['profile_image', 'photo_count', 'status', 'actions'])
@@ -176,7 +176,6 @@ public function getUsersWithImages(Request $request)
             return $query->where('id', $request->user_id);  // Filter by user_id
         })
         ->get();
-
     return DataTables::of($users)
 
         // ✅ Upload Track Column
@@ -342,7 +341,7 @@ $users = User::with('photos.uploadTrack') // Load the relationships
         return $query->where('id', $request->user_id);  // Filter by user_id
     })
     ->get();
-
+// dd($users);
 $data = [];  // Initialize an empty array to store all the rows
 
 $serialNumber = 1;  // Initialize the serial number
@@ -356,12 +355,13 @@ foreach ($users as $user) {
         $data[] = [
             'serial_number' => $serialNumber++, // Increment serial number for each row
             'user_id' => $user->id,
-            'user_name' => $user->name,
+            // 'user_name' => $user->name,
             'user_email' => $user->email,
             'image' => $photo->photo ? asset('storage/profile/' . $photo->photo) : 'No Image Available',
             'upload_track_details' => $track ? 
                 "<div style='border:1px solid #ddd; padding:10px; margin-bottom:10px;'>
-                    <b>IP:</b> {$track->ip_address}<br>
+                 <b>Random Id:</b> {$photo->random_id}<br>
+                    <b>IP Address:</b> {$track->ip_address}<br>
                     <b>City:</b> {$track->city}<br>
                     <b>Country:</b> {$track->country}<br>
                     <b>Latitude:</b> {$track->latitude}<br>

@@ -42,30 +42,40 @@ return DataTables::of($photos)
     })
 
     ->addColumn('user_name', function ($photo) {
-        return $photo->user ? $photo->user->name : '--';
+        return $photo->user ? $photo->user->email : '--';
     })
+
+    // ->addColumn('view_count', function ($photo) {
+    //     $count=  $photo->view_count ?? 0;
+        
+    // })
 
     ->addColumn('view_count', function ($photo) {
-        return $photo->view_count ?? 0;
-    })
+$count=  $photo->view_count ?? 0;
+            return '<span class="badge bg-info" ><a href="'.route('admin.photos.show', $photo->id).'" class="badge bg-info">
+        '.$count.'
+    </a></span>';
+
+        })
 
 ->addColumn('status', function ($photo) {
-    if ($photo->state == 1) {
+    if ($photo->state == 0) {
         return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$photo->id.'" data-state="0">Inactive</button>';
     }
-    if ($photo->state == 0) {
+    if ($photo->state == 1) {
         return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$photo->id.'" data-state="1">Active</button>';
         
     }
 })
 
     ->addColumn('actions', function ($photo) {
-            return '<a href="'.route('admin.photos.show', $photo->id).'" class="btn btn-sm btn-primary">View</a>
-                    <a href="'.route('admin.photos.edit', $photo->id).'" class="btn btn-sm btn-warning">Edit</a>
-                    <button class="btn btn-sm btn-danger delete-user" data-id="'.$photo->id.'">Delete</button>';
+            // return '<a href="'.route('admin.photos.show', $photo->id).'" class="btn btn-sm btn-primary">View</a>
+            //         <a href="'.route('admin.photos.edit', $photo->id).'" class="btn btn-sm btn-warning">Edit</a>
+            //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$photo->id.'">Delete</button>';
+            return '<button class="btn btn-sm btn-danger delete-user" data-id="'.$photo->id.'">Delete</button>';
         })
 
-    ->rawColumns(['photo','actions','status'])
+    ->rawColumns(['photo','actions','status','view_count'])
     ->make(true);
     }
 

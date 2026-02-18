@@ -24,10 +24,10 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Profile</th>
-                        <th>Name</th>
+                        <!-- <th>Profile</th> -->
+                        <!-- <th>Name</th> -->
                         <th>Email</th>
-                        <th>Phone</th>
+                        <!-- <th>Phone</th> -->
                         <th>Photos</th>
                         <th>Status</th>
                         <th>Actions</th>
@@ -49,7 +49,7 @@
 <!-- Bootstrap JS (optional but recommended) -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    var $j = jQuery.noConflict();
+var $j = jQuery.noConflict();
 $j(document).ready(function() {
     let table = $j('#userTableList').DataTable({
         processing: true,
@@ -58,10 +58,10 @@ $j(document).ready(function() {
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'profile_image', name: 'profile_image', orderable: false, searchable: false },
-            { data: 'name', name: 'name' },
+            //{ data: 'profile_image', name: 'profile_image', orderable: false, searchable: false },
+            //{ data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
-            { data: 'phone_number', name: 'phone_number' },
+            //{ data: 'phone_number', name: 'phone_number' },
             { data: 'photo_count', name: 'photo_count', orderable: false, searchable: false },
             { data: 'status', name: 'status', orderable: false, searchable: false },
             { data: 'actions', name: 'actions', orderable: false, searchable: false }

@@ -28,7 +28,7 @@
                         <th>Random ID</th>
                         <th>Name</th>
                         <th>Location</th>
-                        <th>User Name</th>
+                        <th>User Email</th>
                         <th>View Count</th>
                         <th>Status</th>
                         <th>Actions</th>

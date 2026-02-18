@@ -85,7 +85,7 @@ $j(document).ready(function() {
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'ip_address', name: 'ip_address', orderable: false, searchable: false },
+            { data: 'ip_address', name: 'ip_address'},
             { data: 'browser', name: 'browser' },
             { data: 'platform', name: 'platform' },
             { data: 'device', name: 'device' },
