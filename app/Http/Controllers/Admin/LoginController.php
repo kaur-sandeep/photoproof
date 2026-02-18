@@ -59,7 +59,8 @@ class LoginController extends Controller
     {
         $totalUsers = User::count();
         $totalPhotos = PhotoDetail::count();
-        return view('admin.dashboard',compact('totalUsers','totalPhotos'));
+        $totalViews = PhotoDetail::sum('view_count');
+        return view('admin.dashboard',compact('totalUsers','totalPhotos','totalViews'));
     }
 
     public function profile()

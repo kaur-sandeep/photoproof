@@ -1,3 +1,6 @@
+.dataTables_filter{
+    float:right;
+}
 .dataTables_wrapper .pagination .page-item {
     margin: 0 6px;
 }

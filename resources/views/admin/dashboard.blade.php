@@ -60,7 +60,7 @@
                  <a href="#" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Photos Verified / Viewed</h5>
-                    <h3>0</h3>
+                    <h3>{{$totalViews}}</h3>
                 </div>
                 </a>
             </div>
