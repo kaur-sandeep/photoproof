@@ -35,31 +35,104 @@ class UserController extends Controller
     //     );
     // }
 
-    public function list(Request $request){
-    $users = User::withCount('photos')->get();
-    return DataTables::of($users)
-        ->addIndexColumn()
-        // ->addColumn('profile_image', function ($user) {
-        //     return $user->profile_image
-        //         ? '<img src="'.asset('storage/profile/'.$user->profile_image).'" width="40" height="40" class="rounded-circle">'
-        //         : '<span class="text-muted">No Image</span>';
-        // })
-        ->addColumn('profile_image', function ($user) {
-                $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    // public function list(Request $request){
+    // $users = User::withCount('photos')->get();
+    // return DataTables::of($users)
+    //     ->addIndexColumn()
+    //     // ->addColumn('profile_image', function ($user) {
+    //     //     return $user->profile_image
+    //     //         ? '<img src="'.asset('storage/profile/'.$user->profile_image).'" width="40" height="40" class="rounded-circle">'
+    //     //         : '<span class="text-muted">No Image</span>';
+    //     // })
+    //     ->addColumn('profile_image', function ($user) {
+    //             $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
-                return '<img src="'
-                    . ($user->profile_image 
-                        ? asset('storage/profile/' . $user->profile_image) 
-                        : $default)
-                    . '" width="40" height="40" class="rounded-circle">';
-            })
-       ->addColumn('device', function ($user) {
-            return $user->device ?? '--'; // if device is null, show --
-        })
-        ->addColumn('created_at', function ($user) {
-            return $user->created_at ?? '--'; // if device is null, show --
-        })
-        ->addColumn('photo_count', function ($user) {
+    //             return '<img src="'
+    //                 . ($user->profile_image 
+    //                     ? asset('storage/profile/' . $user->profile_image) 
+    //                     : $default)
+    //                 . '" width="40" height="40" class="rounded-circle">';
+    //         })
+    //    ->addColumn('device', function ($user) {
+    //         return $user->device ?? '--'; // if device is null, show --
+    //     })
+    //     ->addColumn('created_at', function ($user) {
+    //         return $user->created_at ?? '--'; // if device is null, show --
+    //     })
+    //     ->addColumn('photo_count', function ($user) {
+    //         return '<span class="badge bg-info" style="
+    //               font-size: 1.2rem; 
+    //               padding: 0.6em 1em; 
+    //               text-decoration: none; 
+    //               border-radius: 0.5rem;
+    //               display: inline-block;
+    //           " ><a href="'.route('admin.users.show.imagedata', $user->id).'" class="badge bg-info">
+    //          '.$user->photos_count.'
+    //         </a></span>';
+    //     })
+    // // ->addColumn('status', function ($user) {
+    // //         if ($user->status == 1) {
+    // //             return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$user->id.'" data-status="0">Inactive</button>';
+    // //         }
+    // //         if ($user->status == 0) {
+    // //             return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$user->id.'" data-status="1">Active</button>';
+                
+    // //         }
+    // //         return '<span class="badge bg-danger">Deleted</span>';
+    // // })
+    //     // ->addColumn('actions', function ($user) {
+    //     //     // return '<a href="'.route('admin.users.show.imagedata', $user->id).'" class="btn btn-sm btn-primary">View</a>
+    //     //     //         <a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
+    //     //     //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
+    //     //     return '<a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
+    //     //             <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
+    //     // })
+    //     // ->rawColumns(['profile_image', 'photo_count', 'status', 'actions'])
+    //     ->rawColumns(['profile_image', 'photo_count'])
+    //     ->make(true);
+    // }
+
+
+    public function list(Request $request){
+    $users = User::with('photos.uploadTrack')->withCount('photos')->get();
+  
+
+return DataTables::of($users)
+    ->addIndexColumn()
+    ->addColumn('name', fn($user) => $user->name ?? '--')
+    ->addColumn('email', fn($user) => $user->email ?? '--')
+    ->addColumn('profile_image', function ($user) {
+        $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        return '<img src="' . ($user->profile_image
+            ? asset('storage/profile/' . $user->profile_image)
+            : $default) . '" width="40" height="40" class="rounded-circle">';
+    })
+  ->addColumn('country', function ($user) {
+        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
+        return $track?->country ?? '--';
+    })
+    ->addColumn('city', function ($user) {
+        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
+        return $track?->city ?? '--';
+    })
+    ->addColumn('state', function ($user) {
+        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
+        return $track?->region_name ?? '--';
+    })
+    ->addColumn('zip', function ($user) {
+        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
+        return $track?->zip ?? '--';
+    })
+    ->addColumn('device', function ($user) {
+        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
+        return $track?->device_type ?? '--';
+    })
+        ->addColumn('timezone', function ($user) {
+        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
+        return $track?->timezone ?? '--';
+    })
+    ->addColumn('created_at', fn($user) => $user->created_at?? '--')
+     ->addColumn('photo_count', function ($user) {
             return '<span class="badge bg-info" style="
                   font-size: 1.2rem; 
                   padding: 0.6em 1em; 
@@ -70,26 +143,8 @@ class UserController extends Controller
              '.$user->photos_count.'
             </a></span>';
         })
-    // ->addColumn('status', function ($user) {
-    //         if ($user->status == 1) {
-    //             return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$user->id.'" data-status="0">Inactive</button>';
-    //         }
-    //         if ($user->status == 0) {
-    //             return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$user->id.'" data-status="1">Active</button>';
-                
-    //         }
-    //         return '<span class="badge bg-danger">Deleted</span>';
-    // })
-        // ->addColumn('actions', function ($user) {
-        //     // return '<a href="'.route('admin.users.show.imagedata', $user->id).'" class="btn btn-sm btn-primary">View</a>
-        //     //         <a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
-        //     //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
-        //     return '<a href="'.route('admin.users.edit', $user->id).'" class="btn btn-sm btn-warning">Edit</a>
-        //             <button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
-        // })
-        // ->rawColumns(['profile_image', 'photo_count', 'status', 'actions'])
-        ->rawColumns(['profile_image', 'photo_count'])
-        ->make(true);
+    ->rawColumns(['profile_image', 'photo_count'])
+    ->make(true);
     }
     public function create(){
         return view('admin/users/add');

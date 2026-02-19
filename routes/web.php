@@ -30,6 +30,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/users/update/{userId}', [UserController::class, 'update'])->name('admin.users.update');
         Route::get('/change/password', [AdminController::class, 'changePassword'])->name('admin.change.password');
         Route::post('/update/password', [AdminController::class, 'updatePassword'])->name('admin.update.password');
+        Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
+         Route::post('/update/settings', [AdminController::class, 'updateSettings'])->name('admin.setting.update');
+        
         
         
         

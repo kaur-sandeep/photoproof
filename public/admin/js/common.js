@@ -38,12 +38,14 @@ $(document).ready(function() {
             { data: 'profile_image', name: 'profile_image', orderable: false, searchable: false },
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
-            // { data: 'location', name: 'location' },
-            // { data: 'state', name: 'state' },
-            // { data: 'city', name: 'city' },
-            // { data: 'zip', name: 'zip' },
-            //{ data: 'phone_number', name: 'phone_number' },
+            { data: 'state', name: 'state' },
+            { data: 'country', name: 'country' },
+            { data: 'state', name: 'state' },
+             { data: 'city', name: 'city' },
+            { data: 'zip', name: 'zip' },
+            // { data: 'phone_number', name: 'phone_number' },
             { data: 'device', name: 'device'},
+            { data: 'timezone', name: 'timezone'},
             { data: 'created_at', name: 'created_at'},
             { data: 'photo_count', name: 'photo_count', orderable: false, searchable: false },
            
@@ -108,7 +110,7 @@ $(document).ready(function() {
             { data:'created_at', name:'created_at'},
             { data: 'view_count', name: 'view_count', orderable: false, searchable: false },
             { data:'status', name:'status'},
-            { data: 'actions', name: 'actions', orderable: false, searchable: false }
+            // { data: 'actions', name: 'actions', orderable: false, searchable: false }
             
         ]
     });
@@ -236,7 +238,7 @@ $(document).on('click', '.viewTrackBtn', function () {
 
     // Build HTML
     var html = `
-        <div>
+        
             <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
             <b>Email:</b> ${rowData.user_email ?? ''}<br>
             <b>IP Address:</b> ${rowData.ip_address ?? ''}<br>
@@ -246,10 +248,18 @@ $(document).on('click', '.viewTrackBtn', function () {
             <b>Device:</b> ${rowData.device_type ?? ''}<br>
             <b>ISP:</b> ${rowData.isp ?? ''}<br>
             <b>Upload Time:</b> ${rowData.upload_time ?? ''}<br>
-        </div>
-        <hr>
-        <div id="dynamicMap" style="height:350px;"></div>
-    `;
+        
+       <hr>
+    ${rowData.latitude && rowData.longitude ? `
+        <iframe 
+            width="100%" 
+            height="350" 
+            style="border:0;" 
+            loading="lazy"
+            src="https://maps.google.com/maps?q=${rowData.latitude},${rowData.longitude}&z=15&output=embed">
+        </iframe>
+    ` : '<p style="color:red;">Location not available</p>'}
+`;
 
     $('#commonheader').html('Track Details');
     $('#commonModalBody').html(html);
@@ -257,33 +267,33 @@ $(document).on('click', '.viewTrackBtn', function () {
     var modal = new bootstrap.Modal(document.getElementById('commonModal'));
     modal.show();
 
-    setTimeout(function () {
+    // setTimeout(function () {
 
-        if (globalMap !== null) {
-            globalMap.remove();
-            globalMap = null;
-        }
+    //     if (globalMap !== null) {
+    //         globalMap.remove();
+    //         globalMap = null;
+    //     }
 
-        if (rowData.latitude && rowData.longitude) {
+    //     if (rowData.latitude && rowData.longitude) {
 
-            globalMap = L.map('dynamicMap').setView(
-                [parseFloat(rowData.latitude), parseFloat(rowData.longitude)],
-                13
-            );
+    //         globalMap = L.map('dynamicMap').setView(
+    //             [parseFloat(rowData.latitude), parseFloat(rowData.longitude)],
+    //             13
+    //         );
 
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-                .addTo(globalMap);
+    //         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+    //             .addTo(globalMap);
 
-            L.marker([
-                parseFloat(rowData.latitude),
-                parseFloat(rowData.longitude)
-            ]).addTo(globalMap);
+    //         L.marker([
+    //             parseFloat(rowData.latitude),
+    //             parseFloat(rowData.longitude)
+    //         ]).addTo(globalMap);
 
-        } else {
-            $('#dynamicMap').html('<p style="color:red;">Location not available</p>');
-        }
+    //     } else {
+    //         $('#dynamicMap').html('<p style="color:red;">Location not available</p>');
+    //     }
 
-    }, 500);
+    // }, 500);
 
 });
 

@@ -78,12 +78,12 @@ $count=  $photo->view_count ?? 0;
     }
 })
 
-    ->addColumn('actions', function ($photo) {
-            // return '<a href="'.route('admin.photos.show', $photo->id).'" class="btn btn-sm btn-primary">View</a>
-            //         <a href="'.route('admin.photos.edit', $photo->id).'" class="btn btn-sm btn-warning">Edit</a>
-            //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$photo->id.'">Delete</button>';
-            return '<button class="btn btn-sm btn-danger delete-user" data-id="'.$photo->id.'">Delete</button>';
-        })
+    // ->addColumn('actions', function ($photo) {
+    //         // return '<a href="'.route('admin.photos.show', $photo->id).'" class="btn btn-sm btn-primary">View</a>
+    //         //         <a href="'.route('admin.photos.edit', $photo->id).'" class="btn btn-sm btn-warning">Edit</a>
+    //         //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$photo->id.'">Delete</button>';
+    //         return '<button class="btn btn-sm btn-danger delete-user" data-id="'.$photo->id.'">Delete</button>';
+    //     })
 
     ->rawColumns(['photo','actions','status','view_count'])
     ->make(true);

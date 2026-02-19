@@ -23,7 +23,7 @@
                 <li class="nav-item">
                     <a href="{{ route('admin.users.data') }}"
                        class="nav-link text-white">
-                        <i class="bi bi-speedometer2 me-2"></i>
+                        <i class="bi bi-people me-2"></i>
                         Admin Users
                     </a>
                 </li>
@@ -58,7 +58,7 @@
               <ul class="nav flex-column">
 
                 <li class="nav-item">
-                    <a href="{{ route('admin.photos') }}"
+                    <a href="{{ route('admin.settings') }}"
                        class="nav-link text-white">
                         <i class="bi bi-gear-fill me-2"></i>
                         Settings

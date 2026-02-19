@@ -23,13 +23,14 @@
                         <th>Profile</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <!-- <th>Location</th>
+                        <th>Location</th>
                         <th>Country</th>
                         <th>State</th>
                         <th>City</th>
-                        <th>Zip</th> -->
+                        <th>Zip</th>
                         <!-- <th>Phone</th> -->
                         <th>Device</th>
+                        <th>Time Zone</th>
                         <th>Registered On</th>
                         <th>Photos</th>
                       

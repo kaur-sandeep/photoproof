@@ -9,6 +9,7 @@ use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Setting;
 class AdminController extends Controller
 {
     public function index(){
@@ -159,9 +160,11 @@ class AdminController extends Controller
             return back()->withErrors([
                 'old_password' => 'Old password is incorrect'
             ]);
-        }else if(Hash::check($request->old_password, $admin->password)) {
+        }
+
+        if (Hash::check($request->new_password, $admin->password)) {
             return back()->withErrors([
-                'new_password' => 'New Password is not equal to he old password'
+                'new_password' => 'New password must be different from old password'
             ]);
         }
         $admin->password = Hash::make($request->new_password);
@@ -170,9 +173,41 @@ class AdminController extends Controller
         return back()->with('success', 'Password changed successfully');
     }
 
+    public function settings(){
+         $settings = Setting::first();
+        return view('admin.settings',compact('settings'));
+    }
 
+     public function updateSettings(Request $request)
+    {
+        $request->validate([
+            'email_enabled'=>'required|boolean',
+            'smtp_enabled' => 'required|boolean',
+            'smtp_host' => 'nullable|string',
+            'smtp_port' => 'nullable|numeric',
+            'smtp_username' => 'nullable|string',
+            'smtp_password' => 'nullable|string',
+            'smtp_encryption' => 'nullable|string|in:tls,ssl,',
+            'delete_photos_after_days' => 'required|numeric|min:1',
+        ]);
 
+        $settings = Setting::first();
+        if (!$settings) {
+            $settings = new Setting();
+        }
 
+        $settings->email_enabled = $request->email_enabled;
+        $settings->smtp_enabled = $request->smtp_enabled;
+        $settings->smtp_host = $request->smtp_host;
+        $settings->smtp_port = $request->smtp_port;
+        $settings->smtp_username = $request->smtp_username;
+        $settings->smtp_password = $request->smtp_password;
+        $settings->smtp_encryption = $request->smtp_encryption;
+        $settings->delete_photos_after_days = $request->delete_photos_after_days;
+        $settings->save();
 
-    
+        return back()->with('success', 'Settings updated successfully');
+    }
 }
+    
+
