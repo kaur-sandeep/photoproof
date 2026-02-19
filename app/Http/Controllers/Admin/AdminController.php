@@ -8,6 +8,7 @@ use App\Models\Admin;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 class AdminController extends Controller
 {
     public function index(){
@@ -138,6 +139,35 @@ class AdminController extends Controller
         $admin->save();
 
         return redirect()->back()->with('success', 'User updated successfully!');
+    }
+
+    public function changePassword(){
+       
+        return view('admin.change-password');
+    }
+
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'old_password' => 'required',
+            'new_password' => 'required|min:6',
+            'confirm_password' => 'required|same:new_password',
+        ]);
+
+        $admin = Auth::user(); // logged in admin/user
+        if (!Hash::check($request->old_password, $admin->password)) {
+            return back()->withErrors([
+                'old_password' => 'Old password is incorrect'
+            ]);
+        }else if(Hash::check($request->old_password, $admin->password)) {
+            return back()->withErrors([
+                'new_password' => 'New Password is not equal to he old password'
+            ]);
+        }
+        $admin->password = Hash::make($request->new_password);
+        $admin->save();
+
+        return back()->with('success', 'Password changed successfully');
     }
 
 

@@ -82,9 +82,18 @@
                 </div>
                   <!--end::Body-->
                   <!--begin::Footer-->
-                  <div class="card-footer">
+                  <!-- <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
-                  </div>
+                  </div> -->
+                  <div class="card-footer d-flex justify-content-center gap-3">
+                    <button type="submit" class="btn btn-primary">
+                        Submit
+                    </button>
+
+                    <a href="{{ route('admin.change.password') }}" class="btn btn-warning">
+                        Change Password
+                    </a>
+                </div>
                   <!--end::Footer-->
                 </form>
 
