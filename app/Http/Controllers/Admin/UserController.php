@@ -262,8 +262,70 @@ class UserController extends Controller
             $user = User::findOrFail($request->id);
             return view('admin.users.showphotos',compact('user'));
     }
+    public function getUsersWithImageswithId(Request $request, $id)
+    {
+        $users = User::with('photos.uploadTrack')
+            ->when($request->name, function ($query) use ($request) {
+                return $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->when($id, function ($query) use ($id) {
+                return $query->where('id', $id);
+            })
+            ->get();
 
-    public function getUsersWithImageswithId(Request $request,$id)
+        $data = [];
+        $serialNumber = 1;
+
+        foreach ($users as $user) {
+            foreach ($user->photos as $photo) {
+
+                $track = $photo->uploadTrack;
+
+                $data[] = [
+                    'serial_number' => $serialNumber++,
+                    'photo_id' => $photo->id,
+                    'user_email' => $user->email,
+                    'view_count' => $photo->view_count ?? 0,
+                    'image' => $photo->photo ? asset('storage/' . $photo->photo) : '',
+                    'random_id' => $photo->random_id,
+                    'ip_address' => $track->ip_address ?? '',
+                    'city' => $track->city ?? '',
+                    'country' => $track->country ?? '',
+                    'latitude' => $track->latitude ?? '',
+                    'longitude' => $track->longitude ?? '',
+                    'zip' => $track->zip ?? '',
+                    'device_type' => $track->device_type ?? '',
+                    'isp' => $track->isp ?? '',
+                    'upload_time' => $track ? $track->created_at->format('Y-m-d H:i:s') : '',
+                ];
+            }
+        }
+
+       return DataTables::of($data)
+            ->addColumn('images', function ($row) {
+                return $row['image']
+                    ? '<img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">'
+                    : 'No Image';
+            })
+            ->addColumn('view_count', function ($row) {
+                return '<span class="badge bg-info" style="
+                        font-size: 1.2rem; 
+                        padding: 0.6em 1em; 
+                        text-decoration: none; 
+                        border-radius: 0.5rem;
+                        display: inline-block;
+                    "><a href="'.route('admin.photos.show',  $row['photo_id']).'" class="badge bg-info">
+                    '.$row['view_count'].'
+                    </a></span>';
+            })
+            ->addColumn('action', function ($row) {
+                return '<button class="btn btn-sm btn-primary viewTrackBtn">View Track</button>';
+            })
+            ->rawColumns(['images', 'action', 'view_count']) // 👈 FIX HERE
+            ->make(true);
+        }
+
+    public function getUsersWithImageswithIdbkbysamdeep(Request $request,$id)
     {
         $users = User::with('photos.uploadTrack') // Load the relationships
             ->when($request->name, function ($query) use ($request) {

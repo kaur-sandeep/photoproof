@@ -168,19 +168,32 @@ $(document).ready(function() {
                 }
             },
             {data:'view_count', name:'view_count'},
-            {
-                data: 'upload_track_details',
-                name: 'upload_track_details',
-                // orderable: false,
-                // searchable: false,
-                render: function(data, type, row) {
-                    if (data) {
-                        return data;
-                    } else {
-                        return '<span>No upload data available</span>';
-                    }
-                }
+           {
+            data: null,
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            render: function(data, type, row) {
+                return `
+                    <button class="btn btn-info btn-sm viewTrackBtn">
+                        View
+                    </button>
+                `;
             }
+        }
+            // {
+            //     data: 'upload_track_details',
+            //     name: 'upload_track_details',
+            //     // orderable: false,
+            //     // searchable: false,
+            //     render: function(data, type, row) {
+            //         if (data) {
+            //             return data;
+            //         } else {
+            //             return '<span>No upload data available</span>';
+            //         }
+            //     }
+            // }
             // ,
             // {
             //     data: 'actions',
@@ -196,6 +209,78 @@ $(document).ready(function() {
        $('#search-name').on('keyup', function() {
         table.draw();
     });
+var globalMap = null;
+$(document).on('click', '.viewTrackBtn', function () {
+
+    var table = $('#photodataTableList').DataTable();
+
+    // Get correct row (works even in responsive mode)
+    var tr = $(this).closest('tr');
+
+    if (tr.hasClass('child')) {
+        tr = tr.prev(); // if responsive child row
+    }
+
+    var rowData = table.row(tr).data();
+
+    if (!rowData) {
+        console.log("Row data not found");
+        return;
+    }
+
+    // Build HTML
+    var html = `
+        <div>
+            <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
+            <b>Email:</b> ${rowData.user_email ?? ''}<br>
+            <b>IP Address:</b> ${rowData.ip_address ?? ''}<br>
+            <b>City:</b> ${rowData.city ?? ''}<br>
+            <b>Country:</b> ${rowData.country ?? ''}<br>
+            <b>Zip:</b> ${rowData.zip ?? ''}<br>
+            <b>Device:</b> ${rowData.device_type ?? ''}<br>
+            <b>ISP:</b> ${rowData.isp ?? ''}<br>
+            <b>Upload Time:</b> ${rowData.upload_time ?? ''}<br>
+        </div>
+        <hr>
+        <div id="dynamicMap" style="height:350px;"></div>
+    `;
+
+    $('#commonheader').html('Track Details');
+    $('#commonModalBody').html(html);
+
+    var modal = new bootstrap.Modal(document.getElementById('commonModal'));
+    modal.show();
+
+    setTimeout(function () {
+
+        if (globalMap !== null) {
+            globalMap.remove();
+            globalMap = null;
+        }
+
+        if (rowData.latitude && rowData.longitude) {
+
+            globalMap = L.map('dynamicMap').setView(
+                [parseFloat(rowData.latitude), parseFloat(rowData.longitude)],
+                13
+            );
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
+                .addTo(globalMap);
+
+            L.marker([
+                parseFloat(rowData.latitude),
+                parseFloat(rowData.longitude)
+            ]).addTo(globalMap);
+
+        } else {
+            $('#dynamicMap').html('<p style="color:red;">Location not available</p>');
+        }
+
+    }, 500);
+
+});
+
 
 
 });
@@ -236,5 +321,9 @@ $(document).ready(function() {
 });
 
 
+$(document).on('click', '.showMap', function () {
+
+
+});
 
 });

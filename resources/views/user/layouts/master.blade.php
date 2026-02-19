@@ -18,6 +18,7 @@
 
 </div>
 
+
 @include('user.partials.scripts')
 
 </body>

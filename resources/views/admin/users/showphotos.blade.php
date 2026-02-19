@@ -13,9 +13,9 @@
                 <thead>
                     <tr>
                         <th>S.No</th>
-                        <th>Images/Viewed/Verified</th>
-                        <th>View</th>
-                        <th>Upload Track Details</th>
+                        <th>Images</th>
+                        <th>Viewed/Verified</th>
+                        <th>Track Details</th>
                     </tr>
                 </thead>
             </table>

@@ -8,3 +8,6 @@
 .dataTables_wrapper .dataTables_paginate {
     padding-right: 15px;
 }
+#photodataTableList_paginate{
+    float:right;
+}
