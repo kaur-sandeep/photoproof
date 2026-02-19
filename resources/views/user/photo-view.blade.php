@@ -162,56 +162,6 @@
                 @endphp	
               
 				<ul class="ip-details">
-                    
-
-
-
-                 <!-- 
-     
-
-    @if(!empty($track->browser) && $track->browser != 0)
-        <p><strong>Browser:</strong> {{ $track->browser }}</p>
-    @endif
-
-    @if(!empty($track->platform) && $track->platform != 0)
-        <p><strong>Platform:</strong> {{ $track->platform }}</p>
-    @endif
-
-    @if(!empty($track->device) && $track->device != 0)
-        <p><strong>Device:</strong> {{ $track->device }}</p>
-    @endif
-
-    @if(!empty($track->device_type) && $track->device_type != 0)
-        <p><strong>Device Type:</strong> {{ $track->device_type }}</p>
-    @endif
-
-    @if(!empty($track->country))
-        <p><strong>Country:</strong> {{ $track->country }}</p>
-    @endif
-
-    @if(!empty($track->region_name))
-        <p><strong>Region:</strong> {{ $track->region_name }}</p>
-    @endif
-
-    @if(!empty($track->city))
-        <p><strong>City:</strong> {{ $track->city }}</p>
-    @endif
-
-    @if(!empty($track->zip))
-        <p><strong>Zip:</strong> {{ $track->zip }}</p>
-    @endif
-
-    @if(!empty($track->timezone))
-        <p><strong>Timezone:</strong> {{ $track->timezone }}</p>
-    @endif
-
-    @if(!empty($track->isp))
-        <p><strong>ISP:</strong> {{ $track->isp }}</p>
-    @endif -->
-
-
-
-
 					<li><strong>Name:</strong>{{ $photo->name }}</li>
 
 					<li><strong>Photo ID:</strong> {{ $photo->random_id }}</li>
@@ -250,8 +200,11 @@
                     @if(!empty($track->isp) && $track->isp != 0)					
 					<li><strong>ISP:</strong> {{ $track->isp }}</li> 
                      @endif
+
 					<li class="map">
+
 					<iframe src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d2625.037070039693!2d2.348825076727974!3d48.85750350076864!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zNDjCsDUxJzI3LjAiTiAywrAyMScwNS4wIkU!5e0!3m2!1sen!2sin!4v1771409809149!5m2!1sen!2sin" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                        
 					
 					</li>
 				</ul>
