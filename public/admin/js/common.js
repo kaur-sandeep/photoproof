@@ -39,9 +39,10 @@ $(document).ready(function() {
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             //{ data: 'phone_number', name: 'phone_number' },
-            { data: 'photo_count', name: 'photo_count', orderable: false, searchable: false },
             { data: 'device', name: 'device'},
             { data: 'created_at', name: 'created_at'},
+            { data: 'photo_count', name: 'photo_count', orderable: false, searchable: false },
+           
             // { data: 'status', name: 'status', orderable: false, searchable: false },
             // { data: 'actions', name: 'actions', orderable: false, searchable: false }
         ]
@@ -100,9 +101,9 @@ $(document).ready(function() {
             { data: 'name', name: 'name' },
             { data: 'location', name: 'location' },
             { data: 'user_name', name: 'user_name' },
+            { data:'created_at', name:'created_at'},
             { data: 'view_count', name: 'view_count', orderable: false, searchable: false },
             { data:'status', name:'status'},
-            { data:'created_at', name:'created_at'},
             { data: 'actions', name: 'actions', orderable: false, searchable: false }
             
         ]
