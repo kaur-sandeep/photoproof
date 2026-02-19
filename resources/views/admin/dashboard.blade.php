@@ -59,7 +59,7 @@
             <div class="card text-bg-success">
                  <a href="{{ route('admin.photos') }}" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
-                    <h5>Photos Verified / Viewed</h5>
+                    <h5>Photos Viewed</h5>
                     <h3>{{$totalViews}}</h3>
                 </div>
                 </a>
