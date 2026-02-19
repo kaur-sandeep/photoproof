@@ -13,7 +13,6 @@ Route::prefix('admin')->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
 
     Route::middleware('auth:admin')->group(function () {
-
         Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/profile', [LoginController::class, 'profile'])->name('admin.profile');
         Route::post('/profile/update', [LoginController::class, 'profileUpdate'])->name('admin.profile.update');
@@ -56,5 +55,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/', [PhotoController::class, 'searchForm']);
     Route::post('/photo-search', [PhotoController::class, 'search'])->name('photo.search');
     Route::get('/photo/{random_id}', [PhotoController::class, 'show'])->name('photo.show');
+     Route::get('/privacy-policy', [PhotoController::class, 'privacy_policy'])->name('privacy-policy');
+     Route::get('/terms-conditions', [PhotoController::class, 'terms_conditions'])->name('terms-conditions');
 
 

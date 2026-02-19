@@ -39,7 +39,7 @@ class LoginController extends Controller
         $admin = Admin::where('email', $request->email)->first();
 
         if (!$admin) {
-            return back()->withInput()->with('error', 'Email not exist.');
+            return back()->withInput()->with('error', 'The email address does not exist.');
         }
 
         // ✅ Step 2: Check password

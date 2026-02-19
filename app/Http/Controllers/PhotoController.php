@@ -112,4 +112,14 @@ class PhotoController extends Controller
 
         return null;
     }
+    public function privacy_policy()
+    {
+        return view('user.privacy-policy');
+    }
+
+    public function terms_conditions()
+    {
+        return view('user.terms-conditions');
+    }
+
 }
