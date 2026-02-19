@@ -20,9 +20,9 @@
                         <th>Name</th>
                         <th>Location</th>
                         <th>User Email</th>
+                        <th>Created On</th>
                         <th>View Count</th>
                         <th>Status</th>
-                        <th>Created On</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

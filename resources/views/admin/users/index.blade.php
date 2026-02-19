@@ -20,9 +20,10 @@
                         <th>Name</th>
                         <th>Email</th>
                         <!-- <th>Phone</th> -->
-                        <th>Photos</th>
                         <th>Device</th>
                         <th>Registered On</th>
+                        <th>Photos</th>
+                      
                         <!-- <th>Status</th>
                         <th>Actions</th> -->
                     </tr>
