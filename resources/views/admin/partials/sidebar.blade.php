@@ -52,6 +52,19 @@
                 </li>
 
             </ul>
+
+            
+              <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.photos') }}"
+                       class="nav-link text-white">
+                        <i class="bi bi-gear-fill me-2"></i>
+                        Settings
+                    </a>
+                </li>
+
+            </ul>
         </nav>
 
     </div>
