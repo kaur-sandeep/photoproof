@@ -168,7 +168,7 @@ class AuthController extends Controller
     public function uploadPhoto(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'display_name' => 'required|string|max:255',
+            // 'display_name' => 'required|string|max:255',
             'photo' => 'required|image|mimes:jpg,jpeg,png|max:15360', // max 5MB
             'location' => 'nullable|string|max:255'
         ]);
@@ -233,6 +233,13 @@ class AuthController extends Controller
             'android_sdk' => $request->android_sdk,
             'ios_system_version' => $request->ios_system_version,
             'ios_identifier' => $request->ios_identifier,
+             'country' => $request->country,
+            'country_code' => $request->country_code,
+            'region' => $request->region,
+            'region_name' => $request->region_name,
+            'city' => $request->city,
+            'zip' => $request->zip,
+            'timezone' => $request->timezone,
         ]);
         $ip = $request->ip();
          $ip ='202.164.57.197';
