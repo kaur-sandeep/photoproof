@@ -22,7 +22,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title"><b>View/Verified Photo List({{$count}})</b></h3>
+            <h3 class="card-title"><b>Viewed/Verified Photo List({{$count}})</b></h3>
         </div>
 
         <div class="card-body">
@@ -49,6 +49,7 @@
                         <!-- <th>ISP</th> -->
                         <th>Org</th>
                         <th>As Name</th>
+                        <th>Viewed On</th>
                     </tr>
                 </thead>
             </table>

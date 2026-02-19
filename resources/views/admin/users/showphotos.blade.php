@@ -6,7 +6,17 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title">{{$user->email}}</h3>
+            <h5 class="d-flex align-items-center gap-3 mb-0">
+                <img src="{{ asset('storage/profile/' . $user->profile_image) }}"
+                    width="45"
+                    height="45"
+                    class="rounded-circle shadow-sm">
+
+                <div>
+                    <div class="fw-semibold">{{ $user->name }}</div>
+                    <small class="text-muted">{{ $user->email }}</small>
+                </div>
+            </h5>
         </div>
         <div class="card-body">
             <table id="photodataTableList" class="table table-bordered table-striped">

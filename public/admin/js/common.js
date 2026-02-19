@@ -102,6 +102,7 @@ $(document).ready(function() {
             { data: 'user_name', name: 'user_name' },
             { data: 'view_count', name: 'view_count', orderable: false, searchable: false },
             { data:'status', name:'status'},
+            { data:'created_at', name:'created_at'},
             { data: 'actions', name: 'actions', orderable: false, searchable: false }
             
         ]
@@ -314,6 +315,7 @@ $(document).ready(function() {
             // { data: 'isp', name: 'isp'},
             { data: 'org', name: 'org'},
             { data: 'as_name', name: 'as_name'},
+            { data: 'created_at', name: 'created_at'},
         ]
     });
 

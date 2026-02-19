@@ -22,6 +22,7 @@
                         <th>User Email</th>
                         <th>View Count</th>
                         <th>Status</th>
+                        <th>Created On</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

@@ -22,7 +22,7 @@
                         <!-- <th>Phone</th> -->
                         <th>Photos</th>
                         <th>Device</th>
-                        <th>Registered on</th>
+                        <th>Registered On</th>
                         <!-- <th>Status</th>
                         <th>Actions</th> -->
                     </tr>

@@ -45,6 +45,9 @@ return DataTables::of($photos)
     ->addColumn('user_name', function ($photo) {
         return $photo->user ? $photo->user->email : '--';
     })
+    ->addColumn('created_at', function ($photo) {
+       return $photo->created_at ?? '-';
+    })
 
     // ->addColumn('view_count', function ($photo) {
     //     $count=  $photo->view_count ?? 0;
@@ -173,6 +176,9 @@ $count=  $photo->view_count ?? 0;
 
         ->addColumn('as_name', function ($photoViews) {
              return $photoViews->as_name ?? '-';
+        })
+        ->addColumn('created_at', function ($photoViews) {
+             return $photoViews->created_at ?? '-';
         })
         ->rawColumns(['photoViews'])
         ->make(true);

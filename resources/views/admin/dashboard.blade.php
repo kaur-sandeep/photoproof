@@ -57,7 +57,7 @@
 
         <div class="col-lg-3 col-6">
             <div class="card text-bg-success">
-                 <a href="#" style="text-decoration: none; color: inherit;">
+                 <a href="{{ route('admin.photos') }}" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Photos Verified / Viewed</h5>
                     <h3>{{$totalViews}}</h3>
