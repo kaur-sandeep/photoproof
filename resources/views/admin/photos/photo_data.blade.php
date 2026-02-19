@@ -33,20 +33,20 @@
                         <th>IP Address</th>
                         <th>Browser</th>
                         <th>Platform</th>
-                        <th>Device</th>
+                        <!-- <th>Device</th> -->
                         <th>Device Type</th>
-                        <th>Referer</th>
+                        <!-- <th>Referer</th> -->
                         <th>User Agent</th>
                         <th>Country</th>
-                        <th>Country Code</th>
-                        <th>Region </th>
+                        <!-- <th>Country Code</th>
+                        <th>Region </th> -->
                         <th>Region Name</th>
                         <th>City</th>
-                        <th>Zip</th>
+                        <!-- <th>Zip</th> -->
                         <th>Latitude</th>
                         <th>Longitude</th>
                         <th>Timezone</th>
-                        <th>ISP</th>
+                        <!-- <th>ISP</th> -->
                         <th>Org</th>
                         <th>As Name</th>
                     </tr>
