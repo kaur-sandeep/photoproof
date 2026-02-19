@@ -169,7 +169,7 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'display_name' => 'required|string|max:255',
-            'photo' => 'required|image|mimes:jpg,jpeg,png|max:5120', // max 5MB
+            'photo' => 'required|image|mimes:jpg,jpeg,png|max:15360', // max 5MB
             'location' => 'nullable|string|max:255'
         ]);
 
@@ -235,7 +235,8 @@ class AuthController extends Controller
             'ios_identifier' => $request->ios_identifier,
         ]);
         $ip = $request->ip();
-        $ip ='202.164.57.197';
+         $ip ='202.164.57.197';
+        // $ip ='192.168.0.90';
         $userAgent = $request->header('User-Agent');
         $referer = $request->headers->get('referer');
         $agent = new Agent();
@@ -245,7 +246,7 @@ class AuthController extends Controller
         $deviceType = $agent->isMobile() ? 'Mobile' : 'Desktop';
 
         $location = $this->getLocationFromIp($ip);
-
+      
         PhotoUploadTrack::create([
             'photo_detail_id' => $photo->id,
             'user_id' => $user->id,
@@ -447,7 +448,7 @@ public function updateProfile(Request $request)
 
     private function getLocationFromIp($ip)
     {
-        if ($ip == '127.0.0.1' || str_starts_with($ip, '192.168')) {
+        if ($ip == '127.0.0.1') {
             return null;
         }
 
@@ -458,7 +459,6 @@ public function updateProfile(Request $request)
             if ($response->successful()) {
 
                 $data = $response->json();
-
                 if ($data['status'] == 'success') {
                     return $data; // return full array
                 }

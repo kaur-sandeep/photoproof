@@ -7,7 +7,6 @@
       </div>
       <div class="modal-body" id="commonModalBody">
       </div>
-
     </div>
   </div>
 </div>
