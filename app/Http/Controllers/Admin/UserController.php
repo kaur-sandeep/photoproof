@@ -39,11 +39,20 @@ class UserController extends Controller
     $users = User::withCount('photos')->get();
     return DataTables::of($users)
         ->addIndexColumn()
+        // ->addColumn('profile_image', function ($user) {
+        //     return $user->profile_image
+        //         ? '<img src="'.asset('storage/profile/'.$user->profile_image).'" width="40" height="40" class="rounded-circle">'
+        //         : '<span class="text-muted">No Image</span>';
+        // })
         ->addColumn('profile_image', function ($user) {
-            return $user->profile_image
-                ? '<img src="'.asset('storage/profile/'.$user->profile_image).'" width="40" height="40" class="rounded-circle">'
-                : '<span class="text-muted">No Image</span>';
-        })
+                $default = asset('storage/profile/user.png');
+
+                return '<img src="'
+                    . ($user->profile_image 
+                        ? asset('storage/profile/' . $user->profile_image) 
+                        : $default)
+                    . '" width="40" height="40" class="rounded-circle">';
+            })
        ->addColumn('device', function ($user) {
             return $user->device ?? '--'; // if device is null, show --
         })
