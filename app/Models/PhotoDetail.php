@@ -28,6 +28,12 @@ class PhotoDetail extends Model
         'android_sdk',
         'ios_system_version',
         'ios_identifier',
+        'country',
+        'country_code',
+        'region',
+        'region_name',
+        'city',
+        'zip',
     ];
 
 

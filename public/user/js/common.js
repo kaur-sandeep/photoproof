@@ -71,3 +71,93 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
 });
+ const items = Array.from(document.querySelectorAll('#galleryGrid .gallery-item'));
+
+         let current = 0;
+         
+         // Build lightbox thumbnail strip by reading each HTML item's <img>
+         const thumbsEl = document.getElementById('lbThumbs');
+         items.forEach(function(item, i) {
+           const img   = item.querySelector('img');
+           const thumb = document.createElement('img');
+           thumb.className    = 'lb-thumb';
+           thumb.src          = img.src;
+           thumb.alt          = img.alt;
+           thumb.dataset.index = i;
+           thumbsEl.appendChild(thumb);
+         });
+         
+         function openLightbox(index) {
+           current = index;
+           document.getElementById('lightbox').classList.add('active');
+           document.body.style.overflow = 'hidden';
+           updateLightbox();
+         }
+         
+         function closeLightbox() {
+           document.getElementById('lightbox').classList.remove('active');
+           document.body.style.overflow = '';
+         }
+         
+         function updateLightbox() {
+           var item  = items[current];
+           var img   = item.querySelector('img');
+           var title = item.dataset.title || img.alt;
+         
+           // Swap src to re-trigger CSS animation
+           var lbImg = document.getElementById('lbImg');
+           lbImg.src = '';
+           lbImg.src = img.src;
+           lbImg.alt = title;
+         
+           document.getElementById('lbTitle').textContent   = title;
+           document.getElementById('lbCounter').textContent = (current + 1) + ' / ' + items.length;
+         
+           // Sync thumbnails
+           document.querySelectorAll('.lb-thumb').forEach(function(el, i) {
+             el.classList.toggle('active', i === current);
+           });
+         
+           // Scroll active thumb into view
+           var activeThumb = thumbsEl.querySelector('.lb-thumb.active');
+           if (activeThumb) {
+             activeThumb.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+           }
+         }
+         
+         // Click on a gallery item → open lightbox
+         document.getElementById('galleryGrid').addEventListener('click', function(e) {
+           var item = e.target.closest('.gallery-item');
+           if (item) openLightbox(items.indexOf(item));
+         });
+         
+         document.getElementById('lbClose').addEventListener('click', closeLightbox);
+         
+         document.getElementById('lbPrev').addEventListener('click', function() {
+           current = (current - 1 + items.length) % items.length;
+           updateLightbox();
+         });
+         
+         document.getElementById('lbNext').addEventListener('click', function() {
+           current = (current + 1) % items.length;
+           updateLightbox();
+         });
+         
+         // Click a thumbnail
+         thumbsEl.addEventListener('click', function(e) {
+           var thumb = e.target.closest('.lb-thumb');
+           if (thumb) { current = parseInt(thumb.dataset.index); updateLightbox(); }
+         });
+         
+         // Keyboard navigation
+         document.addEventListener('keydown', function(e) {
+           if (!document.getElementById('lightbox').classList.contains('active')) return;
+           if (e.key === 'ArrowRight') { current = (current + 1) % items.length; updateLightbox(); }
+           if (e.key === 'ArrowLeft')  { current = (current - 1 + items.length) % items.length; updateLightbox(); }
+           if (e.key === 'Escape') closeLightbox();
+         });
+         
+         // Click backdrop to close
+         document.getElementById('lbMain').addEventListener('click', function(e) {
+           if (e.target === this) closeLightbox();
+         });

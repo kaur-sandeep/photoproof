@@ -28,7 +28,7 @@
 
 </div>
 
-@include('admin.partials.popup')
+@include('user.partials.popup')
 @include('user.partials.scripts')
 
 </body>

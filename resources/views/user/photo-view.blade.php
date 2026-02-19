@@ -151,10 +151,29 @@
       <div class="container-fluid px-5">
          <div class="row d-flex align-items-center">			
 			<div class="col-sm-12 col-lg-9">
-				<div class="photo_bx">
-					<img src="{{ $photo->photo_url }}" alt="photo"/>
-				</div>			
+                    <div class="photo_bx">
+                        <div class="gallery-grid" id="galleryGrid">
+                           <div class="gallery-item"  data-category="Landscape">
+                              <img src="{{ $photo->photo_url }}"  loading="lazy">					
+                              <div class="expand-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="15 3 21 3 21 9"></polyline>
+                                <polyline points="9 21 3 21 3 15"></polyline>
+                                <line x1="21" y1="3" x2="14" y2="10"></line>
+                                <line x1="3" y1="21" x2="10" y2="14"></line>
+                                </svg>
+                                </div>
+                           </div>
+                        </div>
+                     </div>
+                   <!-- <div class="mt-3">
+                    <a href="{{ $photo->photo_url }}" 
+                    download 
+                    class="btn btn-primary">
+                    Download Image
+                    </a>
+                </div>		 -->
 			</div>
+             
 			<div class="col-sm-12 col-lg-3">		
                 @if($photo->uploadTrack)	
                   @php
@@ -162,28 +181,60 @@
                 @endphp	
               
 				<ul class="ip-details">
-					<li><strong>Name:</strong>{{ $photo->name }}</li>
+					<!-- <li><strong>Name:</strong>{{ $photo->name }}</li> -->
 
 					<li><strong>Photo ID:</strong> {{ $photo->random_id }}</li>
-					<li><strong>Date & Time:</strong> Feb 17, 2027  04:57:14 PM </li>
-                    @if(!empty($track->country))
-					    <li><strong>Country:</strong> {{$track->country}}</li>
+				
+                      @if(!empty($photo->word_api_date_time))
+					    <li><strong>Date & Time:</strong> {{$photo->word_api_date_time}}</li>
                     @endif
-                    @if(!empty($track->region_name))
-					<li><strong>Region:</strong>{{ $track->region_name }}</li>
+                     @if(!empty($photo->location))
+					    <li><strong>Location:</strong> {{$photo->location}}</li>
                     @endif
-                     @if(!empty($track->city))
-					<li><strong>City:</strong> {{ $track->city }}</li>
-                     @endif
-                    @if(!empty($track->zip))
-					    <li><strong>Zip:</strong>  {{ $track->zip }}</li>
+
+                    @if(isset($photo->country, $photo->country))
+                        <li><strong>Country :</strong>  {{$photo->country }}  </li>
+                    @elseif(isset($track->country, $track->country))
+                         <li><strong>Country:</strong> {{$track->country}}</li>
                     @endif
-                     @if(!empty($track->timezone))
-					<li><strong>Timezone:</strong> {{ $track->timezone }}</li>
-                      @endif
-                    @if(!empty($track->latitude) && !empty($track->longitude))
-					        <li><strong>Latitude & Longitude:</strong> {{ $track->latitude }}° N, {{ $track->longitude }}° E</li>	
-                     @endif
+
+                     @if(isset($photo->region_name, $photo->region_name))
+                        <li><strong>Region : </strong>  {{$photo->region_name }}  </li>
+                    @elseif(isset($track->region_name, $track->region_name))
+                         <li><strong>Region:</strong> {{$track->region_name}}</li>
+                    @endif
+
+                    @if(isset($photo->city, $photo->city))
+                        <li><strong>City: </strong>  {{$photo->city }}  </li>
+                    @elseif(isset($track->city, $track->city))
+                         <li><strong>City:</strong> {{$track->city}}</li>
+                    @endif
+
+                     @if(isset($photo->zip, $photo->zip))
+                        <li><strong>Zip: </strong>  {{$photo->zip }}  </li>
+                    @elseif(isset($track->zip, $track->zip))
+                         <li><strong>Zip:</strong> {{$track->zip}}</li>
+                    @endif
+
+                      @if(isset($photo->timezone, $photo->timezone))
+                        <li><strong>Timezone: </strong>  {{$photo->timezone }}  </li>
+                    @elseif(isset($track->timezone, $track->timezone))
+                         <li><strong>Timezone:</strong> {{$track->timezone}}</li>
+                    @endif
+                   
+
+                   @if(isset($photo->latitude, $photo->longitude))
+                        <li>
+                            <strong>Latitude & Longitude:</strong> 
+                             {{ number_format($photo->latitude, 8) }}° N, 
+                            {{ number_format($photo->longitude, 8) }}° E
+                        </li>
+                    @elseif(isset($track->latitude, $track->longitude))
+                        <li>
+                            <strong>Latitude & Longitude:</strong> 
+                            {{ $track->latitude }}° N, {{ $track->longitude }}° E
+                        </li>
+                    @endif
                     @if(!empty($track->ip_address) && $track->ip_address != 0)				
 				    <li><strong>IP Address:</strong> {{ $track->ip_address }}</li>
                     @endif
@@ -197,15 +248,47 @@
                     @if(!empty($photo->device_model) && $photo->device_model != 0)	
 					    <li><strong>Device Model:</strong> {{ $photo->device_model }}</li>	
                     @endif  
-                    @if(!empty($track->isp) && $track->isp != 0)					
+
+                      @if(!empty($photo->device_name ) && $photo->device_name != 0)					
+					<li><strong>Device Name:</strong> {{ $photo->device_name }}</li> 
+                     @endif
+
+                    @if(!empty($photo->device_manufacturer ) && $photo->device_manufacturer != 0)					
+					<li><strong>Device Manufacturer:</strong> {{ $photo->device_manufacturer }}</li> 
+                     @endif
+
+                      @if(!empty($photo->android_version ) && $photo->android_version != 0)					
+					<li><strong>Android Version:</strong> {{ $photo->android_version }}</li> 
+                     @endif
+
+
+                      @if(!empty($photo->android_sdk) && $photo->android_sdk != 0)					
+					<li><strong>Android Sdk :</strong> {{ $photo->android_sdk }}</li> 
+                     @endif
+
+
+                      @if(!empty($photo->ios_system_version ) && $photo->ios_system_version != 0)					
+					<li><strong>IOS System Version:</strong> {{ $photo->ios_system_version }}</li> 
+                     @endif
+
+                      @if(!empty($photo->ios_identifier ) && $photo->ios_identifier != 0)					
+					<li><strong>IOS Identifier:</strong> {{ $photo->ios_identifier }}</li> 
+                     @endif
+
+                      @if(!empty($track->isp) && $track->isp != 0)					
 					<li><strong>ISP:</strong> {{ $track->isp }}</li> 
                      @endif
 
-					@if(!empty($track->latitude) && !empty($track->longitude))
-                    <li class="map">
+				</ul>
+                    @php
+                        $lat = $photo->latitude ?? $track->latitude ?? null;
+                        $lng = $photo->longitude ?? $track->longitude ?? null;
+                    @endphp
+                		@if(!empty($lat) && !empty($lng))
+                    <div class="map">
                        <div class="map-preview" 
-                            data-lat="{{ $track->latitude }}" 
-                            data-lng="{{ $track->longitude }}"
+                            data-lat="{{ $lat }}" 
+                            data-lng="{{ $lng }}"
                             style="position:relative; cursor:pointer;">
 
                             <iframe 
@@ -213,7 +296,7 @@
                                 height="250" 
                                 style="border:0;"
                                 loading="lazy"
-                                src="https://maps.google.com/maps?q={{ $track->latitude }},{{ $track->longitude }}&z=15&output=embed">
+                                src="https://maps.google.com/maps?q={{ $lat }},{{ $lng }}&z=15&output=embed">
                             </iframe>
 
                             <div style="
@@ -225,9 +308,8 @@
                                 z-index:10;">
                             </div>
                         </div>
-                    </li>
+                    </div>
                 @endif
-				</ul>
                 @else
                     <p>No upload tracking data found.</p>
                 @endif
@@ -238,7 +320,19 @@
     </section>
 
 
-
+<div id="lightbox">
+        <div class="lb-topbar">
+            <div class="lb-counter" id="lbCounter"></div>
+            <div class="lb-title"   id="lbTitle"></div>
+            <button class="lb-close" id="lbClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="lb-main" id="lbMain">
+            <button class="lb-arrow prev" id="lbPrev"><i class="fas fa-chevron-left"></i></button>
+            <img id="lbImg" src="" alt="">
+            <button class="lb-arrow next" id="lbNext"><i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div class="lb-thumbs" id="lbThumbs"></div>
+        </div>
 
 
 
