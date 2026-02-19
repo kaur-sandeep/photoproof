@@ -2,6 +2,7 @@
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\Admin\PhotosController;
 Route::get('/', function () {
@@ -16,6 +17,19 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/profile', [LoginController::class, 'profile'])->name('admin.profile');
         Route::post('/profile/update', [LoginController::class, 'profileUpdate'])->name('admin.profile.update');
+        
+        Route::get('/admins', [AdminController::class, 'index'])->name('admin.users.data');
+        Route::get('/users/data/list', [AdminController::class, 'list'])->name('admin.users.data.list');
+        Route::get('/user/create', [AdminController::class, 'create'])->name('admin.users.create');
+        Route::post('/users/add', [AdminController::class, 'addUser'])->name('admin.store.users');
+        
+        Route::get('/update/users/status', [AdminController::class, 'updateStatus'])->name('admin.update.users.status');
+        Route::get('/edit/users/{userId}', [AdminController::class, 'editUsers'])->name('admin.users.edit.data');
+        Route::post('/update/users/{userId}', [AdminController::class, 'updateUsers'])->name('admin.update.users.data');
+        
+        Route::post('/users/update/{userId}', [UserController::class, 'update'])->name('admin.users.update');
+        
+        
         Route::get('/users', [UserController::class, 'index'])->name('admin.users');
         // Route::get('/users/list', [UserController::class, 'list'])->name('admin.users.list');
         Route::post('/users/update-status', [UserController::class, 'admin.user.updateStatus']);

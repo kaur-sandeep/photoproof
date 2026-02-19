@@ -3,38 +3,26 @@
 @section('title', 'Users List')
 
 @section('content')
-<style>
-    .pull-right{
-        float:right;
-    }
-    </style>
+
 <div class="container-fluid">
 
     <div class="card">
         <div class="card-header">
             <h3 class="card-title"><b>Users List</b></h3>
+             <a href="{{ route('admin.users.create') }}" class="btn btn-primary mb-3" style="float:right">Add User</a>
         </div>
-
         <div class="card-body">
-            <table id="userTableList" class="table table-bordered table-striped">
+            <table id="userList" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
                         <th>Profile</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <!-- <th>Location</th>
-                        <th>Country</th>
-                        <th>State</th>
-                        <th>City</th>
-                        <th>Zip</th> -->
-                        <!-- <th>Phone</th> -->
-                        <th>Device</th>
+                        <th>Phone</th>
                         <th>Registered On</th>
-                        <th>Photos</th>
-                      
-                        <!-- <th>Status</th>
-                        <th>Actions</th> -->
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
             </table>

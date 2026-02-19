@@ -45,7 +45,7 @@ class UserController extends Controller
         //         : '<span class="text-muted">No Image</span>';
         // })
         ->addColumn('profile_image', function ($user) {
-                $default = asset('storage/profile/user.png');
+                $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
 
                 return '<img src="'
                     . ($user->profile_image 

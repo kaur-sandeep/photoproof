@@ -18,17 +18,18 @@
                 </li>
 
             </ul>
-             <!-- <ul class="nav flex-column">
-
+            
+            <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="{{ route('admin.users') }}"
+                    <a href="{{ route('admin.users.data') }}"
                        class="nav-link text-white">
                         <i class="bi bi-speedometer2 me-2"></i>
-                        Users
+                        Admin Users
                     </a>
                 </li>
 
-            </ul> -->
+            </ul>
+            
             <ul class="nav flex-column">
 
                 <li class="nav-item">
