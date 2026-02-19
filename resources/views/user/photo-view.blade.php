@@ -202,19 +202,31 @@
                      @endif
 
 					@if(!empty($track->latitude) && !empty($track->longitude))
-                        <li class="map">
-                                <iframe 
-                                    width="100%" 
-                                    height="250" 
-                                    style="border:0;"
-                                    loading="lazy"
-                                    allowfullscreen
-                                    referrerpolicy="no-referrer-when-downgrade"
-                                    src="https://maps.google.com/maps?q={{ $track->latitude }},{{ $track->longitude }}&z=15&output=embed">
-                                </iframe>
-                            </li>
-                        @endif
-					
+                    <li class="map">
+                       <div class="map-preview" 
+                            data-lat="{{ $track->latitude }}" 
+                            data-lng="{{ $track->longitude }}"
+                            style="position:relative; cursor:pointer;">
+
+                            <iframe 
+                                width="100%" 
+                                height="250" 
+                                style="border:0;"
+                                loading="lazy"
+                                src="https://maps.google.com/maps?q={{ $track->latitude }},{{ $track->longitude }}&z=15&output=embed">
+                            </iframe>
+
+                            <div style="
+                                position:absolute;
+                                top:0;
+                                left:0;
+                                width:100%;
+                                height:100%;
+                                z-index:10;">
+                            </div>
+                        </div>
+                    </li>
+                @endif
 				</ul>
                 @else
                     <p>No upload tracking data found.</p>

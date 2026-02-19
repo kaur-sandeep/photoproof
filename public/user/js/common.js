@@ -1,42 +1,73 @@
-document.getElementById('resetForm').addEventListener('submit', function(e) {
+document.addEventListener("DOMContentLoaded", function () {
 
-    let password = document.getElementById('password').value;
-    let confirmPassword = document.getElementById('confirmPassword').value;
+    const form = document.getElementById('resetForm');
 
-    let passwordError = document.getElementById('passwordError');
-    let confirmPasswordError = document.getElementById('confirmPasswordError');
+    if (form) {
 
-    // Clear old errors
-    passwordError.innerText = '';
-    confirmPasswordError.innerText = '';
+        form.addEventListener('submit', function (e) {
 
-    let isValid = true;
+            let password = document.getElementById('password').value;
+            let confirmPassword = document.getElementById('confirmPassword').value;
 
-    // Password required
-    if (password === '') {
-        passwordError.innerText = 'Password is required.';
-        isValid = false;
+            let passwordError = document.getElementById('passwordError');
+            let confirmPasswordError = document.getElementById('confirmPasswordError');
+
+            // Clear old errors
+            passwordError.innerText = '';
+            confirmPasswordError.innerText = '';
+
+            let isValid = true;
+
+            if (password === '') {
+                passwordError.innerText = 'Password is required.';
+                isValid = false;
+            } else if (password.length < 6) {
+                passwordError.innerText = 'Password must be at least 6 characters.';
+                isValid = false;
+            }
+
+            if (confirmPassword === '') {
+                confirmPasswordError.innerText = 'Confirm password is required.';
+                isValid = false;
+            } else if (password !== confirmPassword) {
+                confirmPasswordError.innerText = 'Passwords do not match.';
+                isValid = false;
+            }
+
+            if (!isValid) {
+                e.preventDefault();
+            }
+
+        });
+
     }
 
-    // Minimum length
-    else if (password.length < 6) {
-        passwordError.innerText = 'Password must be at least 6 characters.';
-        isValid = false;
-    }
+});
 
-    // Confirm password required
-    if (confirmPassword === '') {
-        confirmPasswordError.innerText = 'Confirm password is required.';
-        isValid = false;
-    }
 
-    // Password match check
-    else if (password !== confirmPassword) {
-        confirmPasswordError.innerText = 'Passwords do not match.';
-        isValid = false;
-    }
+document.addEventListener("DOMContentLoaded", function () {
 
-    if (!isValid) {
-        e.preventDefault(); // Stop form submission
-    }
+    document.querySelectorAll(".map-preview").forEach(function (map) {
+
+        map.addEventListener("click", function () {
+           
+            let lat = this.getAttribute("data-lat");
+            let lng = this.getAttribute("data-lng");
+
+            let mapUrl = `https://maps.google.com/maps?q=${lat},${lng}&z=15&output=embed`;
+
+          
+            document.getElementById("commonheader").innerText = "Location Map";
+
+        
+            document.getElementById("commonModalBody").innerHTML =
+                `<iframe width="100%" height="400" style="border:0;" 
+                 src="${mapUrl}" allowfullscreen></iframe>`;
+
+            var modal = new bootstrap.Modal(document.getElementById('commonModal'));
+            modal.show();
+        });
+
+    });
+
 });

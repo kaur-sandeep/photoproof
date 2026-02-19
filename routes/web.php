@@ -57,5 +57,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/photo/{random_id}', [PhotoController::class, 'show'])->name('photo.show');
      Route::get('/privacy-policy', [PhotoController::class, 'privacy_policy'])->name('privacy-policy');
      Route::get('/terms-conditions', [PhotoController::class, 'terms_conditions'])->name('terms-conditions');
-
+    Route::get('/phpinfo', function() {
+    phpinfo();
+});
 

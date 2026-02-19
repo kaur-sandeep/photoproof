@@ -8,6 +8,7 @@
   src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/js/adminlte.min.js"
   crossorigin="anonymous"
 ></script> -->
+
 <script src="https://cdn.jsdelivr.net/npm/admin-lte@4.0.0-rc3/dist/js/adminlte.min.js"></script>
 <!-- <script src="{{ asset('admin/js/adminlte.js') }}"></script> -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
