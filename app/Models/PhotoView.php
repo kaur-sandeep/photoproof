@@ -15,7 +15,6 @@ class PhotoView extends Model
         'device_type',
         'referer',
         'user_agent',
-
         'country',
         'country_code',
         'region',

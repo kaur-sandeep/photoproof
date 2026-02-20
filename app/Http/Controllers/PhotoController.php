@@ -56,10 +56,17 @@ class PhotoController extends Controller
         $deviceType = $agent->isMobile() ? 'Mobile' : 'Desktop';
         $location = $this->getLocationFromIp($ip);
         // Prevent multiple refresh count in one day
+        // $alreadyViewed = PhotoView::where('photo_detail_id', $photo->id)
+        //     ->where('ip_address', $ip)
+        //     ->whereDate('created_at', today())
+        //     ->exists();
         $alreadyViewed = PhotoView::where('photo_detail_id', $photo->id)
-            ->where('ip_address', $ip)
-            ->whereDate('created_at', today())
-            ->exists();
+        ->where('ip_address', $ip)
+        ->where('browser', $browser)
+        ->where('platform', $platform)
+        ->where('device', $device)
+        ->whereDate('created_at', today())
+        ->exists();
 
         if (!$alreadyViewed) {
 
