@@ -323,8 +323,8 @@
                 @endif
 			</div>	
                  <div class="col-sm-12 col-lg-12 text-center pt-4">
-					<h5 class="text-white mb-3">This photo is available for 20 days.</h5>
-					<a href="Report-This-Photo.html" class="btn btn-lightgreen "/>Report This Photo</a>					
+					<h5 class="text-white mb-3">This photo is available for  {{ $daysAvailable }} days.</h5>
+					<a href="/report" class="btn btn-lightgreen "/>Report This Photo</a>					
 				  </div>
             
 
@@ -346,7 +346,7 @@
             <button class="lb-arrow next" id="lbNext"><i class="fas fa-chevron-right"></i></button>
         </div>
         <div class="lb-thumbs" id="lbThumbs"></div>
-        </div>
+</div>
 
 
 

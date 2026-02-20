@@ -6,6 +6,9 @@ use App\Models\PhotoDetail;
 use App\Models\PhotoView;
 use Jenssegers\Agent\Agent;
 use Illuminate\Support\Facades\Http;
+use App\Models\Setting;
+use Carbon\Carbon;
+
 class PhotoController extends Controller
 {
    public function searchForm()
@@ -84,8 +87,19 @@ class PhotoController extends Controller
                     'ip_query' => $location['query'] ?? null,
             ]);
         }
+    // Fetch setting
+    $setting = Setting::first();
+    $totalDays = (int) ($setting->delete_photos_after_days ?? 0); // cast to integer
 
-        return view('user.photo-view', compact('photo'));
+    // Make sure $photo->created_at is Carbon
+    $created = $photo->created_at instanceof Carbon ? $photo->created_at : Carbon::parse($photo->created_at);
+
+    // Use diffInDays() — integer only
+    $daysElapsed = $created->diffInDays(Carbon::now()); // returns integer
+
+    //$daysAvailable = max($totalDays - $daysElapsed, 0); 
+    $daysAvailable = (int) round($totalDays - $daysElapsed);
+        return view('user.photo-view', compact('photo', 'daysAvailable'));
     }
    private function getLocationFromIp($ip)
     {
