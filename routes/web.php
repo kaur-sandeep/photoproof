@@ -65,6 +65,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/photo/update/{id}', [PhotosController::class, 'update'])->name('admin.photo.update');
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
         Route::get('/activity-logs', [ActivityController::class, 'index'])->name('admin.activity');
+        Route::get('/activity/list', [ActivityController::class, 'list'])->name('admin.activity');
+        
     });
 
 });
