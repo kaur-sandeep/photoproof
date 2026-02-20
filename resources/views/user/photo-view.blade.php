@@ -324,7 +324,10 @@
 			</div>	
                  <div class="col-sm-12 col-lg-12 text-center pt-4">
 					<h5 class="text-white mb-3">This photo is available for  {{ $daysAvailable }} days.</h5>
-					<a href="/report" class="btn btn-lightgreen "/>Report This Photo</a>					
+					<a href="{{ url('/report/' . $photo->random_id) }}" 
+                        class="btn btn-lightgreen">
+                        Report This Photo
+                        </a>				
 				  </div>
             
 

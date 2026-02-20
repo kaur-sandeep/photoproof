@@ -8,6 +8,7 @@ use Jenssegers\Agent\Agent;
 use Illuminate\Support\Facades\Http;
 use App\Models\Setting;
 use Carbon\Carbon;
+use App\Models\PhotoReport;
 
 class PhotoController extends Controller
 {
@@ -139,9 +140,48 @@ class PhotoController extends Controller
     {
         return view('user.thank-you');
     }
-    public function report()
+    public function report($random_id)
     {
-        return view('user.report-photo');
+        $photo = PhotoDetail::where('random_id', $random_id)->first();
+        if (!$photo) {
+            return redirect()->back()->with('error', 'Photo not found');
+        }
+        
+        return view('user.report-photo', compact('photo'));
     }
+    public function report_submit(Request $request, $random_id){
+       $request->validate([
+        'name' => 'required',
+        'email' => 'required|email',
+        'message' => 'required',
+         'g-recaptcha-response' => 'required'
+    ]);
+
+    // If captcha is enabled, then keep this
+    
+    $response = Http::asForm()->post(
+        'https://www.google.com/recaptcha/api/siteverify',
+        [
+            'secret' => env('RECAPTCHA_SECRET_KEY'),
+            'response' => $request->input('g-recaptcha-response'),
+        ]
+    );
+
+    if (!$response->json()['success']) {
+        return back()->with('error', 'Captcha verification failed.');
+    }
+    
+
+    PhotoReport::create([
+        'photo_random_id' => $random_id,
+        'name' => $request->name,
+        'email' => $request->email,
+        'message' => $request->message,
+        'is_read' => 0
+    ]);
+
+    return redirect()->route('thank-you');
+    }
+    
 
 }

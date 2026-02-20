@@ -20,6 +20,7 @@
 <!-- 5. Your Files LAST -->
 <script src="{{ asset('user/js/common.js') }}"></script>
 <script src="{{ asset('user/js/custom.js') }}"></script>
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
 
 

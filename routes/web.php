@@ -84,7 +84,10 @@ Route::prefix('admin')->group(function () {
      Route::get('/privacy-policy', [PhotoController::class, 'privacy_policy'])->name('privacy-policy');
      Route::get('/terms-conditions', [PhotoController::class, 'terms_conditions'])->name('terms-conditions');
       Route::get('/thank-you', [PhotoController::class, 'thank_you'])->name('thank-you');
-      Route::get('/report', [PhotoController::class, 'report'])->name('report');
+     Route::get('/report/{random_id}', [PhotoController::class, 'report'])
+    ->name('photo.report');
+    Route::post('/report/{random_id}', [PhotoController::class, 'report_submit'])
+    ->name('report.submit');
     Route::get('/phpinfo', function() {
     phpinfo();
 });
