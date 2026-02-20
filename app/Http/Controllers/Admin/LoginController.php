@@ -116,9 +116,13 @@ class LoginController extends Controller
         }
     }
     
-    public function generateResetToken($email)
+    private function generateResetToken($email)
     {
+        // delete old token first
+        DB::table('password_reset_tokens')->where('email', $email)->delete();
+
         $token = Str::random(60);
+
         DB::table('password_reset_tokens')->insert([
             'email' => $email,
             'token' => $token,
