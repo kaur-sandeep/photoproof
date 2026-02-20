@@ -38,10 +38,10 @@ class AdminController extends Controller
         })
         ->addColumn('status', function ($admins) {
                 if ($admins->state == 1) {
-                    return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$admins->id.'" data-status="0">Set Inactive</button>';
+                    return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$admins->id.'" data-status="0">Active</button>';
                 }
                 if ($admins->state == 0) {
-                    return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$admins->id.'" data-status="1">Set Active</button>';
+                    return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$admins->id.'" data-status="1">Inactive</button>';
                     
                 }
                 return '<span class="badge bg-danger">Deleted</span>';

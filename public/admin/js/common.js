@@ -119,7 +119,7 @@ $(document).ready(function() {
 $('#photoTableList').on('click', '.toggle-state', function () {
     let id = $(this).data('id');
     let state = $(this).data('state');
-    if (confirm("Are you sure?")) {
+    if (confirm("Are you sure you want to change the status?")) {
        $.ajax({
     url: window.APP_URL + '/admin/photos/update/data',
     type: "get",
@@ -360,7 +360,7 @@ $(document).ready(function() {
 $('#userList').on('click', '.toggle-status', function () {
     let id = $(this).data('id');
     let status = $(this).data('status');
-    if (confirm("Are you sure?")) {
+    if (confirm("Are you sure you want to change the status?")) {
        $.ajax({
     url: window.APP_URL + '/admin/update/users/status',
     type: "get",
@@ -391,6 +391,26 @@ $('#userList').on('click', '.toggle-status', function () {
                 table.ajax.reload(null, false);
             });
         }
+    });
+});
+
+
+
+$(document).ready(function() {
+    let table = $('#activityList').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: window.APP_URL + '/admin/activity/list/',  // Ensure this URL is correct
+
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'admin', name: 'admin', orderable: false, searchable: false },
+            { data: 'action', name: 'action' },
+            { data: 'module', name: 'module' },
+            { data: 'description', name: 'description' },
+            { data: 'ip_address', name: 'ip_address'},
+            { data: 'date', name: 'date'},
+        ]
     });
 });
 

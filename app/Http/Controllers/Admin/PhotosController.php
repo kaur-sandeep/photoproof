@@ -10,6 +10,7 @@ use App\Models\PhotoDetail;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\ActivityLogger;
+use Illuminate\Support\Facades\Auth;
 class PhotosController extends Controller
 {
 
@@ -71,10 +72,10 @@ $count=  $photo->view_count ?? 0;
 
 ->addColumn('status', function ($photo) {
     if ($photo->state == 1) {
-        return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$photo->id.'" data-state="0">Set Inactive</button>';
+        return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$photo->id.'" data-state="0">Active</button>';
     }
     if ($photo->state == 0) {
-        return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$photo->id.'" data-state="1">Set Active</button>';
+        return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$photo->id.'" data-state="1">Inactive</button>';
         
     }
 })
@@ -280,6 +281,7 @@ public function update(Request $request, $photo_id)
     public function updateStatus(Request $request){
     $id = $request->input('id');
     $status = $request->input('state');
+    $admin = Auth::user();
     // dd($id,$status);
         $request->validate([
             'id' => 'required|exists:users,id',
@@ -287,8 +289,23 @@ public function update(Request $request, $photo_id)
         ]);
 
         $photo = PhotoDetail::findOrFail($id);
+        $oldStatus = $photo->state;
         $photo->state = $status;
         $photo->save();
+         $statusText = [
+            -1 => 'Deleted',
+            0  => 'Inactive',
+            1  => 'Active',
+        ];
+
+        // ✅ Activity Log
+        ActivityLogger::log(
+            'Update',
+            'Admin Photos',
+            'Changed status of photo ' . $photo->name .
+            ' from ' . ($statusText[$oldStatus] ?? $oldStatus) .
+            ' to ' . ($statusText[$status] ?? $status)
+        );
         return response()->json([
             'success' => true,
             'message' => 'Photo status updated successfully'
