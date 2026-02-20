@@ -16,6 +16,8 @@ use Illuminate\Support\Carbon;
 use App\Notifications\CommonMailNotification;
 use App\Models\PhotoUploadTrack;
 use Jenssegers\Agent\Agent;
+use App\Models\Setting;
+
 class AuthController extends Controller
 {
     // Register API
@@ -283,6 +285,39 @@ class AuthController extends Controller
             'ip_query' => $location['query'] ?? null,
         ]);
 
+        // send email to user
+        // Send email only if email is enabled
+        $settings = \App\Models\Setting::first();
+
+        if ($settings && $settings->email_enabled) {
+            $photoUrl = $photo->photo_url; // from accessor
+
+            $slot = '
+                <p>Hello '.$user->name.',</p>
+
+                <p>Your photo has been uploaded successfully.</p>
+
+                <p><strong>Photo ID:</strong> '.$photo->random_id.'</p>
+                <p><strong>Location:</strong> '.$photo->location.'</p>
+                <p><strong>Date Time:</strong> '.$photo->word_api_date_time.'</p>
+
+                <p><strong>Share this link with anyone for proof varification :</strong><br>
+                <a href="'.$photoUrl.'" target="_blank">'.$photoUrl.'</a></p>
+
+                <hr>
+
+                <p><strong>Photo Preview:</strong></p>
+                <img src="'.$photoUrl.'" width="300" style="max-width:100%;">
+            ';
+
+            // Send email to user
+            $user->notify(new CommonMailNotification(
+                'Photo Uploaded Successfully',
+                $slot
+            ));
+        }
+        //end
+
         return response()->json([
             'status' => true,
             'message' => 'Photo uploaded successfully',
@@ -417,10 +452,18 @@ public function forgotPassword(Request $request)
         $user = User::where('email', $request->email)->first();
 
         if (!$user) {
-            return response()->json([
-                'status' => false,
-                'message' => 'User not found'
-            ], 404);
+             $freePlan = \App\Models\Plan::where('name', 'Free')->first();
+                $user = User::create([
+                    'name' => $request->name ,
+                    'email' => $request->email,
+                    'password' => bcrypt('guest123'), // temporary password
+                    'plan_id' => \App\Models\Plan::where('name', 'Free')->first()->id
+                ]);
+                   return response()->json([
+                    'status' => true,
+                    'message' => 'Profile added successfully.',
+                    'user' => $user
+                ]);
         }
 
         if ($request->filled('name')) {

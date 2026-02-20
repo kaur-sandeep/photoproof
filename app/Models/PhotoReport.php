@@ -11,6 +11,20 @@ class PhotoReport extends Model
         'name',
         'email',
         'message',
-        'is_read'
+        'is_read',
+         'ip_address',
+        'browser',
+        'platform',
+        'device',
+        'device_type',
+        'user_agent',
+        'referer',
+        'country',
+        'region',
+        'city',
+        'zip',
+        'latitude',
+        'longitude',
+        'timezone',
     ];
 }

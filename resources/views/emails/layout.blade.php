@@ -7,14 +7,15 @@
         /* Add common styles here */
         body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 0; }
         .container { max-width: 600px; margin: 20px auto; background: #fff; padding: 20px; border-radius: 8px; }
-        .header { background: #3490dc; color: #fff; padding: 10px; text-align: center; border-radius: 8px 8px 0 0; }
+        .header { background: #0f0f0f; color: #fff; padding: 10px; text-align: center; border-radius: 8px 8px 0 0; }
         .footer { font-size: 12px; color: #777; text-align: center; margin-top: 20px; }
-        .button { display: inline-block; padding: 10px 20px; background: #3490dc; color: #fff; text-decoration: none; border-radius: 5px; }
+        .button { display: inline-block; padding: 10px 20px; background: #0f0f0f; color: #fff; text-decoration: none; border-radius: 5px; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="header">
+            <img src="{{ url('user/images/logo-white.png') }}" width="200">
             <!-- <h2>{{ $header ?? 'Photo Proof' }}</h2> -->
         </div>
 
@@ -24,7 +25,7 @@
         </div>
 
         <div class="footer">
-            {{ $footer ?? '© '.date('Y').' My App. All rights reserved.' }}
+            {{ $footer ?? '© '.date('Y').' Photo Proof . All rights reserved.' }}
         </div>
     </div>
 </body>
