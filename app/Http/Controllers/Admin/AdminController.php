@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
 use App\Helpers\ActivityLogger;
+use App\Helpers\DateTime;
 class AdminController extends Controller
 {
     public function index(){
@@ -31,7 +32,7 @@ class AdminController extends Controller
                     . '" width="40" height="40" class="rounded-circle">';
             })
         ->addColumn('created_at', function ($admins) {
-            return $admins->created_at ?? '--'; // if device is null, show --
+            return DateTime::dateFormat($admins->created_at) ?? '--'; // if device is null, show --
         })
         ->addColumn('phone_number', function ($admins) {
             return $admins->phone_number ?? '--'; // if device is null, show --
@@ -135,16 +136,68 @@ class AdminController extends Controller
         return view('admin/edit',compact('admin'));
     }
 
-     public function updateUsers(Request $request,$user_id){
+    //  public function updateUsers(Request $request,$user_id){
+    //     $admin = Admin::findOrFail($user_id);
+    //     $request->validate([
+    //         'name'   => 'required|string|max:255',
+    //         'number' => 'required|numeric|digits_between:10,14',
+    //         'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+    //     ]);
+
+    //     $admin->name = $request->name;
+    //     // $user->emarenderRecordCountil = $request->email;
+    //     $admin->phone_number = $request->number;
+
+    //     if ($request->hasFile('profile_image')) {
+
+    //         // Delete old image
+    //         if ($admin->profile_image && Storage::disk('public')->exists('profile/' . $admin->profile_image)) {
+    //             Storage::disk('public')->delete('profile/' . $admin->profile_image);
+    //         }
+
+    //         // Store new image
+    //         $path = $request->file('profile_image')->store('profile', 'public');
+    //         $admin->profile_image = basename($path);
+    //     }
+
+    //     $admin->save();
+    //     $oldData = $admin->only(['name', 'phone_number', 'profile_image']);
+    //     $admin->update($request->only(['name', 'phone_number', 'profile_image']));
+    //     foreach (['name', 'phone_number', 'profile_image'] as $field) {
+    //         if (($oldData[$field] ?? null) !== ($admin->$field ?? null)) {
+    //             $old = $oldData[$field] ?? '-';
+    //             $new = $admin->$field ?? '-';
+    //             $changes[] = ucfirst(str_replace('_', ' ', $field)) . " changed from '$old' to '$new'";
+    //         }
+    //     }
+    //    if (!empty($changes)) {
+    //         $description = implode('; ', $changes);
+            
+    //         ActivityLogger::log(
+    //             'Update',
+    //             'Admin Users',
+    //             $description
+    //         );
+    //     }
+
+    //     return redirect()->back()->with('success', 'User updated successfully!');
+    // }
+
+    public function updateUsers(Request $request, $user_id)
+    {
         $admin = Admin::findOrFail($user_id);
+
         $request->validate([
-            'name'   => 'required|string|max:255',
-            'number' => 'required|numeric|digits_between:10,14',
-            'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'name'          => 'required|string|max:255',
+            'number'        => 'required|numeric|digits_between:10,14',
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
+        // Capture old data BEFORE updating
+        $oldData = $admin->only(['name', 'phone_number', 'profile_image']);
+
+        // Update fields
         $admin->name = $request->name;
-        // $user->emarenderRecordCountil = $request->email;
         $admin->phone_number = $request->number;
 
         if ($request->hasFile('profile_image')) {
@@ -160,6 +213,26 @@ class AdminController extends Controller
         }
 
         $admin->save();
+
+        // Prepare changes for logging
+        $changes = [];
+        foreach (['name', 'phone_number', 'profile_image'] as $field) {
+            if (($oldData[$field] ?? null) !== ($admin->$field ?? null)) {
+                $old = $oldData[$field] ?? '-';
+                $new = $admin->$field ?? '-';
+                $changes[] = ucfirst(str_replace('_', ' ', $field)) . " changed from '$old' to '$new'";
+            }
+        }
+
+        if (!empty($changes)) {
+            $description = implode('; ', $changes);
+            
+            ActivityLogger::log(
+                'Update',
+                'Admin Users',
+                $description
+            );
+        }
 
         return redirect()->back()->with('success', 'User updated successfully!');
     }

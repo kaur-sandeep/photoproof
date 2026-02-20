@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\PhotoDetail;
 use Yajra\DataTables\DataTables;
 use App\Helpers\ActivityLogger;
+use App\Helpers\DateTime;
 
 
 class UserController extends Controller
@@ -131,7 +132,7 @@ return DataTables::of($users)
         $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
         return $track?->timezone ?? '--';
     })
-    ->addColumn('created_at', fn($user) => $user->created_at?? '--')
+    ->addColumn('created_at', fn($user) => DateTime::dateFormat($user->created_at)?? '--')
      ->addColumn('photo_count', function ($user) {
             return '<span class="badge bg-info" style="
                   font-size: 1.2rem; 
@@ -336,7 +337,6 @@ return DataTables::of($users)
                 return $query->where('id', $id);
             })
             ->get();
-
         $data = [];
         $serialNumber = 1;
 
@@ -346,21 +346,42 @@ return DataTables::of($users)
                 $track = $photo->uploadTrack;
 
                 $data[] = [
+                    'name'=>$user->name,
+                    'created_at'=>DateTime::dateFormat($photo->created_at),
+                    'email'=>$user->email,
+                    'random_id' => $photo->random_id,
                     'serial_number' => $serialNumber++,
                     'photo_id' => $photo->id,
                     'user_email' => $user->email,
                     'view_count' => $photo->view_count ?? 0,
                     'image' => $photo->photo ? asset('storage/' . $photo->photo) : '',
-                    'random_id' => $photo->random_id,
+                    'date_time' => DateTime::dateFormat($photo->word_api_date_time) ?? '',
+                    'location' => $photo->location ?? '',
+                    // 'country' => isset($photo->country) ? $photo->country : (isset($track->country) ? $track->country : ''),
+                    // 'region' => isset($photo->region_name) ? $photo->region_name : (isset($track->region_name) ? $track->region_name : ''),
+                    // 'city' => isset($photo->city) ? $photo->city : (isset($track->city) ? $track->city : ''),
+                    // 'zip' => isset($photo->zip) ? $photo->zip : (isset($track->zip) ? $track->zip : ''),
+                    'timezone' => isset($photo->timezone) ? $photo->timezone : (isset($track->timezone) ? $track->timezone : ''),
+                    'latitude' => isset($photo->latitude) 
+                        ? number_format($photo->latitude, 8, '.', '') 
+                        : (isset($track->latitude) ? number_format($track->latitude, 8, '.', '') : null),
+
+                    'longitude' => isset($photo->longitude) 
+                        ? number_format($photo->longitude, 8, '.', '') 
+                        : (isset($track->longitude) ? number_format($track->longitude, 8, '.', '') : null),
                     'ip_address' => $track->ip_address ?? '',
-                    'city' => $track->city ?? '',
-                    'country' => $track->country ?? '',
-                    'latitude' => $track->latitude ?? '',
-                    'longitude' => $track->longitude ?? '',
-                    'zip' => $track->zip ?? '',
-                    'device_type' => $track->device_type ?? '',
+                    'device_type' => $photo->device_type ?? '',
+                    'device_brand' => $photo->device_brand ?? '',
+                    'device_model' => $photo->device_model ?? '',
+                    'device_name' => $photo->device_name ?? '',
+                    'device_manufacturer' => $photo->device_manufacturer ?? '',
+                    'android_version' => $photo->android_version ?? '',
+                    'android_sdk' => $photo->android_sdk ?? '',
+                    'ios_system_version' => $photo->ios_system_version ?? '',
+                    'ios_identifier' => $photo->ios_identifier ?? '',
                     'isp' => $track->isp ?? '',
-                    'upload_time' => $track ? $track->created_at->format('Y-m-d H:i:s') : '',
+                    'state' => $photo->state ?? '',
+                    
                 ];
             }
         }
@@ -370,6 +391,11 @@ return DataTables::of($users)
                 return $row['image']
                     ? '<img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">'
                     : 'No Image';
+    //             return $row['image']
+    // ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
+    //         <img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">
+    //    </button>'
+    // : 'No Image';
             })
             ->addColumn('view_count', function ($row) {
                 return '<span class="badge bg-info" style="
@@ -385,7 +411,16 @@ return DataTables::of($users)
             ->addColumn('action', function ($row) {
                 return '<button class="btn btn-sm btn-primary viewTrackBtn">View Track</button>';
             })
-            ->rawColumns(['images', 'action', 'view_count']) // 👈 FIX HERE
+            ->addColumn('status', function ($row) {
+            if ($row['state'] == 1) {
+                    return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$row['photo_id'].'" data-state="0">Active</button>';
+            }
+            if ($row['state'] == 0) {
+                    return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$row['photo_id'].'" data-state="1">Inactive</button>';
+                    
+            }
+            })
+            ->rawColumns(['images', 'action', 'view_count','status']) // 👈 FIX HERE
             ->make(true);
         }
 
@@ -427,7 +462,7 @@ return DataTables::of($users)
                             <b>Zip:</b> {$track->zip}<br>
                             <b>Device:</b> {$track->device_type}<br>
                             <b>ISP:</b> {$track->isp}<br>
-                            <b>Upload Time:</b> " . $track->created_at->format('Y-m-d H:i:s') . "<br>
+                            <b>Upload Time:</b> " . DateTime::dateFormat($track->created_at) . "<br>
                         </div>" : 
                         "<span style='color:red;'>No Upload Track Found</span>"
                 ];

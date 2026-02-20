@@ -110,11 +110,96 @@ $(document).ready(function() {
             { data:'created_at', name:'created_at'},
             { data: 'view_count', name: 'view_count', orderable: false, searchable: false },
             { data:'status', name:'status'},
+            //  { data:'upload_track_record', name:'upload_track_record'},
+              {
+            data: null,
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            render: function(data, type, row) {
+                return `
+                    <button class="btn btn-info btn-sm viewTrackBtn">
+                        View
+                    </button>
+                `;
+            }
+        },
             // { data: 'actions', name: 'actions', orderable: false, searchable: false }
             
         ]
     });
 
+    $(document).on('click', '.viewTrackBtn', function () {
+
+    var tr = $(this).closest('tr');
+
+    if (tr.hasClass('child')) {
+        tr = tr.prev();
+    }
+
+    var rowData = table.row(tr).data();
+
+    if (!rowData) return;
+
+    // var html = `
+    //      <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
+    //             <b>Date & Time:</b> ${rowData.word_api_date_time ?? ''}<br>
+    //             <b>Location:</b> ${rowData.word_api_date_time ?? ''}<br>
+    //             <b>Country:</b> ${rowData.country ?? ''}<br>
+    //             <b>Region:</b> ${rowData.country ?? ''}<br>
+    //             <b>City:</b> ${rowData.city ?? ''}<br>
+    //             <b>Zip:</b> ${rowData.zip ?? ''}<br>
+    //             <b>Timezone:</b> ${rowData.zip ?? ''}<br>
+    //             <b>Latitude:</b> ${rowData.latitude ?? ''}<br>
+    //             <b>Longitude:</b> ${rowData.longitude ?? ''}<br>
+    //             <b>IP Address:</b> ${rowData.ip_address ?? ''}<br>
+    //             <b>Device Type:</b> ${rowData.device_type ?? ''}<br>
+    //             <b>Device Brand:</b> ${rowData.device_brand ?? ''}<br>
+    //             <b>Device Model:</b> ${rowData.device_model ?? ''}<br>
+    //             <b>Device Name:</b> ${rowData.device_name ?? ''}<br>
+    //             <b>Device Manufacturer:</b> ${rowData.device_manufacturer ?? ''}<br>
+    //             <b>Android Version:</b> ${rowData.android_version ?? ''}<br>
+    //             <b>Android Sdk:</b> ${rowData.android_sdk ?? ''}<br>
+    //             <b>IOS System Version:</b> ${rowData.ios_system_version ?? ''}<br>
+    //             <b>IOS Identifier:</b> ${rowData.ios_identifier ?? ''}<br>
+    //             <b>ISP:</b> ${rowData.isp ?? ''}<br>
+    //     <hr>
+     var html = `
+         <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
+                <b>Date & Time:</b> ${rowData.word_api_date_time ?? ''}<br>
+                <b>Location:</b> ${rowData.location ?? ''}<br>
+                <b>Timezone:</b> ${rowData.zip ?? ''}<br>
+                <b>Latitude:</b> ${rowData.latitude ?? ''}<br>
+                <b>Longitude:</b> ${rowData.longitude ?? ''}<br>
+                <b>IP Address:</b> ${rowData.ip_address ?? ''}<br>
+                <b>Device Type:</b> ${rowData.device_type ?? ''}<br>
+                <b>Device Brand:</b> ${rowData.device_brand ?? ''}<br>
+                <b>Device Model:</b> ${rowData.device_model ?? ''}<br>
+                <b>Device Name:</b> ${rowData.device_name ?? ''}<br>
+                <b>Device Manufacturer:</b> ${rowData.device_manufacturer ?? ''}<br>
+                <b>Android Version:</b> ${rowData.android_version ?? ''}<br>
+                <b>Android Sdk:</b> ${rowData.android_sdk ?? ''}<br>
+                <b>IOS System Version:</b> ${rowData.ios_system_version ?? ''}<br>
+                <b>IOS Identifier:</b> ${rowData.ios_identifier ?? ''}<br>
+                <b>ISP:</b> ${rowData.isp ?? ''}<br>
+        <hr>
+        ${rowData.latitude && rowData.longitude ? `
+            <iframe 
+                width="100%" 
+                height="350" 
+                style="border:0;" 
+                loading="lazy"
+                src="https://maps.google.com/maps?q=${rowData.latitude},${rowData.longitude}&z=15&output=embed">
+            </iframe>
+        ` : '<p style="color:red;">Location not available</p>'}
+    `;
+
+    $('#commonheader').html('Track Details');
+    $('#commonModalBody').html(html);
+
+    var modal = new bootstrap.Modal(document.getElementById('commonModal'));
+    modal.show();
+});
         // STATUS TOGGLE
 $('#photoTableList').on('click', '.toggle-state', function () {
     let id = $(this).data('id');
@@ -161,8 +246,7 @@ $(document).ready(function() {
         ajax: window.APP_URL + '/admin/fetch/users/images/' +  window.USER_ID,
         columns: [
             { data: 'serial_number', name: 'serial_number' },
-            // { data: 'email', name: 'email' },
-            {
+              {
                 data: 'images',
                 name: 'images',
                 orderable: false,
@@ -175,6 +259,12 @@ $(document).ready(function() {
                     }
                 }
             },
+            { data: 'random_id', name: 'random_id' },
+            { data: 'name', name: 'name' },
+            { data: 'location', name: 'location' },
+            { data: 'email', name: 'email' },
+            { data: 'created_at', name: 'created_at' },
+          
             {data:'view_count', name:'view_count'},
            {
             data: null,
@@ -188,118 +278,118 @@ $(document).ready(function() {
                     </button>
                 `;
             }
-        }
-            // {
-            //     data: 'upload_track_details',
-            //     name: 'upload_track_details',
-            //     // orderable: false,
-            //     // searchable: false,
-            //     render: function(data, type, row) {
-            //         if (data) {
-            //             return data;
-            //         } else {
-            //             return '<span>No upload data available</span>';
-            //         }
-            //     }
-            // }
-            // ,
-            // {
-            //     data: 'actions',
-            //     name: 'actions',
-            //     orderable: false,
-            //     searchable: false,
-            //     render: function(data, type, row) {
-            //         return '<a href="/edit/'+row.id+'" class="btn btn-warning btn-sm">Edit</a>';
-            //     }
-            // }
+        },
+         {data: 'status', name: 'status' },
         ]
+        });
+        $('#search-name').on('keyup', function() {
+            table.draw();
+        });
+        var globalMap = null;
+        $(document).on('click', '.viewTrackBtn', function () {
+
+            var table = $('#photodataTableList').DataTable();
+
+            // Get correct row (works even in responsive mode)
+            var tr = $(this).closest('tr');
+
+            if (tr.hasClass('child')) {
+                tr = tr.prev(); // if responsive child row
+            }
+
+            var rowData = table.row(tr).data();
+            if (!rowData) {
+                console.log("Row data not found");
+                return;
+            }
+
+            //  var html = `
+            //     <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
+            //     <b>Date & Time:</b> ${rowData.word_api_date_time ?? ''}<br>
+            //     <b>Location:</b> ${rowData.word_api_date_time ?? ''}<br>
+            //     <b>Country:</b> ${rowData.country ?? ''}<br>
+            //     <b>Region:</b> ${rowData.country ?? ''}<br>
+            //     <b>City:</b> ${rowData.city ?? ''}<br>
+            //     <b>Zip:</b> ${rowData.zip ?? ''}<br>
+            //     <b>Timezone:</b> ${rowData.zip ?? ''}<br>
+            //     <b>Latitude:</b> ${rowData.latitude ?? ''}<br>
+            //     <b>Longitude:</b> ${rowData.longitude ?? ''}<br>
+            //     <b>IP Address:</b> ${rowData.ip_address ?? ''}<br>
+            //     <b>Device Type:</b> ${rowData.device_type ?? ''}<br>
+            //     <b>Device Brand:</b> ${rowData.device_brand ?? ''}<br>
+            //     <b>Device Model:</b> ${rowData.device_model ?? ''}<br>
+            //     <b>Device Name:</b> ${rowData.device_name ?? ''}<br>
+            //     <b>Device Manufacturer:</b> ${rowData.device_manufacturer ?? ''}<br>
+            //     <b>Android Version:</b> ${rowData.android_version ?? ''}<br>
+            //     <b>Android Sdk:</b> ${rowData.android_sdk ?? ''}<br>
+            //     <b>IOS System Version:</b> ${rowData.ios_system_version ?? ''}<br>
+            //     <b>IOS Identifier:</b> ${rowData.ios_identifier ?? ''}<br>
+            //     <b>ISP:</b> ${rowData.isp ?? ''}<br>
+            //     <hr>
+            var html = `
+                <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
+                <b>Date & Time:</b> ${rowData.word_api_date_time ?? ''}<br>
+                <b>Location:</b> ${rowData.location ?? ''}<br>
+                <b>Timezone:</b> ${rowData.zip ?? ''}<br>
+                <b>Latitude:</b> ${rowData.latitude ?? ''}<br>
+                <b>Longitude:</b> ${rowData.longitude ?? ''}<br>
+                <b>IP Address:</b> ${rowData.ip_address ?? ''}<br>
+                <b>Device Type:</b> ${rowData.device_type ?? ''}<br>
+                <b>Device Brand:</b> ${rowData.device_brand ?? ''}<br>
+                <b>Device Model:</b> ${rowData.device_model ?? ''}<br>
+                <b>Device Name:</b> ${rowData.device_name ?? ''}<br>
+                <b>Device Manufacturer:</b> ${rowData.device_manufacturer ?? ''}<br>
+                <b>Android Version:</b> ${rowData.android_version ?? ''}<br>
+                <b>Android Sdk:</b> ${rowData.android_sdk ?? ''}<br>
+                <b>IOS System Version:</b> ${rowData.ios_system_version ?? ''}<br>
+                <b>IOS Identifier:</b> ${rowData.ios_identifier ?? ''}<br>
+                <b>ISP:</b> ${rowData.isp ?? ''}<br>
+                <hr>
+                ${rowData.latitude && rowData.longitude ? `
+                    <iframe 
+                        width="100%" 
+                        height="350" 
+                        style="border:0;" 
+                        loading="lazy"
+                        src="https://maps.google.com/maps?q=${rowData.latitude},${rowData.longitude}&z=15&output=embed">
+                    </iframe>
+                ` : '<p style="color:red;">Location not available</p>'}
+            `;
+
+            $('#commonheader').html('Track Details');
+            $('#commonModalBody').html(html);
+
+            var modal = new bootstrap.Modal(document.getElementById('commonModal'));
+            modal.show();
     });
-       $('#search-name').on('keyup', function() {
-        table.draw();
+
+    $('#photodataTableList').on('click', '.toggle-state', function () {
+        let id = $(this).data('id');
+        let state = $(this).data('state');
+        if (confirm("Are you sure you want to change the status?")) {
+        $.ajax({
+        url: window.APP_URL + '/admin/photos/update/data',
+        type: "get",
+        data: {
+            id: id,
+            state: state
+        },
+        success: function (response) {
+            console.log("SUCCESS:", response);
+            table.ajax.reload(null, false);
+        },
+        error: function (xhr) {
+            console.log("STATUS CODE:", xhr.status);
+            console.log("RESPONSE:", xhr.responseText);
+            alert("Failed. Check console.");
+        }
     });
-var globalMap = null;
-$(document).on('click', '.viewTrackBtn', function () {
-
-    var table = $('#photodataTableList').DataTable();
-
-    // Get correct row (works even in responsive mode)
-    var tr = $(this).closest('tr');
-
-    if (tr.hasClass('child')) {
-        tr = tr.prev(); // if responsive child row
-    }
-
-    var rowData = table.row(tr).data();
-
-    if (!rowData) {
-        console.log("Row data not found");
-        return;
-    }
-
-    // Build HTML
-    var html = `
-        
-            <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
-            <b>Email:</b> ${rowData.user_email ?? ''}<br>
-            <b>IP Address:</b> ${rowData.ip_address ?? ''}<br>
-            <b>City:</b> ${rowData.city ?? ''}<br>
-            <b>Country:</b> ${rowData.country ?? ''}<br>
-            <b>Zip:</b> ${rowData.zip ?? ''}<br>
-            <b>Device:</b> ${rowData.device_type ?? ''}<br>
-            <b>ISP:</b> ${rowData.isp ?? ''}<br>
-            <b>Upload Time:</b> ${rowData.upload_time ?? ''}<br>
-        
-       <hr>
-    ${rowData.latitude && rowData.longitude ? `
-        <iframe 
-            width="100%" 
-            height="350" 
-            style="border:0;" 
-            loading="lazy"
-            src="https://maps.google.com/maps?q=${rowData.latitude},${rowData.longitude}&z=15&output=embed">
-        </iframe>
-    ` : '<p style="color:red;">Location not available</p>'}
-`;
-
-    $('#commonheader').html('Track Details');
-    $('#commonModalBody').html(html);
-
-    var modal = new bootstrap.Modal(document.getElementById('commonModal'));
-    modal.show();
-
-    // setTimeout(function () {
-
-    //     if (globalMap !== null) {
-    //         globalMap.remove();
-    //         globalMap = null;
-    //     }
-
-    //     if (rowData.latitude && rowData.longitude) {
-
-    //         globalMap = L.map('dynamicMap').setView(
-    //             [parseFloat(rowData.latitude), parseFloat(rowData.longitude)],
-    //             13
-    //         );
-
-    //         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png')
-    //             .addTo(globalMap);
-
-    //         L.marker([
-    //             parseFloat(rowData.latitude),
-    //             parseFloat(rowData.longitude)
-    //         ]).addTo(globalMap);
-
-    //     } else {
-    //         $('#dynamicMap').html('<p style="color:red;">Location not available</p>');
-    //     }
-
-    // }, 500);
+        }
+    });
 
 });
 
 
-
-});
 
 
 
@@ -412,6 +502,131 @@ $(document).ready(function() {
             { data: 'date', name: 'date'},
         ]
     });
+});
+
+
+$(document).ready(function() {
+
+// Fetch notifications and update modal
+function fetchNotifications() {
+    $.ajax({
+        url: window.APP_URL + '/admin/notifications/unread',
+        type: 'GET',
+        success: function(data) {
+            // Update badge count
+            let count = data.length;
+            if(count > 0) {
+                $('#notificationCount').text(count).show();
+            } else {
+                $('#notificationCount').hide();
+            }
+
+            // Build modal content
+            if(data.length === 0) {
+                $('#notificationModalBody').html('<p>No new notifications.</p>');
+            } else {
+                let html = '<ul class="list-group">';
+                data.forEach(function(item) {
+                    html += `
+                        <li class="list-group-item notificationRow d-flex justify-content-between align-items-start bg-light" 
+                            data-id="${item.id}" style="cursor: pointer;">
+                            <div class="notification-text">
+                                <b>${item.name}</b><br>
+                                <small>${item.message}</small><br>
+                                <small class="text-muted">${item.created_at}</small>
+                            </div>
+                        </li>
+                    `;
+                });
+                html += '</ul>';
+                $('#notificationModalBody').html(html);
+            }
+        },
+        error: function() {
+            $('#notificationModalBody').html('<p class="text-danger">Failed to load notifications.</p>');
+        }
+    });
+}
+
+// Call once on page load to show count
+fetchNotifications();
+
+// When bell icon is clicked, fetch notifications and show modal
+$('#notificationBell').on('click', function() {
+    fetchNotifications();
+
+    // Show Bootstrap modal
+    var notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+    notificationModal.show();
+});
+
+// Mark notification as read when clicking on row
+$(document).on('click', '.notificationRow', function() {
+    let id = $(this).data('id');
+
+    $.ajax({
+        url: window.APP_URL + '/admin/notifications/read/' + id,
+        type: 'POST',
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function() {
+            // Mark row visually as read
+            $(`li.notificationRow[data-id="${id}"]`).removeClass('bg-light');
+
+            // Refresh count and modal
+            fetchNotifications();
+        },
+        error: function() {
+            alert('Failed to mark notification as read.');
+        }
+    });
+});
+
+// Optional: auto-refresh badge count every 15 seconds
+setInterval(fetchNotifications, 15000);
+});
+
+
+$(document).ready(function() {
+
+    $(document).on('click', '.notification-item', function() {
+        let row = $(this);
+        let id = row.data('id');
+        let isRead = row.data('is-read');
+
+        // If already read, just navigate
+        if (isRead) {
+            window.location.href = `/admin/notifications/${id}`;
+            return;
+        }
+
+        // AJAX call to mark as read
+        $.ajax({
+            url: `/admin/notifications/read/${id}`,
+            type: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function() {
+                // Update row to show as read
+                row.removeClass('bg-light border-start border-4 border-primary').addClass('bg-white');
+                row.data('is-read', 1);
+
+                // Decrease badge count
+                let badge = $('#notificationBadge'); // your badge ID
+                let count = parseInt(badge.text()) || 0;
+                if (count > 0) badge.text(count - 1);
+
+                // Redirect to the notification details page
+                window.location.href = `/admin/notifications/${id}`;
+            },
+            error: function() {
+                alert('Failed to mark notification as read.');
+            }
+        });
+    });
+
 });
 
 

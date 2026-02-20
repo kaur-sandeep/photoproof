@@ -10,6 +10,7 @@ use App\Models\PhotoDetail;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Storage;
 use App\Helpers\ActivityLogger;
+use App\Helpers\DateTime;
 use Illuminate\Support\Facades\Auth;
 class PhotosController extends Controller
 {
@@ -20,65 +21,121 @@ class PhotosController extends Controller
     }
 
   public function list(Request $request){
-   $photos = PhotoDetail::with('user')->where('state', '!=', -1)->get();
-    
-return DataTables::of($photos)
-    ->addIndexColumn()
+    // $photos = PhotoDetail::with('user')->where('state', '!=', -1)->get();
+    $photos = PhotoDetail::with('user.photo_upload_tracks') // load user and their uploadTrack
+    ->where('state', '!=', -1)
+    ->get();
 
-    ->addColumn('photo', function ($photo) {
-        if ($photo->photo) {
-            return '<img src="'.asset('storage/'.$photo->photo).'" width="50" height="50">';
+      $data = [];
+        $serialNumber = 1;
+     foreach ($photos as $photo) {
+        $user = $photo->user;
+            foreach ($user->photo_upload_tracks as $track ) {
+                $data[] = [
+                    'name'=>$user->name,
+                    'created_at'=>DateTime::dateFormat($photo->created_at),
+                    'email'=>$user->email,
+                    'random_id' => $photo->random_id,
+                    'serial_number' => $serialNumber++,
+                    'photo_id' => $photo->id,
+                    'user_email' => $user->email,
+                    'view_count' => $photo->view_count ?? 0,
+                    'image' => $photo->photo ? asset('storage/' . $photo->photo) : '',
+                    'date_time' => DateTime::dateFormat($photo->word_api_date_time) ?? '',
+                    'location' => $photo->location ?? '',
+                    // 'country' => isset($photo->country) ? $photo->country : (isset($track->country) ? $track->country : ''),
+                    // 'region' => isset($photo->region_name) ? $photo->region_name : (isset($track->region_name) ? $track->region_name : ''),
+                    // 'city' => isset($photo->city) ? $photo->city : (isset($track->city) ? $track->city : ''),
+                    // 'zip' => isset($photo->zip) ? $photo->zip : (isset($track->zip) ? $track->zip : ''),
+                    'timezone' => isset($photo->timezone) ? $photo->timezone : (isset($track->timezone) ? $track->timezone : ''),
+                    'latitude' => isset($photo->latitude) 
+                        ? number_format($photo->latitude, 8, '.', '') 
+                        : (isset($track->latitude) ? number_format($track->latitude, 8, '.', '') : null),
+
+                    'longitude' => isset($photo->longitude) 
+                        ? number_format($photo->longitude, 8, '.', '') 
+                        : (isset($track->longitude) ? number_format($track->longitude, 8, '.', '') : null),
+                    'ip_address' => $track->ip_address ?? '',
+                    'device_type' => $photo->device_type ?? '',
+                    'device_brand' => $photo->device_brand ?? '',
+                    'device_model' => $photo->device_model ?? '',
+                    'device_name' => $photo->device_name ?? '',
+                    'device_manufacturer' => $photo->device_manufacturer ?? '',
+                    'android_version' => $photo->android_version ?? '',
+                    'android_sdk' => $photo->android_sdk ?? '',
+                    'ios_system_version' => $photo->ios_system_version ?? '',
+                    'ios_identifier' => $photo->ios_identifier ?? '',
+                    'isp' => $track->isp ?? '',
+                    'state' => $photo->state ?? '',
+                    
+                ];
+            }
         }
-        return 'No Image';
-    })
+    return DataTables::of($photos)
+        ->addIndexColumn()
 
-    ->addColumn('random_id', function ($photo) {
-        return $photo->random_id ?? '-';
-    })
-
-    ->addColumn('name', function ($photo) {
-        return $photo->name ?? '-';
-    })
-
-    ->addColumn('location', function ($photo) {
-        return $photo->location ?? '-';
-    })
-
-    ->addColumn('user_name', function ($photo) {
-        return $photo->user ? $photo->user->email : '--';
-    })
-    ->addColumn('created_at', function ($photo) {
-       return $photo->created_at ?? '-';
-    })
-
-    // ->addColumn('view_count', function ($photo) {
-    //     $count=  $photo->view_count ?? 0;
-        
-    // })
-
-    ->addColumn('view_count', function ($photo) {
-$count=  $photo->view_count ?? 0;
-            return '<span class="badge bg-info" style="
-                  font-size: 1.2rem; 
-                  padding: 0.6em 1em; 
-                  text-decoration: none; 
-                  border-radius: 0.5rem;
-                  display: inline-block;
-              "><a href="'.route('admin.photos.show', $photo->id).'" class="badge bg-info">
-        '.$count.'
-    </a></span>';
-
+        ->addColumn('photo', function ($photo) {
+            // if ($photo->photo) {
+            //     return '<img src="'.asset('storage/'.$photo->photo).'" width="50" height="50">';
+            // }
+            // return 'No Image';
+            return $photo->photo
+            ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
+            <img src="'.asset('storage/'.$photo->photo).'" width="80" height="80" style="border-radius:5px;">
+            </button>'
+            : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
         })
 
-->addColumn('status', function ($photo) {
-    if ($photo->state == 1) {
-        return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$photo->id.'" data-state="0">Active</button>';
-    }
-    if ($photo->state == 0) {
-        return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$photo->id.'" data-state="1">Inactive</button>';
-        
-    }
-})
+        ->addColumn('random_id', function ($photo) {
+            return $photo->random_id ?? '-';
+        })
+
+        ->addColumn('name', function ($photo) {
+            return $photo->name ?? '-';
+        })
+
+        ->addColumn('location', function ($photo) {
+            return $photo->location ?? '-';
+        })
+
+        ->addColumn('user_name', function ($photo) {
+            return $photo->user ? $photo->user->email : '--';
+        })
+        ->addColumn('created_at', function ($photo) {
+        return DateTime::dateFormat($photo->created_at) ?? '-';
+        })
+
+        // ->addColumn('view_count', function ($photo) {
+        //     $count=  $photo->view_count ?? 0;
+            
+        // })
+
+        ->addColumn('view_count', function ($photo) {
+        $count=  $photo->view_count ?? 0;
+                return '<span class="badge bg-info" style="
+                    font-size: 1.2rem; 
+                    padding: 0.6em 1em; 
+                    text-decoration: none; 
+                    border-radius: 0.5rem;
+                    display: inline-block;
+                "><a href="'.route('admin.photos.show', $photo->id).'" class="badge bg-info">
+            '.$count.'
+        </a></span>';
+
+            })
+
+    ->addColumn('status', function ($photo) {
+        if ($photo->state == 1) {
+            return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$photo->id.'" data-state="0">Active</button>';
+        }
+        if ($photo->state == 0) {
+            return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$photo->id.'" data-state="1">Inactive</button>';
+            
+        }
+    })
+    ->addColumn('upload_track_record', function ($row) {
+                return '<button class="btn btn-sm btn-primary viewTrackBtn">View Track</button>';
+    })
 
     // ->addColumn('actions', function ($photo) {
     //         // return '<a href="'.route('admin.photos.show', $photo->id).'" class="btn btn-sm btn-primary">View</a>
@@ -87,7 +144,7 @@ $count=  $photo->view_count ?? 0;
     //         return '<button class="btn btn-sm btn-danger delete-user" data-id="'.$photo->id.'">Delete</button>';
     //     })
 
-    ->rawColumns(['photo','actions','status','view_count'])
+    ->rawColumns(['photo','actions','status','view_count','upload_track_record'])
     ->make(true);
     }
 
@@ -179,9 +236,9 @@ $count=  $photo->view_count ?? 0;
         ->addColumn('as_name', function ($photoViews) {
              return $photoViews->as_name ?? '-';
         })
-        ->addColumn('created_at', function ($photoViews) {
-             return $photoViews->created_at ?? '-';
-        })
+->addColumn('created_at', function ($photoViews) {
+    return DateTime::dateFormat($photoViews->created_at) ?? '-';
+})
         ->rawColumns(['photoViews'])
         ->make(true);
     }                

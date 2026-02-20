@@ -26,8 +26,14 @@
                     <tr>
                         <th>S.No</th>
                         <th>Images</th>
+                        <th>Random Id</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                        <th>Email</th>
+                        <th>Created At</th>
                         <th>Viewed/Verified</th>
                         <th>Track Details</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
             </table>

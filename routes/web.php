@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\Admin\PhotosController;
 use App\Http\Controllers\Admin\ActivityController;
+use App\Http\Controllers\Admin\PhotoNotificationController;
 
 Route::get('/', function () {
     return redirect()->route('photo.search.form');
@@ -66,6 +67,12 @@ Route::prefix('admin')->group(function () {
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
         Route::get('/activity-logs', [ActivityController::class, 'index'])->name('admin.activity');
         Route::get('/activity/list', [ActivityController::class, 'list'])->name('admin.activity');
+
+        Route::get('/notifications/unread', [PhotoNotificationController::class, 'getUnreadNotifications']);
+        Route::post('/notifications/read/{id}', [PhotoNotificationController::class, 'markAsRead']);
+        Route::get('/notifications', [PhotoNotificationController::class,'notifications'])->name('notifications.index');
+        Route::get('/notifications/{id}', [PhotoNotificationController::class, 'show'])->name('notifications.show');
+        
         
     });
 

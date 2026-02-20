@@ -23,6 +23,7 @@
                         <th>Created On</th>
                         <th>View Count</th>
                         <th>Status</th>
+                        <th>Track Details</th>
                         <!-- <th>Actions</th> -->
                     </tr>
                 </thead>
