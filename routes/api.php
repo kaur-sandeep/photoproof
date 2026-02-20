@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\AuthController;
 
     Route::post('/upload_photo', [AuthController::class, 'uploadPhoto']);
     Route::get('/photos', [AuthController::class, 'getPhotos']);
-    // Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+    Route::post('/update-profile', [AuthController::class, 'updateProfile']);
 
 // });
 // Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
