@@ -26,16 +26,3 @@
 #notificationModalBody li.list-group-item {
     word-break: break-word;    /* Ensure long messages wrap */
 }
-
-.pagination svg {
-    width: 16px !important;
-    height: 16px !important;
-}
-
-.pagination a {
-    font-size: 14px !important;
-}
-
-.pagination {
-    justify-content: center;
-}
