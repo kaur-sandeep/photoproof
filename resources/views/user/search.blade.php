@@ -62,23 +62,26 @@
                </div>
             </div>
          </section>
-         <section class="usecases bg-lightgrey">
+         <section class="usecases bg-lightgrey" style="background: #0d1721; border-top: 2px solid #070707;">
             <div class="container">
                <div class="col-md-12 mx-auto text-center">
-			      <div class="verifyphoto">
+			      <!-- <div class="verifyphoto"> -->
+                   <form method="POST" action="{{ route('photo.search') }}"  class="verifyphoto">
 					<label>Verify a photo</label>
 					<!-- <input type="text" name="photoid" class="form-control" placeholder="Enter Photo ID •  e.g. 9865XXXXX"> 
                     <a href="verify-photo.html" class="btn btn-lightgreen submit ">Verify</a> -->
 
-                     <form method="POST" action="{{ route('photo.search') }}">
+                    
                         @csrf
-                        <input type="text" name="random_id"  value="{{ old('random_id') }}"  placeholder="Enter Photo ID •  e.g. 9865XXXXX" required >
+                        <input type="text" name="random_id" class="form-control" value="{{ old('random_id') }}"  placeholder="Enter Photo ID •  e.g. 9865XXXXX" required >
                         <button  class="btn btn-lightgreen submit " type="submit">Verify</button>
-                    </form>
+                  
+				  <!-- </div> -->
+
+                </form>
                     @if(session('error'))
                         <p style="color:red">{{ session('error') }}</p>
                     @endif
-				  </div>
                </div>
             </div>
          </section>
@@ -159,47 +162,52 @@
                   </h2>
                   <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
                      <div class="feature-card p-0 common-usecases">
-						<div class="usecases-num">01</div>
+                        <div class="usecases-num">01</div>
                         <img src="{{ asset('user/images/usecase1.png')}}" class="img-fluid"/>
-						<p>PhotoProof of item being with you with your current location and time embedded when your buyer asks for an image.</p>
+						<h4>Buyer and Seller</h4>
+                        <p>PhotoProof of item being with you with your current location and time embedded when your buyer asks for an image.</p>
                      </div>
                   </div>
-				  <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
+                  <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
                      <div class="feature-card p-0 common-usecases">
-						<div class="usecases-num">02</div>
+                        <div class="usecases-num">02</div>
                         <img src="{{ asset('user/images/usecase2.png')}}" class="img-fluid"/>
-						<p>Undisputable proof that you were at a particular spot at a particular time when you took that selfie.</p>
+						<h4>Verified Visit</h4>
+                        <p>Undisputable proof that you were at a particular spot at a particular time when you took that selfie.</p>
                      </div>
                   </div>
-				  <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
+                  <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
                      <div class="feature-card p-0 common-usecases">
-						<div class="usecases-num">03</div>
+                        <div class="usecases-num">03</div>
                         <img src="{{ asset('user/images/usecase3.png')}}" class="img-fluid"/>
-						<p>Proof that a package was dropped by you at your friend's address with the time stamp and location embedded in the photo.</p>
+						<h4>Proof of Delivery</h4>
+                        <p>Proof that a package was dropped by you at your friend's address with the time stamp and location embedded in the photo.</p>
                      </div>
                   </div>
-				  <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
+                  <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
                      <div class="feature-card p-0 common-usecases">
-						<div class="usecases-num">04</div>
+                        <div class="usecases-num">04</div>
                         <img src="{{ asset('user/images/usecase4.png')}}" class="img-fluid"/>
-						<p>Capture construction site progress with live GPS, date, and time embedded for accurate proof. Enable trusted contractor validation and compliance with tamper-proof verified photos.</p>
+						<h4>Contractor and Client</h4>
+                        <p>Capture construction site progress with live GPS, date, and time embedded for accurate proof. Enable trusted contractor validation and compliance with tamper-proof verified photos.</p>
                      </div>
                   </div>
-				  <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
+                  <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
                      <div class="feature-card p-0 common-usecases">
-						<div class="usecases-num">05</div>
+                        <div class="usecases-num">05</div>
                         <img src="{{ asset('user/images/usecase5.png')}}" class="img-fluid"/>
-						<p>Capture property inspections with live GPS, date, and time embedded for reliable visual records. Document tenant move-in and move-out with tamper-proof verified photos for clear proof.</p>
+						<h4>Owner and Tenant</h4>
+                        <p>Capture property inspections with live GPS, date, and time embedded for reliable visual records. Document tenant move-in and move-out with tamper-proof verified photos for clear proof.</p>
                      </div>
                   </div>
-				  <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
+                  <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
                      <div class="feature-card p-0 common-usecases">
-						<div class="usecases-num">06</div>
+                        <div class="usecases-num">06</div>
                         <img src="{{ asset('user/images/usecase6.png')}}" class="img-fluid"/>
-						<p>Capture on-site field verification with live GPS, date, and time embedded for reliable records. Secure loan collateral inspection and KYC documentation with tamper-proof verified photos.</p>
+						<h4>Lender and Field Officer</h4>
+                        <p>Capture on-site field verification with live GPS, date, and time embedded for reliable records. Secure loan collateral inspection and KYC documentation with tamper-proof verified photos.</p>
                      </div>
                   </div>
-                  
                </div>
             </div>
          </div>
@@ -220,29 +228,25 @@
                                  <svg class="svg-icon" width="35" height="35" style="color:#1fda69">
                                     <use href="#ic-phone"></use>
                                  </svg>
-                              </div> -->
+                                 </div> -->
                               <div class="step-title">Install &amp; Allow Access</div>
                               <div class="step-detail">Install the app and grant location and camera permissions. These are required to ensure metadata authenticity.</div>
-							  <div class="step-bottom">
-							  <svg width="200" height="200" viewBox="0 0 72 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-								  <!-- Phone -->
-								  <rect x="14" y="6" width="28" height="52" rx="6" stroke="#38d762" stroke-width="2"/>
-								  
-								  <!-- Download Arrow (Install) -->
-								  <path d="M28 16V30" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
-								  <path d="M24 26L28 30L32 26" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-
-								  <!-- Camera -->
-								  <rect x="22" y="36" width="14" height="10" rx="2" stroke="#38d762" stroke-width="2"/>
-								  <circle cx="29" cy="41" r="3" stroke="#38d762" stroke-width="2"/>
-								  <path d="M25 36L26.5 34H31.5L33 36" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
-
-								  <!-- Location Pin (More Outside / Right Side) -->
-								  <path d="M60 16C60 12.686 57.314 10 54 10C50.686 10 48 12.686 48 16C48 21 54 26 54 26C54 26 60 21 60 16Z" stroke="#38d762" stroke-width="2"/>
-								  <circle cx="54" cy="16" r="2" fill="#38d762"/>
-								</svg>
-								</div>
-
+                              <div class="step-bottom">
+                                 <svg width="200" height="200" viewBox="0 0 72 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Phone -->
+                                    <rect x="14" y="6" width="28" height="52" rx="6" stroke="#38d762" stroke-width="2"/>
+                                    <!-- Download Arrow (Install) -->
+                                    <path d="M28 16V30" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M24 26L28 30L32 26" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                                    <!-- Camera -->
+                                    <rect x="22" y="36" width="14" height="10" rx="2" stroke="#38d762" stroke-width="2"/>
+                                    <circle cx="29" cy="41" r="3" stroke="#38d762" stroke-width="2"/>
+                                    <path d="M25 36L26.5 34H31.5L33 36" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
+                                    <!-- Location Pin (More Outside / Right Side) -->
+                                    <path d="M60 16C60 12.686 57.314 10 54 10C50.686 10 48 12.686 48 16C48 21 54 26 54 26C54 26 60 21 60 16Z" stroke="#38d762" stroke-width="2"/>
+                                    <circle cx="54" cy="16" r="2" fill="#38d762"/>
+                                 </svg>
+                              </div>
                            </div>
                            <svg width="40" height="24" viewBox="0 0 40 24" fill="none" class="steparrow">
                               <path d="M0 12H38M38 12L28 2M38 12L28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -256,42 +260,33 @@
                                  <svg class="svg-icon" width="35" height="35" style="color:#1fda69">
                                     <use href="#ic-camera"></use>
                                  </svg>
-                              </div> -->
+                                 </div> -->
                               <div class="step-title">Take a Snap</div>
                               <div class="step-detail">App retrieves time, timezone, and exact location from secure servers and embeds it into the image. Data is NOT user-editable</div>
-							  <div class="step-bottom">
-							  <svg width="200" height="200" viewBox="0 0 96 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-                                <!-- Camera Body -->
-                                <rect x="28" y="20" width="40" height="28" rx="6" stroke="#38d762" stroke-width="2"/>
-
-                                <!-- Camera Top -->
-                                <path d="M40 20L43 16H53L56 20" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
-
-                                <!-- Camera Lens -->
-                                <circle cx="48" cy="34" r="7" stroke="#38d762" stroke-width="2"/>
-                                <circle cx="48" cy="34" r="3" fill="#38d762"/>
-
-                                <!-- Clock (Far Outside - Top Left) -->
-                                <circle cx="12" cy="18" r="6" stroke="#38d762" stroke-width="2"/>
-                                <path d="M12 18V14" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M12 18H16" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
-
-                                <!-- Location Pin (Far Outside - Top Right) -->
-                                <path d="M88 18C88 14.686 85.314 12 82 12C78.686 12 76 14.686 76 18C76 23 82 28 82 28C82 28 88 23 88 18Z"
-                                        stroke="#38d762" stroke-width="2"/>
-                                <circle cx="82" cy="18" r="2" fill="#38d762"/>
-
-                                <!-- Server (Bottom Center - Outside) -->
-                                <rect x="40" y="54" width="16" height="6" rx="2" stroke="#38d762" stroke-width="2"/>
-                                <rect x="40" y="60" width="16" height="6" rx="2" stroke="#38d762" stroke-width="2"/>
-                                <circle cx="44" cy="57" r="1" fill="#38d762"/>
-                                <circle cx="44" cy="63" r="1" fill="#38d762"/>
-
-                                </svg>
-
-                                </div>
-
+                              <div class="step-bottom">
+                                 <svg width="200" height="200" viewBox="0 0 96 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <!-- Camera Body -->
+                                    <rect x="28" y="20" width="40" height="28" rx="6" stroke="#38d762" stroke-width="2"/>
+                                    <!-- Camera Top -->
+                                    <path d="M40 20L43 16H53L56 20" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
+                                    <!-- Camera Lens -->
+                                    <circle cx="48" cy="34" r="7" stroke="#38d762" stroke-width="2"/>
+                                    <circle cx="48" cy="34" r="3" fill="#38d762"/>
+                                    <!-- Clock (Far Outside - Top Left) -->
+                                    <circle cx="12" cy="18" r="6" stroke="#38d762" stroke-width="2"/>
+                                    <path d="M12 18V14" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
+                                    <path d="M12 18H16" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
+                                    <!-- Location Pin (Far Outside - Top Right) -->
+                                    <path d="M88 18C88 14.686 85.314 12 82 12C78.686 12 76 14.686 76 18C76 23 82 28 82 28C82 28 88 23 88 18Z"
+                                       stroke="#38d762" stroke-width="2"/>
+                                    <circle cx="82" cy="18" r="2" fill="#38d762"/>
+                                    <!-- Server (Bottom Center - Outside) -->
+                                    <rect x="40" y="54" width="16" height="6" rx="2" stroke="#38d762" stroke-width="2"/>
+                                    <rect x="40" y="60" width="16" height="6" rx="2" stroke="#38d762" stroke-width="2"/>
+                                    <circle cx="44" cy="57" r="1" fill="#38d762"/>
+                                    <circle cx="44" cy="63" r="1" fill="#38d762"/>
+                                 </svg>
+                              </div>
                            </div>
                            <svg width="40" height="24" viewBox="0 0 40 24" fill="none" class="steparrow">
                               <path d="M0 12H38M38 12L28 2M38 12L28 22" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -305,31 +300,27 @@
                                  <svg class="svg-icon" width="35" height="35" style="color:#1fda69">
                                     <use href="#ic-share"></use>
                                  </svg>
-                              </div> -->
+                                 </div> -->
                               <div class="step-title">Save &amp; Share Proof</div>
                               <div class="step-detail">Save to gallery or share with embedded timestamp, location, unique ID, and optionally your photo and name as verifiable proof.</div>
-							   <div class="step-bottom">
-							  <svg width="200" height="200" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-
-                                <!-- SAVE (Main Icon) -->
-                                <path d="M32 12V36" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M26 30L32 36L38 30" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                                <rect x="20" y="38" width="24" height="8" rx="3" stroke="#38d762" stroke-width="2"/>
-
-                                <!-- SHARE (Small, Perfectly Aligned - Top Right) -->
-                                <!-- Nodes -->
-                                <circle cx="50" cy="16" r="2.5" stroke="#38d762" stroke-width="2"/>
-                                <circle cx="44" cy="24" r="2.5" stroke="#38d762" stroke-width="2"/>
-                                <circle cx="56" cy="28" r="2.5" stroke="#38d762" stroke-width="2"/>
-
-                                <!-- Connecting Lines -->
-                                <path d="M48.7 18L45.5 22" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M46.5 25.5L53.5 27" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
-
-                                </svg>
-
-
-                                </div>
+                              <div class="step-bottom">
+                                 <svg width="200" height="200" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+								  <!-- SAVE (Main Icon) -->
+								  <path d="M32 12V36" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
+								  <path d="M26 30L32 36L38 30" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+								  <rect x="20" y="38" width="24" height="8" rx="3" stroke="#38d762" stroke-width="2"/>
+								  <!-- SHARE (Rotated -90° around center 50,24) -->
+								  <g transform="rotate(-90 50 24)">
+									<!-- Nodes -->
+									<circle cx="50" cy="18" r="3" stroke="#38d762" stroke-width="2"/>
+									<circle cx="44" cy="28" r="3" stroke="#38d762" stroke-width="2"/>
+									<circle cx="56" cy="28" r="3" stroke="#38d762" stroke-width="2"/>
+									<!-- Connecting Lines -->
+									<path d="M47.5 20.5L45.5 25.5" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
+									<path d="M52.5 20.5L54.5 25.5" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
+								  </g>
+								</svg>
+                              </div>
                            </div>
                         </div>
                      </div>

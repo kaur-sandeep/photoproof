@@ -200,10 +200,14 @@ class AuthController extends Controller
                 ]);
             }
         }
-        $photoCount = \App\Models\PhotoDetail::where('user_id', $user->id)->count();
+        // $photoCount = \App\Models\PhotoDetail::where('user_id', $user->id)->count();
+        $photoCount = \App\Models\PhotoDetail::where('user_id', $user->id)
+        ->whereDate('created_at', Carbon::today())
+        ->count();
+
         $plan = $user->plan;
 
-        if ($photoCount >= $plan->photo_limit) {
+       if ($photoCount >= $plan->photo_limit) {
             return response()->json([
                 'status' => false,
                 'message' => 'You have reached your photo upload limit.'

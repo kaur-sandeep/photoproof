@@ -5,6 +5,8 @@ use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\Admin\PhotosController;
+use App\Http\Controllers\Admin\ActivityController;
+
 Route::get('/', function () {
     return redirect()->route('photo.search.form');
 });
@@ -62,6 +64,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/photos/edit/{id}', [PhotosController::class, 'edit'])->name('admin.photos.edit');
         Route::post('/photo/update/{id}', [PhotosController::class, 'update'])->name('admin.photo.update');
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
+        Route::get('/activity-logs', [ActivityController::class, 'index'])->name('admin.activity');
     });
 
 });
@@ -78,6 +81,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/photo/{random_id}', [PhotoController::class, 'show'])->name('photo.show');
      Route::get('/privacy-policy', [PhotoController::class, 'privacy_policy'])->name('privacy-policy');
      Route::get('/terms-conditions', [PhotoController::class, 'terms_conditions'])->name('terms-conditions');
+      Route::get('/thank-you', [PhotoController::class, 'thank_you'])->name('thank-you');
+      Route::get('/report', [PhotoController::class, 'report'])->name('report');
     Route::get('/phpinfo', function() {
     phpinfo();
 });

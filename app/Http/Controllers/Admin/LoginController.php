@@ -16,7 +16,7 @@ use App\Notifications\CommonMailNotification;
 use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\PhotoDetail;
-
+use App\Helpers\ActivityLogger;
 
 class LoginController extends Controller
 {

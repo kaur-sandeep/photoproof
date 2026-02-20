@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use App\Models\PhotoDetail;
 use Yajra\DataTables\DataTables;
-
+use App\Helpers\ActivityLogger;
 
 
 class UserController extends Controller

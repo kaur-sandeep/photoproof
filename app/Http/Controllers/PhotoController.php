@@ -121,5 +121,13 @@ class PhotoController extends Controller
     {
         return view('user.terms-conditions');
     }
+    public function thank_you()
+    {
+        return view('user.thank-you');
+    }
+    public function report()
+    {
+        return view('user.report-photo');
+    }
 
 }

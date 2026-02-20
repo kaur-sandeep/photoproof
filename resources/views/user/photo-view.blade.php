@@ -155,13 +155,21 @@
                         <div class="gallery-grid" id="galleryGrid">
                            <div class="gallery-item"  data-category="Landscape">
                               <img src="{{ $photo->photo_url }}"  loading="lazy">					
-                              <div class="expand-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="15 3 21 3 21 9"></polyline>
-                                <polyline points="9 21 3 21 3 15"></polyline>
-                                <line x1="21" y1="3" x2="14" y2="10"></line>
-                                <line x1="3" y1="21" x2="10" y2="14"></line>
-                                </svg>
-                                </div>
+                              <a href="javascript:;"  class="expand-icon">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <polyline points="9 21 3 21 3 15"></polyline>
+                                    <line x1="21" y1="3" x2="14" y2="10"></line>
+                                    <line x1="3" y1="21" x2="10" y2="14"></line>
+                                 </svg>
+                              </a>
+							  <a href="{{ $photo->photo_url }}" class="download-icon">
+                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+								  <path d="M12 3v12"></path>
+								  <path d="M7 10l5 5 5-5"></path>
+								  <path d="M5 21h14"></path>
+								</svg>
+                              </a>
                            </div>
                         </div>
                      </div>
@@ -313,7 +321,13 @@
                 @else
                     <p>No upload tracking data found.</p>
                 @endif
-			</div>			
+			</div>	
+                 <div class="col-sm-12 col-lg-12 text-center pt-4">
+					<h5 class="text-white mb-3">This photo is available for 20 days.</h5>
+					<a href="Report-This-Photo.html" class="btn btn-lightgreen "/>Report This Photo</a>					
+				  </div>
+            
+
          </div>
          </div>
          <!-- End container -->

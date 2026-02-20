@@ -10,14 +10,12 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
+use App\Helpers\ActivityLogger;
 class AdminController extends Controller
 {
     public function index(){
         return view('admin.index');
     }
-
-
-   
     public function list(Request $request){
 
     $admins = Admin::where('state', '!=', -1)->get();
@@ -58,6 +56,7 @@ class AdminController extends Controller
         })
         ->rawColumns(['profile_image', 'status', 'actions'])
         ->make(true);
+        
     }
 
     public function create(){
@@ -84,30 +83,53 @@ class AdminController extends Controller
             'password' => Hash::make($request->password),
             'profile_image' => $imageName,
         ]);
-
+        ActivityLogger::log(
+            'Create',
+            'Admin Users',
+            'Created new admin: ' . $request->email
+        );
         return redirect()->back()->with('success', 'User added successfully!');
 
     }
     
 
-    public function updateStatus(Request $request){
-        $id = $request->input('id');
-        $status = $request->input('status');
+    public function updateStatus(Request $request)
+    {
         $request->validate([
             'id' => 'required|exists:admins,id',
             'status' => 'required|in:-1,0,1'
         ]);
 
-        $status = $request->status;
-        $admin = Admin::findOrFail($id);
-        $admin->state = $status;
+        $admin = Admin::findOrFail($request->id);
+
+        // ✅ Get old status before update
+        $oldStatus = $admin->state;
+
+        // ✅ Update status
+        $admin->state = $request->status;
         $admin->save();
+
+        // ✅ Convert status to readable text
+        $statusText = [
+            -1 => 'Deleted',
+            0  => 'Inactive',
+            1  => 'Active',
+        ];
+
+        // ✅ Activity Log
+        ActivityLogger::log(
+            'Update',
+            'Admin Users',
+            'Changed status of ' . $admin->email .
+            ' from ' . ($statusText[$oldStatus] ?? $oldStatus) .
+            ' to ' . ($statusText[$request->status] ?? $request->status)
+        );
+
         return response()->json([
             'success' => true,
             'message' => 'User status updated successfully'
         ]);
     }
-
     public function editUsers(Request $request,$user_id){
         $admin = Admin::findOrFail($user_id);
         return view('admin/edit',compact('admin'));

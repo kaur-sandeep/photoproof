@@ -9,6 +9,7 @@ use App\Models\PhotoView;
 use App\Models\PhotoDetail;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Facades\Storage;
+use App\Helpers\ActivityLogger;
 class PhotosController extends Controller
 {
 

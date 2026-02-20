@@ -66,6 +66,18 @@
                 </li>
 
             </ul>
+
+              <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.activity') }}"
+                       class="nav-link text-white">
+                          <i class="bi bi-clock-history me-2"></i>
+                        Activity Logs
+                    </a>
+                </li>
+
+            </ul>
         </nav>
 
     </div>
