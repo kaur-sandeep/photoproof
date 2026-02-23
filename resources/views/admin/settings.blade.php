@@ -27,27 +27,50 @@
         <form action="{{route('admin.setting.update')}}" method="POST">
             @csrf
             <div class="card-body">
-                  
             <div class="row mb-3">
                     <div class="col-md-4"><strong>Enable Email</strong></div>
-                    <div class="col-md-8">
-                        <select name="email_enabled" class="form-control">
-                            <option value="1" {{ old('smtp_enabled', $settings->email_enabled ?? 0) == 1 ? 'selected' : '' }}>Enabled</option>
-                            <option value="0" {{ old('smtp_enabled', $settings->email_enabled ?? 0) == 0 ? 'selected' : '' }}>Disabled</option>
-                        </select>
+                        <div class="col-md-8 d-flex align-items-center">
+
+                        <span class="me-2 fw-bold text-success">Yes</span>
+
+                        <div class="form-check form-switch m-0">
+                            <input type="hidden" name="email_enabled" value="0">
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                id="email_enabled"
+                                name="email_enabled"
+                                value="1"
+                                {{ old('email_enabled', $settings->email_enabled ?? 0) == 1 ? 'checked' : '' }}
+                            >
+                        </div>
+
+                        <span class="ms-2 fw-bold text-danger">No</span>
+
                     </div>
                 </div>
-
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>Enable SMTP</strong></div>
-                    <div class="col-md-8">
-                        <select name="smtp_enabled" class="form-control">
-                            <option value="1" {{ old('smtp_enabled', $settings->smtp_enabled ?? 0) == 1 ? 'selected' : '' }}>Enabled</option>
-                            <option value="0" {{ old('smtp_enabled', $settings->smtp_enabled ?? 0) == 0 ? 'selected' : '' }}>Disabled</option>
-                        </select>
+                    <div class="col-md-8 d-flex align-items-center">
+
+                        <span class="me-2 fw-bold text-success">Yes</span>
+
+                        <div class="form-check form-switch m-0">
+                            <input type="hidden" name="smtp_enabled" value="0">
+                            <input 
+                                class="form-check-input" 
+                                type="checkbox" 
+                                id="smtp_enabled"
+                                name="smtp_enabled"
+                                value="1"
+                                {{ old('smtp_enabled', $settings->smtp_enabled ?? 0) == 1 ? 'checked' : '' }}
+                            >
+                        </div>
+
+                        <span class="ms-2 fw-bold text-danger">No</span>
+
                     </div>
                 </div>
-
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>SMTP Host</strong></div>
                     <div class="col-md-8">

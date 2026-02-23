@@ -42,7 +42,7 @@
                <div class="col-md-12">
                   <div class="copyright">
                      <img src="{{ asset('user/images/footer-logo.png') }}"/>
-                     <p>&copy; 2026 PhotoProof. All Rights Reserved. <a href="Terms-Conditions.html">Terms of Service</a> | <a href="Privacy-Policy.html">Privacy Policy</a></p>
+                     <p>&copy; 2026 PhotoProof. All Rights Reserved. <a href="/terms-conditions">Terms of Service</a> | <a href="/privacy-policy">Privacy Policy</a></p>
                   </div>
                </div>
             </div>

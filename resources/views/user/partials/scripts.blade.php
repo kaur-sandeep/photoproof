@@ -16,6 +16,7 @@
 <script src="{{ asset('user/js/modernizr.custom.js') }}"></script>
 <script src="{{ asset('user/js/retina.js') }}"></script>
 <script src="{{ asset('user/js/slick.min.js') }}"></script>
+<script src="{{ asset('user/js/bootstrap.min.js') }}"></script>	
 
 <!-- 5. Your Files LAST -->
 <script src="{{ asset('user/js/common.js') }}"></script>
