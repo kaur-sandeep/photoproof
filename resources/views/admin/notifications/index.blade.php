@@ -46,7 +46,7 @@
 
     <div class="d-flex justify-content-center mt-4">
         <!-- Pagination (if needed) -->
-        <!-- {{ $notifications->links() }} -->
+        {{ $notifications->links('pagination::bootstrap-5') }}
     </div>
 </div>
 @endsection

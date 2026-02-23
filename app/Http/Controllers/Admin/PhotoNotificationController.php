@@ -29,7 +29,7 @@ class PhotoNotificationController extends Controller
 
     public function notifications()
     {
-        $notifications = PhotoReport::orderBy('created_at', 'desc')->paginate(20);
+        $notifications = PhotoReport::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.notifications.index', compact('notifications'));
     }
 

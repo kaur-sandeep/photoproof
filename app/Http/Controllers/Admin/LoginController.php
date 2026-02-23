@@ -51,6 +51,11 @@ class LoginController extends Controller
         }
 
         // ✅ Step 3: Login success
+          ActivityLogger::log(
+                'Login',
+                'Admin Users',
+                'Logged By:' . $request->email,
+            );
         return redirect()->route('admin.dashboard');
     }
 
