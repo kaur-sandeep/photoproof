@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Photos List')
+@section('title', 'Notification Details')
 
 @section('content')
 
@@ -11,7 +11,7 @@
         </div>
 
         <div class="card-body">
-            <h4>{{ $notification->name }}</h4>
+            <h4>Name : {{ $notification->name }}</h4>
             <p><strong>Email:</strong> {{ $notification->email }}</p>
             <p><strong>Message:</strong> {{ $notification->message }}</p>
 

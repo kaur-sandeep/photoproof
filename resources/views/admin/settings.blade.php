@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Users List')
+@section('title', 'Setting')
 
 @section('content')
 <div class="container mt-5">

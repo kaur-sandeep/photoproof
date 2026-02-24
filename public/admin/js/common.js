@@ -494,7 +494,7 @@ $(document).ready(function() {
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'admin', name: 'admin', orderable: false, searchable: false },
+            { data: 'admin', name: 'admin'},
             { data: 'action', name: 'action' },
             { data: 'module', name: 'module' },
             { data: 'description', name: 'description' },

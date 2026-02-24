@@ -77,18 +77,27 @@ class PhotosController extends Controller
     return DataTables::of($photos)
         ->addIndexColumn()
 
+        // ->addColumn('photo', function ($photo) {
+        //     // if ($photo->photo) {
+        //     //     return '<img src="'.asset('storage/'.$photo->photo).'" width="50" height="50">';
+        //     // }
+        //     // return 'No Image';
+        //     return $photo->photo
+        //     ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
+        //     <img src="'.asset('storage/'.$photo->photo).'" width="80" height="80" style="border-radius:5px;">
+        //     </button>'
+        //     : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        // })
         ->addColumn('photo', function ($photo) {
-            // if ($photo->photo) {
-            //     return '<img src="'.asset('storage/'.$photo->photo).'" width="50" height="50">';
-            // }
-            // return 'No Image';
-            return $photo->photo
-            ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
-            <img src="'.asset('storage/'.$photo->photo).'" width="80" height="80" style="border-radius:5px;">
-            </button>'
-            : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-        })
+            $image = $photo->photo 
+                ? asset('storage/'.$photo->photo)
+                : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
 
+            return '<a href="'.route('admin.photos.show', $photo->id).'">
+                        <img src="'.$image.'" width="80" height="80" style="border-radius:5px;">
+                    </a>';
+        })
+        ->rawColumns(['photo'])
         ->addColumn('random_id', function ($photo) {
             return $photo->random_id ?? '-';
         })
@@ -435,5 +444,7 @@ public function update(Request $request, $photo_id)
         ->rawColumns(['image','photo_random_id','created_at','actions'])
         ->make(true);
     }
+
+
 
 }

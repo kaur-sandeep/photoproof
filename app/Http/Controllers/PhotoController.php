@@ -288,6 +288,19 @@ class PhotoController extends Controller
     public function report_photo(){
 
     }
+
+    public function download($id)
+{
+    $photo = PhotoDetail::findOrFail($id);
+
+    $path = storage_path('app/public/' . $photo->photo);
+
+    if (!file_exists($path)) {
+        abort(404, 'File not found');
+    }
+
+    return response()->download($path);
+}
     
 
 }

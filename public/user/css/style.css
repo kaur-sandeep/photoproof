@@ -1168,7 +1168,7 @@ margin-top: 30px;
 
 .hero-stores-badge p {
 font-weight: 500;
-margin-bottom: : 10px;
+margin-bottom: 10px;
 }
 
 .os-version {
@@ -3127,8 +3127,9 @@ ul.listoption { margin-top: 18px; }
 .gallery-item-overlay span { font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
 .expand-icon { position: absolute; top: 12px; right: 12px; width: 42px; height: 42px; background: rgba(9, 18, 64, 0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.3s ease; font-size: 0.65rem; color: #fff; pointer-events: none; padding: 7px; }
 .gallery-item:hover .expand-icon { opacity: 1; }
-.download-icon { position: absolute; top: 12px; right: 68px; width: 42px; height: 42px; background: rgba(9, 18, 64, 0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.3s ease; font-size: 0.65rem; color: #fff; pointer-events: none; padding: 7px; }
-.views-count { position: absolute; top: 12px; right: 118px; width: auto; height: 42px; background: rgba(9, 18, 64, 0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.3s ease; font-size: 14px; color: #fff; pointer-events: none; padding: 7px;} 
+.btn-cntr{ display: flex; z-index: 10; position: absolute; top: 13px;  right: 80px; align-items: center; justify-content: right;}
+.download-icon { position: relative; width: 42px; height: 42px; background: rgba(9, 18, 64, 0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.3s ease; font-size: 0.65rem; color: #fff; padding: 7px; }
+.views-count { position: relative;  margin-right:10px; width: auto; height: 42px; background: rgba(9, 18, 64, 0.5); border: 1px solid rgba(255,255,255,0.2); border-radius: 10px; display: flex; align-items: center; justify-content: center; opacity: 1; transition: opacity 0.3s ease; font-size: 14px; color: #fff;  padding: 7px;} 
 
 /* ── Lightbox ── */
 #lightbox { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(10,10,10,0.97); flex-direction: column; animation: fadeIn 0.25s ease; }
