@@ -10,11 +10,13 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\VerifyEmailCustom;
 use App\Models\PhotoDetail;
 use App\Models\photo_upload_tracks;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasApiTokens,HasFactory, Notifiable;
+    use HasApiTokens,HasFactory, Notifiable, HasRoles;
+
 
     /**
      * The attributes that are mass assignable.

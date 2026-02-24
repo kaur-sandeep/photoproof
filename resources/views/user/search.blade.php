@@ -25,10 +25,10 @@
                            With PhotoProof, every image becomes a verified document backed by live metadata and secure validation. Download PhotoProof today and ensure your visual records are trusted, traceable, and tamper-resistant.
                         </p>
                         <div class="hero-stores-badge animated" data-animation="fadeInUp" data-animation-delay="500">
-                           <a href="#" class="store">
+                            <a href="https://apps.apple.com/us/app/photo-proof/id6759238577" class="store" target="_blank">
                            <img class="appstore-white" src="{{ asset('user/images/store_badges/appstore.png') }}" width="155" height="50" alt="appstore-logo">
                            </a>	
-                           <a href="#" class="store">
+                          <a href="https://play.google.com/store/apps/details?id=com.photoproof" class="store"  target="_blank">
                            <img class="googleplay-white" src="{{ asset('user/images/store_badges/googleplay.png') }}" width="164" height="50" alt="googleplay-logo">
                            </a>
                            <div class="os-version">
@@ -57,7 +57,7 @@
                      </div>
                   </div>
                   <div class="col-md-6 text-right">
-                     <img src="{{ asset('user/images/image-09.png')}}" class="img-fluid heroimg"/>
+                     <img src="{{ asset('user/images/image-09.png')}}" class="img-fluid heroimg" id="hdrright"/>
                   </div>
                </div>
             </div>

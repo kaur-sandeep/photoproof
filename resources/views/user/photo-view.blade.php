@@ -134,7 +134,6 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12">
-					    <h2>Tracking Information</h2>
 						 <nav aria-label="breadcrumb">
 							<ol class="breadcrumb-list">
 								<li><a href="/">Home</a></li>
@@ -192,7 +191,7 @@
                     $track = $photo->uploadTrack;
                 @endphp	
                 <div class="ip-details-container">
-                    <div class="details-top d-flex align-items-center gap-2"><h6 class="text-white mb-0">This photo is available for {{ $daysAvailable }} days.</h6>|<a href="{{ url('/report/' . $photo->random_id) }}" class=""/>Report This Photo</a></div>
+                    <div class="details-top">This photo is available for {{ $daysAvailable }} days. | <a href="{{ url('/report/' . $photo->random_id) }}" class=""/>Report This Photo</a></div>
                     <ul class="ip-details">
 					<!-- <li><strong>Name:</strong>{{ $photo->name }}</li> -->
 					<li><strong>Photo ID:</strong> {{ $photo->random_id }}</li>

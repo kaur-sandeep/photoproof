@@ -235,7 +235,7 @@ class PhotoController extends Controller
 
     //send email
     $admin = env('ADMIN_EMAIL');
-
+    // dd($admin);
     if ($admin) {
             $photo = PhotoDetail::where('random_id', $random_id)->first();
             if($photo){
@@ -290,17 +290,17 @@ class PhotoController extends Controller
     }
 
     public function download($id)
-{
-    $photo = PhotoDetail::findOrFail($id);
+    {
+        $photo = PhotoDetail::findOrFail($id);
 
-    $path = storage_path('app/public/' . $photo->photo);
+        $path = storage_path('app/public/' . $photo->photo);
 
-    if (!file_exists($path)) {
-        abort(404, 'File not found');
+        if (!file_exists($path)) {
+            abort(404, 'File not found');
+        }
+
+        return response()->download($path);
     }
-
-    return response()->download($path);
-}
     
 
 }

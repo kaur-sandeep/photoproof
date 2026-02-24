@@ -167,3 +167,6 @@ document.addEventListener("DOMContentLoaded", function () {
          document.getElementById('lbMain').addEventListener('click', function(e) {
            if (e.target === this) closeLightbox();
          });
+
+
+         

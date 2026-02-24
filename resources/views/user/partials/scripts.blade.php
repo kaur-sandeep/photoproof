@@ -23,5 +23,16 @@
 <script src="{{ asset('user/js/custom.js') }}"></script>
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 
+<script>
+const images = [
+        "{{ asset('user/images/image-09.png') }}",
+        "{{ asset('user/images/image-10.png') }}",
+        "{{ asset('user/images/image-11.png') }}",
+        "{{ asset('user/images/image-12.png') }}"
+];
+const randomImage = images[Math.floor(Math.random() * images.length)];
 
+// Change IMAGE src instead of background
+document.getElementById("hdrright").src = randomImage;
+</script>
 

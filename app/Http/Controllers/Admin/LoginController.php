@@ -49,8 +49,8 @@ class LoginController extends Controller
         ])) {
             return back()->withInput()->with('error', 'Invalid Credentials');
         }
-
         // ✅ Step 3: Login success
+      
           ActivityLogger::log(
                 'Login',
                 'Admin Users',

@@ -19,7 +19,7 @@
 
         @include('user.partials.header')
 
-        <main class="app-main p-3">
+        <main class="app-main">
             @yield('content')
         </main>
 
