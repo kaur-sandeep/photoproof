@@ -494,7 +494,7 @@ $(document).ready(function() {
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'admin', name: 'admin', orderable: false, searchable: false },
+            { data: 'admin', name: 'admin'},
             { data: 'action', name: 'action' },
             { data: 'module', name: 'module' },
             { data: 'description', name: 'description' },
@@ -533,7 +533,7 @@ function fetchNotifications() {
                             <div class="notification-text">
                                 <b>${item.name}</b><br>
                                 <small>${item.message}</small><br>
-                                <small class="text-muted">${item.created_at}</small>
+                                <small class="text-muted">${item.created_at_formatted}</small>
                             </div>
                         </li>
                     `;
@@ -572,7 +572,7 @@ $(document).on('click', '.notificationRow', function() {
         },
         success: function() {
             // Mark row visually as read
-            $(`li.notificationRow[data-id="${id}"]`).removeClass('bg-light');
+            // $(`li.notificationRow[data-id="${id}"]`).removeClass('bg-light');
 
             // Refresh count and modal
             fetchNotifications();
@@ -627,6 +627,37 @@ $(document).ready(function() {
         });
     });
 
+});
+
+
+$(document).ready(function() {
+    let table = $('#reportImagesList').DataTable({
+         responsive: true,
+        scrollX: true,
+        autoWidth: false,
+        processing: true,
+        serverSide: true,
+        ajax: window.APP_URL + '/admin/reported/images/list',  // Ensure this URL is correct
+
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'image', name: 'image'},
+            { data: 'photo_random_id', name: 'photo_random_id'},
+            { data: 'name', name: 'name' },
+            { data: 'email', name: 'email' },
+            { data: 'message', name: 'message' },
+            { data: 'ip_address', name: 'ip_address'},
+            { data: 'device', name: 'device'},
+            { data: 'device_type', name: 'device_type'},
+            { data: 'country', name: 'country'},
+            { data: 'region', name: 'region'},
+            { data: 'city', name: 'city'},
+            { data: 'zip', name: 'zip'},
+            { data: 'created_at', name: 'created_at'},
+            { data: 'actions', name: 'actions'},
+            
+        ]
+    });
 });
 
 

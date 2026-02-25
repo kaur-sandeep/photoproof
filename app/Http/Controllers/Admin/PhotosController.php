@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Storage;
 use App\Helpers\ActivityLogger;
 use App\Helpers\DateTime;
 use Illuminate\Support\Facades\Auth;
+use App\Models\PhotoReport;
+use Illuminate\Support\Str;
+
 class PhotosController extends Controller
 {
 
@@ -74,18 +77,27 @@ class PhotosController extends Controller
     return DataTables::of($photos)
         ->addIndexColumn()
 
+        // ->addColumn('photo', function ($photo) {
+        //     // if ($photo->photo) {
+        //     //     return '<img src="'.asset('storage/'.$photo->photo).'" width="50" height="50">';
+        //     // }
+        //     // return 'No Image';
+        //     return $photo->photo
+        //     ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
+        //     <img src="'.asset('storage/'.$photo->photo).'" width="80" height="80" style="border-radius:5px;">
+        //     </button>'
+        //     : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+        // })
         ->addColumn('photo', function ($photo) {
-            // if ($photo->photo) {
-            //     return '<img src="'.asset('storage/'.$photo->photo).'" width="50" height="50">';
-            // }
-            // return 'No Image';
-            return $photo->photo
-            ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
-            <img src="'.asset('storage/'.$photo->photo).'" width="80" height="80" style="border-radius:5px;">
-            </button>'
-            : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-        })
+            $image = $photo->photo 
+                ? asset('storage/'.$photo->photo)
+                : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
 
+            return '<a href="'.route('admin.photos.show', $photo->id).'">
+                        <img src="'.$image.'" width="80" height="80" style="border-radius:5px;">
+                    </a>';
+        })
+        ->rawColumns(['photo'])
         ->addColumn('random_id', function ($photo) {
             return $photo->random_id ?? '-';
         })
@@ -368,5 +380,71 @@ public function update(Request $request, $photo_id)
             'message' => 'Photo status updated successfully'
         ]);
     }
+
+    public function reportedImages(){
+        return view('admin.report.index');
+    }
+
+    public function reportedImagesList(){
+        $reported_data = PhotoReport::get();
+        return DataTables::of($reported_data)
+        ->addIndexColumn()
+        ->addColumn('image', function ($reported_data) {
+        $photo = PhotoDetail::where('random_id', $reported_data->photo_random_id)->first();
+        $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        return '<img src="' . ($photo->photo
+            ? asset('storage/' . $photo->photo)
+            : $default) . '" width="40" height="40" class="rounded-circle">';
+    })
+        ->addColumn('photo_random_id', function ($reported_data) {
+            return $reported_data->photo_random_id ?? '--';
+        })
+        ->addColumn('photo_random_id', function ($reported_data) {
+            return $reported_data->photo_random_id ?? '--';
+        })
+        ->addColumn('name', function ($reported_data) {
+            return $reported_data->name ?? '-';
+        })
+        ->addColumn('email', function ($reported_data) {
+            return $reported_data->email ?? '-';
+        })
+
+        ->addColumn('message', function ($reported_data) {
+            return $reported_data->message 
+                ? Str::limit($reported_data->message, 50, '...') 
+                : '--';
+        })
+        ->addColumn('ip_address', function ($reported_data) {
+        return $reported_data->ip_address ?? '-';
+        })
+        ->addColumn('device', function ($reported_data) {
+        return $reported_data->device ?? '-';
+        })
+        ->addColumn('device_type', function ($reported_data) {
+        return $reported_data->device_type ?? '-';
+        })
+        ->addColumn('country', function ($reported_data) {
+        return $reported_data->country ?? '-';
+        })
+        ->addColumn('region', function ($reported_data) {
+        return $reported_data->region ?? '-';
+        })
+        ->addColumn('city', function ($reported_data) {
+        return $reported_data->city ?? '-';
+        })
+        ->addColumn('zip', function ($reported_data) {
+        return $reported_data->zip ?? '-';
+        })
+        ->addColumn('created_at', function ($reported_data) {
+        return $reported_data->created_at ?? '-';
+        })
+         ->addColumn('actions', function ($reported_data) {
+            return '<a href="'.route('notifications.show', $reported_data->id).'" class="btn btn-sm btn-primary">View</a>';
+        })
+        ->rawColumns(['image','photo_random_id','created_at','actions'])
+        ->make(true);
+    }
+
+
 
 }

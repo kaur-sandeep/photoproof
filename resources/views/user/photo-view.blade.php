@@ -134,7 +134,6 @@
 			<div class="container">
 				<div class="row">
 					<div class="col-md-12">
-					    <h2>Tracking Information</h2>
 						 <nav aria-label="breadcrumb">
 							<ol class="breadcrumb-list">
 								<li><a href="/">Home</a></li>
@@ -151,10 +150,20 @@
       <div class="container-fluid px-5">
          <div class="row d-flex align-items-center">			
 			<div class="col-sm-12 col-lg-9">
+                    <div class="btn-cntr">
+                         <span class="views-count">{{$photo->view_count}} Views</span>
+                        <a href="{{route('photo.download', $photo->id)}}" class="download-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12 3v12"></path>
+                            <path d="M7 10l5 5 5-5"></path>
+                            <path d="M5 21h14"></path>
+                        </svg>
+                        </a>
+                    </div>
                     <div class="photo_bx">
                         <div class="gallery-grid" id="galleryGrid">
                            <div class="gallery-item"  data-category="Landscape">
-                              <img src="{{ $photo->photo_url }}"  loading="lazy">					
+                              <img src="{{ $photo->photo_url }}"  loading="lazy">                               
                               <a href="javascript:;"  class="expand-icon">
                                  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <polyline points="15 3 21 3 21 9"></polyline>
@@ -163,13 +172,7 @@
                                     <line x1="3" y1="21" x2="10" y2="14"></line>
                                  </svg>
                               </a>
-							  <a href="{{ $photo->photo_url }}" class="download-icon">
-                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-								  <path d="M12 3v12"></path>
-								  <path d="M7 10l5 5 5-5"></path>
-								  <path d="M5 21h14"></path>
-								</svg>
-                              </a>
+							  <!-- <a href="{{ $photo->photo_url }}" class="download-icon"> -->                                
                            </div>
                         </div>
                      </div>
@@ -187,10 +190,10 @@
                   @php
                     $track = $photo->uploadTrack;
                 @endphp	
-              
-				<ul class="ip-details">
+                <div class="ip-details-container">
+                    <div class="details-top">This photo is available for {{ $daysAvailable }} days. | <a href="{{ url('/report/' . $photo->random_id) }}" class=""/>Report This Photo</a></div>
+                    <ul class="ip-details">
 					<!-- <li><strong>Name:</strong>{{ $photo->name }}</li> -->
-
 					<li><strong>Photo ID:</strong> {{ $photo->random_id }}</li>
 				
                       @if(!empty($photo->word_api_date_time))
@@ -287,12 +290,13 @@
 					<li><strong>ISP:</strong> {{ $track->isp }}</li> 
                      @endif
 
-				</ul>
+				    </ul>
                     @php
                         $lat = $photo->latitude ?? $track->latitude ?? null;
                         $lng = $photo->longitude ?? $track->longitude ?? null;
                     @endphp
                 		@if(!empty($lat) && !empty($lng))
+                </div>
                     <div class="map">
                        <div class="map-preview" 
                             data-lat="{{ $lat }}" 
@@ -322,15 +326,6 @@
                     <p>No upload tracking data found.</p>
                 @endif
 			</div>	
-                 <div class="col-sm-12 col-lg-12 text-center pt-4">
-					<h5 class="text-white mb-3">This photo is available for  {{ $daysAvailable }} days.</h5>
-					<a href="{{ url('/report/' . $photo->random_id) }}" 
-                        class="btn btn-lightgreen">
-                        Report This Photo
-                        </a>				
-				  </div>
-            
-
          </div>
          </div>
          <!-- End container -->

@@ -5,18 +5,37 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PhotoReport;
+use App\Helpers\DateTime;
 
 class PhotoNotificationController extends Controller
 {
-    public function getUnreadNotifications()
-    {
-        $notifications = PhotoReport::where('is_read', 0)
-            ->orderBy('created_at', 'desc')
-            ->take(5)
-            ->get();
+    // public function getUnreadNotifications()
+    // {
+    //     $notifications = PhotoReport::where('is_read', 0)
+    //         ->orderBy('created_at', 'desc')
+    //         ->take(5)
+    //         ->get();
 
-        return response()->json($notifications);
-    }
+    //     return response()->json($notifications);
+    // }
+
+    public function getUnreadNotifications()
+{
+    $notifications = PhotoReport::where('is_read', 0)
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get()
+        ->map(function ($item) {
+
+            $item->created_at_formatted = $item->created_at
+                ? DateTime::dateFormat($item->created_at)
+                : '--';
+
+            return $item;
+        });
+
+    return response()->json($notifications);
+}
 
     public function markAsRead($id)
 {

@@ -78,6 +78,19 @@
                 </li>
 
             </ul>
+
+              <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.reported') }}"
+                       class="nav-link text-white">
+                          <i class="bi bi-flag me-2"></i>
+                        Reported Images
+                    </a>
+                </li>
+
+            </ul>
+
         </nav>
 
     </div>

@@ -148,25 +148,45 @@ class PhotoController extends Controller
     {
         return view('user.thank-you');
     }
-    public function report($random_id)
+    // public function report($random_id)
+    // {
+    //     $photo = PhotoDetail::where('random_id', $random_id)->first();
+    //     if (!$photo) {
+    //         return redirect()->back()->with('error', 'Photo not found');
+    //     }
+        
+    //     return view('user.report-photo', compact('photo'));
+    // }
+
+        public function report($random_id)
     {
+            $setting = Setting::first();
+            $totalDays = (int) ($setting->delete_photos_after_days ?? 0); // cast to integer
+
+            // Make sure $photo->created_at is Carbon
+            
         $photo = PhotoDetail::where('random_id', $random_id)->first();
+        $created = $photo->created_at instanceof Carbon ? $photo->created_at : Carbon::parse($photo->created_at);
+
+            // Use diffInDays() — integer only
+            $daysElapsed = $created->diffInDays(Carbon::now()); // returns integer
+
+            //$daysAvailable = max($totalDays - $daysElapsed, 0); 
+            $daysAvailable = (int) round($totalDays - $daysElapsed);
         if (!$photo) {
             return redirect()->back()->with('error', 'Photo not found');
         }
-        
-        return view('user.report-photo', compact('photo'));
+        return view('user.report-this-photo', compact('photo','daysAvailable'));
     }
     public function report_submit(Request $request, $random_id){
        $request->validate([
         'name' => 'required',
         'email' => 'required|email',
         'message' => 'required',
-         'g-recaptcha-response' => 'required'
+        'g-recaptcha-response' => 'required'
     ]);
 
     // If captcha is enabled, then keep this
-    
     $response = Http::asForm()->post(
         'https://www.google.com/recaptcha/api/siteverify',
         [
@@ -178,7 +198,6 @@ class PhotoController extends Controller
     if (!$response->json()['success']) {
         return back()->with('error', 'Captcha verification failed.');
     }
-    
     $ip = $request->ip(); // real user IP
     $ip ='202.164.57.197';
     $userAgent = $request->header('User-Agent');
@@ -192,7 +211,6 @@ class PhotoController extends Controller
 
     // Get location from IP (if you already have this function)
     $location = $this->getLocationFromIp($ip);
-
     PhotoReport::create([
         'photo_random_id' => $random_id,
         'name' => $request->name,
@@ -216,9 +234,8 @@ class PhotoController extends Controller
     ]);
 
     //send email
-
     $admin = env('ADMIN_EMAIL');
-
+    // dd($admin);
     if ($admin) {
             $photo = PhotoDetail::where('random_id', $random_id)->first();
             if($photo){
@@ -266,6 +283,23 @@ class PhotoController extends Controller
         
     }
     return redirect()->route('thank-you');
+    }
+
+    public function report_photo(){
+
+    }
+
+    public function download($id)
+    {
+        $photo = PhotoDetail::findOrFail($id);
+
+        $path = storage_path('app/public/' . $photo->photo);
+
+        if (!file_exists($path)) {
+            abort(404, 'File not found');
+        }
+
+        return response()->download($path);
     }
     
 

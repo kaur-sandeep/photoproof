@@ -8,14 +8,14 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title"><b>Users List</b></h3>
+            <h3 class="card-title"><b>Activity List</b></h3>
         </div>
 
         <div class="card-body">
             <table id="activityList" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>S.No</th>
                         <th>Admin</th>
                         <th>Action</th>
                         <th>Module</th>

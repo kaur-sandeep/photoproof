@@ -7,7 +7,7 @@ use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\Admin\PhotosController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\PhotoNotificationController;
-
+use Illuminate\Support\Facades\Storage;
 Route::get('/', function () {
     return redirect()->route('photo.search.form');
 });
@@ -64,9 +64,15 @@ Route::prefix('admin')->group(function () {
         Route::post('/photos/update/{photId}', [PhotosController::class, 'update'])->name('admin.photo.update');
         Route::get('/photos/edit/{id}', [PhotosController::class, 'edit'])->name('admin.photos.edit');
         Route::post('/photo/update/{id}', [PhotosController::class, 'update'])->name('admin.photo.update');
+        Route::get('/reported/images', [PhotosController::class, 'reportedImages'])->name('admin.reported');
+         Route::get('/reported/images/list', [PhotosController::class, 'reportedImagesList']);
+        
+
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
         Route::get('/activity-logs', [ActivityController::class, 'index'])->name('admin.activity');
         Route::get('/activity/list', [ActivityController::class, 'list'])->name('admin.activity');
+       
+        
 
         Route::get('/notifications/unread', [PhotoNotificationController::class, 'getUnreadNotifications']);
         Route::post('/notifications/read/{id}', [PhotoNotificationController::class, 'markAsRead']);
@@ -95,6 +101,8 @@ Route::prefix('admin')->group(function () {
     ->name('photo.report');
     Route::post('/report/{random_id}', [PhotoController::class, 'report_submit'])
     ->name('report.submit');
+    Route::get('/photo/download/{id}', [PhotoController::class, 'download'])
+        ->name('photo.download');
     Route::get('/phpinfo', function() {
     phpinfo();
 });
