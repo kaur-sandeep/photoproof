@@ -200,7 +200,7 @@
 					    <li><strong>Location:</strong> {{$photo->location}}</li>
                     @endif
 
-                    @if(isset($photo->country, $photo->country))
+                    <!-- @if(isset($photo->country, $photo->country))
                         <li><strong>Country :</strong>  {{$photo->country }}  </li>
                     @elseif(isset($track->country, $track->country))
                          <li><strong>Country:</strong> {{$track->country}}</li>
@@ -222,7 +222,7 @@
                         <li><strong>Zip: </strong>  {{$photo->zip }}  </li>
                     @elseif(isset($track->zip, $track->zip))
                          <li><strong>Zip:</strong> {{$track->zip}}</li>
-                    @endif
+                    @endif -->
 
                       @if(isset($photo->timezone, $photo->timezone))
                         <li><strong>Timezone: </strong>  {{$photo->timezone }}  </li>
