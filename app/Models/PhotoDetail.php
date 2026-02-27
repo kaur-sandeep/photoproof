@@ -34,7 +34,12 @@ class PhotoDetail extends Model
         'region_name',
         'city',
         'zip',
+        'meta_data'
     ];
+
+    protected $casts = [
+    'meta_data' => 'array',
+];
 
 
 

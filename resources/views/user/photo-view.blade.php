@@ -185,7 +185,9 @@
                 </div>		 -->
 			</div>
              
-			<div class="col-sm-12 col-lg-3">		
+			<div class="col-sm-12 col-lg-3">
+               
+
                 @if($photo->uploadTrack)	
                   @php
                     $track = $photo->uploadTrack;
@@ -289,8 +291,13 @@
                       @if(!empty($track->isp) && $track->isp != 0)					
 					<li><strong>ISP:</strong> {{ $track->isp }}</li> 
                      @endif
-
+                    @if(!empty($photo->meta_data))
+                    @foreach($photo->meta_data as $key => $value)
+                        <li><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}</li>
+                    @endforeach
+                    @endif
 				    </ul>
+                    
                     @php
                         $lat = $photo->latitude ?? $track->latitude ?? null;
                         $lng = $photo->longitude ?? $track->longitude ?? null;
