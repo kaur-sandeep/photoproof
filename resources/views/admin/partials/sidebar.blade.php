@@ -18,7 +18,8 @@
                 </li>
 
             </ul>
-            
+            @if(auth()->check() && auth()->user()->getRoleNames()->contains('super-admin'))
+  
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="{{ route('admin.users.data') }}"
@@ -29,7 +30,7 @@
                 </li>
 
             </ul>
-            
+            @endif
             <ul class="nav flex-column">
 
                 <li class="nav-item">
@@ -54,7 +55,7 @@
 
             </ul>
 
-            
+            @if(auth()->check() && auth()->user()->getRoleNames()->contains('super-admin'))
               <ul class="nav flex-column">
 
                 <li class="nav-item">
@@ -66,7 +67,7 @@
                 </li>
 
             </ul>
-
+            @endif
               <ul class="nav flex-column">
 
                 <li class="nav-item">
@@ -78,7 +79,7 @@
                 </li>
 
             </ul>
-
+            @if(auth()->check() && auth()->user()->getRoleNames()->contains('super-admin'))
               <ul class="nav flex-column">
 
                 <li class="nav-item">
@@ -86,6 +87,18 @@
                        class="nav-link text-white">
                           <i class="bi bi-flag me-2"></i>
                         Reported Images
+                    </a>
+                </li>
+
+            </ul>
+            @endif
+            <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a href="{{ route('notifications.index') }}"
+                       class="nav-link text-white">
+                          <i class="bi bi-flag me-2"></i>
+                        Notifications
                     </a>
                 </li>
 

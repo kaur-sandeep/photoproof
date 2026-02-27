@@ -532,7 +532,7 @@ function fetchNotifications() {
                             data-id="${item.id}" style="cursor: pointer;">
                             <div class="notification-text">
                                 <b>${item.name}</b><br>
-                                <small>${item.message}</small><br>
+                                <small>${item.type}</small><br>
                                 <small class="text-muted">${item.created_at_formatted}</small>
                             </div>
                         </li>
@@ -659,6 +659,38 @@ $(document).ready(function() {
         ]
     });
 });
+
+
+$(document).ready(function() {
+    let table = $('#notificationList').DataTable({
+        processing: true,
+        serverSide: true,   
+        ajax: {
+            url: window.APP_URL + '/admin/notificationList/list/', // Ensure this URL is correct
+            type: 'GET', // Use GET method to pass query parameters
+            data: function(d) {
+                // Get the selected type filter value and append it to the request data
+                d.type = $('#typeFilter').val();  // Add type filter to the request
+            }
+        },
+
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'photo_random_id', name: 'photo_random_id'},
+            { data: 'name', name: 'name' },
+            { data: 'email', name: 'email' },
+            { data: 'type', name: 'type' },
+            { data: 'ip_address', name: 'ip_address'},
+            { data: 'date', name: 'date'},
+        ]
+    });
+
+    // Trigger DataTable reload when the filter changes
+    $('#typeFilter').change(function () {
+        table.ajax.reload();  // Reload the table with the new filter value
+    });
+});
+
 
 
 

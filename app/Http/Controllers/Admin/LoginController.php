@@ -62,6 +62,7 @@ class LoginController extends Controller
 
     public function dashboard()
     {
+   
         $totalUsers = User::count();
         $totalPhotos = PhotoDetail::count();
         $totalViews = PhotoDetail::sum('view_count');

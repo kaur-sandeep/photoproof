@@ -19,7 +19,7 @@ class AdminController extends Controller
     }
     public function list(Request $request){
 
-    $admins = Admin::where('state', '!=', -1)->get();
+    $admins = Admin::where('state', '!=', -1)->orderBy('created_at', 'desc')->get();
     return DataTables::of($admins)
         ->addIndexColumn()
         ->addColumn('profile_image', function ($admins) {
@@ -97,7 +97,7 @@ class AdminController extends Controller
     public function updateStatus(Request $request)
     {
         $request->validate([
-            'id' => 'required|exists:admins,id',
+            'id' => 'required',
             'status' => 'required|in:-1,0,1'
         ]);
 

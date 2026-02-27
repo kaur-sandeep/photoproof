@@ -95,7 +95,7 @@ class UserController extends Controller
 
 
     public function list(Request $request){
-    $users = User::with('photos.uploadTrack')->withCount('photos')->get();
+    $users = User::with('photos.uploadTrack')->withCount('photos')->orderBy('created_at', 'desc')->get();
   
 
 return DataTables::of($users)
@@ -242,7 +242,7 @@ return DataTables::of($users)
         $id = $request->input('id');
         $status = $request->input('status');
         $request->validate([
-            'id' => 'required|exists:users,id',
+            'id' => 'required',
             'status' => 'required|in:-1,0,1'
         ]);
 
@@ -388,9 +388,10 @@ return DataTables::of($users)
 
        return DataTables::of($data)
             ->addColumn('images', function ($row) {
+                 $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
                 return $row['image']
                     ? '<img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">'
-                    : 'No Image';
+                    :  $default;
     //             return $row['image']
     // ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
     //         <img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">

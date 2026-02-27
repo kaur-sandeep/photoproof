@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\AdminActivityLog;
 use Yajra\DataTables\DataTables;
+use App\Helpers\DateTime;
 class ActivityController extends Controller
 {
     public function index()
@@ -15,7 +16,7 @@ class ActivityController extends Controller
 
     public function list()
     {
-        $logs = AdminActivityLog::with('admin')->get();
+        $logs = AdminActivityLog::with('admin')->orderBy('created_at', 'desc')->get();
         return DataTables::of($logs)
         ->addIndexColumn()
         ->addColumn('admin', function ($logs) {
@@ -36,7 +37,7 @@ class ActivityController extends Controller
         return $logs->ip_address ?? '-';
         })
         ->addColumn('date', function ($logs) {
-        return $logs->created_at ?? '-';
+        return  DateTime::dateFormat($logs->created_at) ?? '-';
         })
         ->rawColumns(['admin','action','module','description','ip_address','date'])
         ->make(true);

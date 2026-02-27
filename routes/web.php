@@ -66,6 +66,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/photo/update/{id}', [PhotosController::class, 'update'])->name('admin.photo.update');
         Route::get('/reported/images', [PhotosController::class, 'reportedImages'])->name('admin.reported');
          Route::get('/reported/images/list', [PhotosController::class, 'reportedImagesList']);
+          Route::get('/reported/{id}', [PhotoNotificationController::class, 'reportShow'])->name('reported.show');
         
 
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
@@ -78,6 +79,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/notifications/read/{id}', [PhotoNotificationController::class, 'markAsRead']);
         Route::get('/notifications', [PhotoNotificationController::class,'notifications'])->name('notifications.index');
         Route::get('/notifications/{id}', [PhotoNotificationController::class, 'show'])->name('notifications.show');
+        Route::get('/notificationList/list', [PhotoNotificationController::class, 'list']);
+
+        
         
         
     });

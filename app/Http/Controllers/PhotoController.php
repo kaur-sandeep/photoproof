@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use App\Models\PhotoReport;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CommonMailNotification;
+use App\Models\Notifications;
 class PhotoController extends Controller
 {
    public function searchForm()
@@ -231,6 +232,35 @@ class PhotoController extends Controller
         'latitude' => $location['lat'] ?? null,
         'longitude' => $location['lon'] ?? null,
         'timezone' => $location['timezone'] ?? null,
+    ]);
+
+        $data = json_encode([
+            'userAgent' => $userAgent,
+            'referer' => $referer,
+            'browser' => $browser,
+            'platform' => $platform,
+            'device' => $device,
+            'deviceType' => $deviceType,
+            'ip' => $ip,
+            'country' => $location['country'] ?? null,
+            'region' => $location['regionName'] ?? null,
+            'city' => $location['city'] ?? null,
+            'zip' => $location['zip'] ?? null,
+            'latitude' => $location['lat'] ?? null,
+            'longitude' => $location['lon'] ?? null,
+            'timezone' => $location['timezone'] ?? null,
+            'message' => $request->message,
+        ]);
+        
+        // save data into notifications table //
+
+        Notifications::create([
+        'photo_random_id' => $random_id,
+        'name' => $request->name,
+        'email' => $request->email,
+        'type'=>'report photo',
+        'data' => $data, 
+        'is_read' => false
     ]);
 
     //send email
