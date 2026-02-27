@@ -7,6 +7,9 @@
 <div class="container-fluid">
 
     <div class="card">
+        <div class="card-header">
+            <h3 class="card-title"><b>Reported Images</b></h3>
+        </div>
         <div class="card-body">
             <table id="reportImagesList" class="table table-bordered table-striped">
                 <thead>

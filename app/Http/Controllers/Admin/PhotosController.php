@@ -24,9 +24,11 @@ class PhotosController extends Controller
     }
 
   public function list(Request $request){
+     $isSuperAdmin  = auth()->check() && auth()->user()->getRoleNames()->contains('super-admin');
     // $photos = PhotoDetail::with('user')->where('state', '!=', -1)->get();
     $photos = PhotoDetail::with('user.photo_upload_tracks') // load user and their uploadTrack
     ->where('state', '!=', -1)
+    ->orderBy('created_at', 'desc')
     ->get();
 
       $data = [];
@@ -135,14 +137,18 @@ class PhotosController extends Controller
         </a></span>';
 
             })
-
-    ->addColumn('status', function ($photo) {
-        if ($photo->state == 1) {
-            return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$photo->id.'" data-state="0">Active</button>';
-        }
-        if ($photo->state == 0) {
-            return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$photo->id.'" data-state="1">Inactive</button>';
-            
+    
+    ->addColumn('status', function ($photo) use ($isSuperAdmin) {
+        if ($isSuperAdmin) {
+            if ($photo->state == 1) {
+                return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$photo->id.'" data-state="0">Active</button>';
+            }
+            if ($photo->state == 0) {
+                return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$photo->id.'" data-state="1">Inactive</button>';
+                
+            }
+        }else{
+            return 'No Permission';
         }
     })
     ->addColumn('upload_track_record', function ($row) {
@@ -172,6 +178,7 @@ class PhotosController extends Controller
     public function showdata(Request $request,$id){
     $photoViews = PhotoView::where('photo_detail_id', $id)
                     ->with('photo')
+                    ->orderBy('created_at','desc')
                     ->get();
 
       
@@ -350,10 +357,11 @@ public function update(Request $request, $photo_id)
     public function updateStatus(Request $request){
     $id = $request->input('id');
     $status = $request->input('state');
+//    dd($id,$status);
     $admin = Auth::user();
     // dd($id,$status);
         $request->validate([
-            'id' => 'required|exists:users,id',
+            'id' => 'required',
             'state' => 'required|in:-1,0,1'
         ]);
 
@@ -386,7 +394,7 @@ public function update(Request $request, $photo_id)
     }
 
     public function reportedImagesList(){
-        $reported_data = PhotoReport::get();
+        $reported_data = PhotoReport::orderBy('created_at', 'desc')->get();
         return DataTables::of($reported_data)
         ->addIndexColumn()
         ->addColumn('image', function ($reported_data) {
@@ -436,10 +444,10 @@ public function update(Request $request, $photo_id)
         return $reported_data->zip ?? '-';
         })
         ->addColumn('created_at', function ($reported_data) {
-        return $reported_data->created_at ?? '-';
+        return DateTime::dateFormat($reported_data->created_at) ?? '-';
         })
          ->addColumn('actions', function ($reported_data) {
-            return '<a href="'.route('notifications.show', $reported_data->id).'" class="btn btn-sm btn-primary">View</a>';
+            return '<a href="'.route('reported.show', $reported_data->id).'" class="btn btn-sm btn-primary">View</a>';
         })
         ->rawColumns(['image','photo_random_id','created_at','actions'])
         ->make(true);
