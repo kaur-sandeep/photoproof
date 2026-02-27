@@ -246,7 +246,7 @@ class AuthController extends Controller
             'city' => $request->city,
             'zip' => $request->zip,
             'timezone' => $request->timezone,
-            'meta_data'=>json_encode($request->meta_data)
+            'meta_data'=>json_decode($request->meta_data)
         ]);
         $ip = $request->ip();
          $ip ='202.164.57.197';
