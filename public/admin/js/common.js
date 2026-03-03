@@ -532,7 +532,7 @@ function fetchNotifications() {
                             data-id="${item.id}" style="cursor: pointer;">
                             <div class="notification-text">
                                 <b>${item.name}</b><br>
-                                <small>${item.type}</small><br>
+                                <small>${toTitleCase(item.type)}</small><br>
                                 <small class="text-muted">${item.created_at_formatted}</small>
                             </div>
                         </li>
@@ -547,6 +547,7 @@ function fetchNotifications() {
         }
     });
 }
+
 
 // Call once on page load to show count
 fetchNotifications();
@@ -691,7 +692,14 @@ $(document).ready(function() {
     });
 });
 
+function toTitleCase(str) {
+    return str.toLowerCase().split(' ').map(word => 
+        word.charAt(0).toUpperCase() + word.slice(1)
+    ).join(' ');
+}
 
+// Example
+item.type = toTitleCase(item.type);
 
 
 });

@@ -97,7 +97,7 @@
                 <li class="nav-item">
                     <a href="{{ route('notifications.index') }}"
                        class="nav-link text-white">
-                          <i class="bi bi-flag me-2"></i>
+                          <i class="bi bi-bell me-2"></i>
                         Notifications
                     </a>
                 </li>

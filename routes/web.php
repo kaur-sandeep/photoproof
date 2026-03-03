@@ -29,8 +29,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/update/users/status', [AdminController::class, 'updateStatus'])->name('admin.update.users.status');
         Route::get('/edit/users/{userId}', [AdminController::class, 'editUsers'])->name('admin.users.edit.data');
         Route::post('/update/users/{userId}', [AdminController::class, 'updateUsers'])->name('admin.update.users.data');
-        
-        Route::post('/users/update/{userId}', [UserController::class, 'update'])->name('admin.users.update');
         Route::get('/change/password', [AdminController::class, 'changePassword'])->name('admin.change.password');
         Route::post('/update/password', [AdminController::class, 'updatePassword'])->name('admin.update.password');
         Route::get('/settings', [AdminController::class, 'settings'])->name('admin.settings');
@@ -43,7 +41,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/users', [UserController::class, 'index'])->name('admin.users');
         // Route::get('/users/list', [UserController::class, 'list'])->name('admin.users.list');
         Route::post('/users/update-status', [UserController::class, 'admin.user.updateStatus']);
-        Route::get('/users/create', [UserController::class, 'create'])->name('admin.users.create');
+        Route::get('/users/create', [UserController::class, 'create'])->name('admin.user.create');
         Route::post('/users/store', [UserController::class, 'store'])->name('admin.users.store');
         Route::get('/user/edit/{userId}', [UserController::class, 'edit'])->name('admin.users.edit');
         Route::post('/users/update/{userId}', [UserController::class, 'update'])->name('admin.users.update');
@@ -63,7 +61,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/photos/update/data', [PhotosController::class, 'updateStatus'])->name('admin.photos.update.status');
         Route::post('/photos/update/{photId}', [PhotosController::class, 'update'])->name('admin.photo.update');
         Route::get('/photos/edit/{id}', [PhotosController::class, 'edit'])->name('admin.photos.edit');
-        Route::post('/photo/update/{id}', [PhotosController::class, 'update'])->name('admin.photo.update');
+        // Route::post('/photo/update/{id}', [PhotosController::class, 'update'])->name('admin.photo.update');
         Route::get('/reported/images', [PhotosController::class, 'reportedImages'])->name('admin.reported');
          Route::get('/reported/images/list', [PhotosController::class, 'reportedImagesList']);
           Route::get('/reported/{id}', [PhotoNotificationController::class, 'reportShow'])->name('reported.show');
@@ -71,7 +69,7 @@ Route::prefix('admin')->group(function () {
 
         Route::post('/logout', [LoginController::class, 'logout'])->name('admin.logout');
         Route::get('/activity-logs', [ActivityController::class, 'index'])->name('admin.activity');
-        Route::get('/activity/list', [ActivityController::class, 'list'])->name('admin.activity');
+        Route::get('/activity/list', [ActivityController::class, 'list']);
        
         
 
