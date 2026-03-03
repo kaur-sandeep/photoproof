@@ -247,9 +247,9 @@
                             {{ $track->latitude }}° N, {{ $track->longitude }}° E
                         </li>
                     @endif
-                    @if(!empty($track->ip_address) && $track->ip_address != 0)				
+                    <!-- @if(!empty($track->ip_address) && $track->ip_address != 0)				
 				    <li><strong>IP Address:</strong> {{ $track->ip_address }}</li>
-                    @endif
+                    @endif -->
                    
                     @if(!empty($photo->device_type) && $photo->device_type != 0)	
 					<li><strong>Device Type:</strong>{{ $photo->device_type }}</li>

@@ -3199,3 +3199,16 @@ footer .os-version span svg {
 }	
 	
 }
+
+#lbMain {
+    position: relative;
+    overflow: hidden;
+    cursor: grab;
+}
+
+#lbImg {
+    transition: transform 0.2s ease;
+    transform-origin: center center;
+    max-width: none;
+    user-select: none;
+}
