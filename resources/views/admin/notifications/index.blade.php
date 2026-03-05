@@ -35,6 +35,7 @@
                         <th>Type</th>
                         <th>IP Address</th>
                         <th>Date</th>
+                        <th>Action</th>
                     </tr>
                 </thead>
             </table>

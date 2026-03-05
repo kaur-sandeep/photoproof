@@ -9,29 +9,25 @@
         <div class="card-header">
             Notification Details
         </div>
+            @php
+            $data = json_decode($notification->data);
+            @endphp
 
         <div class="card-body">
             <h4>Name : {{ $notification->name }}</h4>
             <p><strong>Email:</strong> {{ $notification->email }}</p>
-            <p><strong>Message:</strong> {{ $notification->message }}</p>
+            <p><strong>Message:</strong> {{ $data->message }}</p>
 
             <hr>
 
-            <p><strong>IP Address:</strong> {{ $notification->ip_address }}</p>
-            <p><strong>Browser:</strong> {{ $notification->browser }}</p>
-            <p><strong>Platform:</strong> {{ $notification->platform }}</p>
-            <p><strong>Device:</strong> {{ $notification->device }}</p>
-            <p><strong>Device Type:</strong> {{ $notification->device_type }}</p>
-
+            <p><strong>IP Address:</strong> {{ $data->ip }}</p>
+            <p><strong>Browser:</strong> {{ $data->browser }}</p>
+            <p><strong>Platform:</strong> {{ $data->platform }}</p>
+            <p><strong>Device:</strong> {{ $data->device }}</p>
+            <p><strong>Device Type:</strong> {{ $data->deviceType }}</p>
             <hr>
-
-            <p><strong>Location:</strong>
-                {{ $notification->city }},
-                {{ $notification->region }},
-                {{ $notification->country }}
-            </p>
-
-            <p><strong>Timezone:</strong> {{ $notification->timezone }}</p>
+             <p><strong>Location:</strong> {{ $data->country }} , {{ $data->region}} , {{$data->city}} , {{$data->zip}}</p>
+            <p><strong>Timezone:</strong> {{ $data->timezone }}</p>
         </div>
     </div>
 </div>

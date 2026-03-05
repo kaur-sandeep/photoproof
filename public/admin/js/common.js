@@ -683,6 +683,7 @@ $(document).ready(function() {
             { data: 'type', name: 'type' },
             { data: 'ip_address', name: 'ip_address'},
             { data: 'date', name: 'date'},
+            { data:'actions',name: 'actions'}
         ]
     });
 
