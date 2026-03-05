@@ -71,20 +71,20 @@ class PhotoNotificationController extends Controller
         return view('admin.notifications.show', compact('notification'));
     }
 
-    //  public function reportShow($id)
-    // {
-    //     // Find the notification or fail
-    //     $reportdata = notifications::findOrFail($id);
-    //     dd
-    //     // Mark as read if not already
-    //     if (!$reportdata->is_read) {
-    //         $reportdata->is_read = 1;
-    //         $reportdata->save();
-    //     }
+     public function reportShow($id)
+    {
+        // Find the notification or fail
+        $reportdata = PhotoReport::findOrFail($id);
+    
+        // Mark as read if not already
+        if (!$reportdata->is_read) {
+            $reportdata->is_read = 1;
+            $reportdata->save();
+        }
 
-    //     // Return a view and pass the notification
-    //     return view('admin.report.show', compact('reportdata'));
-    // }
+        // Return a view and pass the notification
+        return view('admin.report.show', compact('reportdata'));
+    }
     
 
 
