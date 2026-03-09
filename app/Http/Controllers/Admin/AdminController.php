@@ -31,6 +31,9 @@ class AdminController extends Controller
                         : $default)
                     . '" width="40" height="40" class="rounded-circle">';
             })
+        ->addColumn('last_login_at', function ($admins) {
+            return DateTime::dateFormat($admins->last_login_at) ?? '--'; // if device is null, show --
+        })
         ->addColumn('created_at', function ($admins) {
             return DateTime::dateFormat($admins->created_at) ?? '--'; // if device is null, show --
         })

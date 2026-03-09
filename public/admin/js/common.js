@@ -442,6 +442,7 @@ $(document).ready(function() {
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'phone_number', name: 'phone_number' },
+            { data: 'last_login_at', name: 'last_login_at' },
             { data: 'created_at', name: 'created_at'},
             { data: 'status', name: 'status', orderable: false, searchable: false },
             { data: 'actions', name: 'actions', orderable: false, searchable: false }

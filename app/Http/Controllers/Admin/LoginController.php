@@ -49,6 +49,10 @@ class LoginController extends Controller
         ])) {
             return back()->withInput()->with('error', 'Invalid Credentials');
         }
+            $admin = Auth::guard('admin')->user();
+
+            $admin->last_login_at = now();
+            $admin->save();
         // ✅ Step 3: Login success
       
           ActivityLogger::log(
@@ -56,6 +60,7 @@ class LoginController extends Controller
                 'Admin Users',
                 'Logged By:' . $request->email,
             );
+           
         return redirect()->route('admin.dashboard');
     }
 
@@ -234,17 +239,16 @@ class LoginController extends Controller
         if ($request->hasFile('image')) {
 
         // Delete old image
-        if ($admin->profile_image && Storage::disk('public')->exists('profile/' . $admin->profile_image)) {
-            Storage::disk('public')->delete('profile/' . $admin->profile_image);
+            if ($admin->profile_image && Storage::disk('public')->exists('profile/' . $admin->profile_image)) {
+                Storage::disk('public')->delete('profile/' . $admin->profile_image);
+            }
+
+            // Store image (auto generate name)
+            $path = $request->file('image')->store('profile', 'public');
+
+            // Save only filename
+            $admin->profile_image = basename($path);
         }
-
-        // Store image (auto generate name)
-        $path = $request->file('image')->store('profile', 'public');
-
-        // Save only filename
-        $admin->profile_image = basename($path);
-    }
-
         $admin->save();
 
         return redirect()->back()->with('success', 'Profile updated successfully!');

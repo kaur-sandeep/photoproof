@@ -32,7 +32,7 @@
                 </a>
             </div>
         </div>
-<!-- 
+
         <div class="col-lg-3 col-6">
             <div class="card text-bg-primary">
                 <a href="#" style="text-decoration: none; color: inherit;">
@@ -53,7 +53,7 @@
                 </div>
                 </a>
             </div>
-        </div> -->
+        </div> 
 
         <div class="col-lg-3 col-6">
             <div class="card text-bg-success">
