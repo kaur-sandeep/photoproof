@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Users List')
+@section('title', 'App Users List')
 
 @section('content')
 <style>
@@ -12,7 +12,7 @@
 
     <div class="card">
         <div class="card-header">
-            <h3 class="card-title"><b>Users List</b></h3>
+            <h3 class="card-title"><b>App Users List</b></h3>
         </div>
 
         <div class="card-body">

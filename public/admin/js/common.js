@@ -138,8 +138,16 @@ $(document).ready(function() {
     }
 
     var rowData = table.row(tr).data();
-console.log('rowdata is here333333333333r',rowData);
     if (!rowData) return;
+
+      const ips = [...new Set((rowData.user?.photo_upload_tracks || [])
+                .map(t => t.ip_address)
+                .filter(Boolean))];
+
+    const ispList = [...new Set((rowData.user?.photo_upload_tracks || [])
+                        .map(t => t.isp)
+                        .filter(Boolean)
+                    )].join(', ');
 
     // var html = `
     //      <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
@@ -165,23 +173,28 @@ console.log('rowdata is here333333333333r',rowData);
     //             <b>ISP:</b> ${rowData.isp ?? ''}<br>
     //     <hr>
      var html = `
-         <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
-                <b>Date & Time:</b> ${rowData.word_api_date_time ?? ''}<br>
-                <b>Location:</b> ${rowData.location ?? ''}<br>
-                <b>Timezone:</b> ${rowData.zip ?? ''}<br>
-                <b>Latitude:</b> ${rowData.latitude ?? ''}<br>
-                <b>Longitude:</b> ${rowData.longitude ?? ''}<br>
-                <b>IP Address:</b>  ${[...new Set(rowData.user.photo_upload_tracks.map(t => t.ip_address))].join(', ')}<br>
-                <b>Device Type:</b> ${rowData.device_type ?? ''}<br>
-                <b>Device Brand:</b> ${rowData.device_brand ?? ''}<br>
-                <b>Device Model:</b> ${rowData.device_model ?? ''}<br>
-                <b>Device Name:</b> ${rowData.device_name ?? ''}<br>
-                <b>Device Manufacturer:</b> ${rowData.device_manufacturer ?? ''}<br>
+       ${rowData.random_id ? `<b>Random Id:</b> ${rowData.random_id}<br>` : ''}
+                ${rowData.word_api_date_time ? `<b>Date & Time:</b> ${rowData.word_api_date_time}<br>` : ''}
+                ${rowData.location ? `<b>Location:</b> ${rowData.location}<br>` : ''}
+                ${rowData.latitude ? `<b>Latitude:</b> ${rowData.latitude}<br>` : ''}
+                ${rowData.longitude ? `<b>Longitude:</b> ${rowData.longitude}<br>` : ''}
+                ${ips.length ? `<b>IP Address:</b> ${ips.join(', ')}<br>` : ''}
+                ${rowData.device_type ? `<b>Device Type:</b> ${rowData.device_type}<br>` : ''}
+                ${rowData.timezone ? `<b>Timezone:</b> ${rowData.timezone}<br>` : ''}  
+                ${rowData.device_brand ? `<b>Device Brand:</b> ${rowData.device_brand}<br>` : ''}
+                ${rowData.device_model ? `<b>Device Model:</b> ${rowData.device_model}<br>` : ''}
+                ${rowData.device_name ? `<b>Device Name:</b> ${rowData.device_name}<br>` : ''}  
+                ${rowData.device_manufacturer ? `<b>Device Manufacturer:</b> ${rowData.device_manufacturer}<br>` : ''} 
                 ${rowData.android_version ? `<b>Android Version:</b> ${rowData.android_version}<br>` : ''}
                 ${rowData.android_sdk ? `<b>Android Sdk:</b> ${rowData.android_sdk}<br>` : ''}
                 ${rowData.ios_system_version ? `<b>IOS System Version:</b> ${rowData.ios_system_version}<br>` : ''}
                 ${rowData.ios_identifier ? `<b>IOS Identifier:</b> ${rowData.ios_identifier}<br>` : ''}
-                <b>ISP:</b> ${rowData.isp ?? ''}<br>
+                ${rowData.isp ? `<b>ISP:</b> ${rowData.isp}<br>` : ''}
+               ${ispList ? `<b>ISP:</b> ${ispList}<br>` : ''}
+                 <hr>
+                 ${rowData.photo_url ? `<b>Image:</b><br>
+                    <img src="${rowData.photo_url}" style="width:100%; height:350px; border-radius:6px;">
+                    <br>` : ''}
         <hr>
         ${rowData.latitude && rowData.longitude ? `
             <iframe 
@@ -327,25 +340,27 @@ $(document).ready(function() {
             //     <b>ISP:</b> ${rowData.isp ?? ''}<br>
             //     <hr>
             var html = `
-                <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
-                <b>Date & Time:</b> ${rowData.word_api_date_time ?? ''}<br>
-                <b>Location:</b> ${rowData.location ?? ''}<br>
-                <b>Timezone:</b> ${rowData.zip ?? ''}<br>
-                <b>Latitude:</b> ${rowData.latitude ?? ''}<br>
-                <b>Longitude:</b> ${rowData.longitude ?? ''}<br>
-                <b>IP Address:</b> ${rowData.ip_address ?? ''}<br>
-                <b>Device Type:</b> ${rowData.device_type ?? ''}<br>
-                <b>Device Brand:</b> ${rowData.device_brand ?? ''}<br>
-                <b>Device Model:</b> ${rowData.device_model ?? ''}<br>
-                <b>Device Name:</b> ${rowData.device_name ?? ''}<br>
-                <b>Device Manufacturer:</b> ${rowData.device_manufacturer ?? ''}<br>
+                 ${rowData.random_id ? `<b>Random Id:</b> ${rowData.random_id}<br>` : ''}
+                ${rowData.word_api_date_time ? `<b>Date & Time:</b> ${rowData.word_api_date_time}<br>` : ''}
+                ${rowData.location ? `<b>Location:</b> ${rowData.location}<br>` : ''}
+                ${rowData.latitude ? `<b>Latitude:</b> ${rowData.latitude}<br>` : ''}
+                ${rowData.longitude ? `<b>Longitude:</b> ${rowData.longitude}<br>` : ''}
+                ${rowData.ip_address ? `<b>IP Address:</b> ${rowData.ip_address}<br>` : ''}
+                ${rowData.device_type ? `<b>Device Type:</b> ${rowData.device_type}<br>` : ''}
+                ${rowData.timezone ? `<b>Timezone:</b> ${rowData.timezone}<br>` : ''}  
+                ${rowData.device_brand ? `<b>Device Brand:</b> ${rowData.device_brand}<br>` : ''}
+                ${rowData.device_model ? `<b>Device Model:</b> ${rowData.device_model}<br>` : ''}
+                ${rowData.device_name ? `<b>Device Name:</b> ${rowData.device_name}<br>` : ''}  
+                ${rowData.device_manufacturer ? `<b>Device Manufacturer:</b> ${rowData.device_manufacturer}<br>` : ''} 
                 ${rowData.android_version ? `<b>Android Version:</b> ${rowData.android_version}<br>` : ''}
                 ${rowData.android_sdk ? `<b>Android Sdk:</b> ${rowData.android_sdk}<br>` : ''}
                 ${rowData.ios_system_version ? `<b>IOS System Version:</b> ${rowData.ios_system_version}<br>` : ''}
                 ${rowData.ios_identifier ? `<b>IOS Identifier:</b> ${rowData.ios_identifier}<br>` : ''}
-
-
-                <b>ISP:</b> ${rowData.isp ?? ''}<br>
+                ${rowData.isp ? `<b>ISP:</b> ${rowData.isp}<br>` : ''}
+                <hr>
+                 ${rowData.image ? `<b>Image:</b><br>
+                    <img src="${rowData.image}" style="width:100%; height:350px; border-radius:6px;">
+                    <br>` : ''}
                 <hr>
                 ${rowData.latitude && rowData.longitude ? `
                     <iframe 

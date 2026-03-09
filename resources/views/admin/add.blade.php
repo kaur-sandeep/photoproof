@@ -1,4 +1,7 @@
 @extends('admin.layouts.master')
+
+@section('title', 'Add Admin User')
+
 @section('content')
 
 <div class="container-fluid">
@@ -21,7 +24,7 @@
         @endif
         <div class="card card-primary">
               <div class="card-header">
-                <h3 class="card-title">Add User</h3>
+                <h3 class="card-title">Add Admin User</h3>
               </div>
               <!-- /.card-header -->
               <!-- form start -->
