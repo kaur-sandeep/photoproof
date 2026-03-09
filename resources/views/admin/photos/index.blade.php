@@ -21,7 +21,7 @@
                         <th>Location</th>
                         <th>User Email</th>
                         <th>Created On</th>
-                        <th>View Count</th>
+                        <th>Viewed/Verified</th>
                         <th>Status</th>
                         <th>Track Details</th>
                         <!-- <th>Actions</th> -->

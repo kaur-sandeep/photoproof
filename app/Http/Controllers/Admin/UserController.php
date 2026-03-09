@@ -389,9 +389,12 @@ return DataTables::of($users)
        return DataTables::of($data)
             ->addColumn('images', function ($row) {
                  $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-                return $row['image']
-                    ? '<img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">'
-                    :  $default;
+                // return $row['image']
+                //     ? '<img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">'
+                //     :  $default;
+                  return '<a href="'.route('admin.photos.show', $row['photo_id']).'">
+                        <img src="'.$row['image'].'" width="80" height="80" style="border-radius:5px;">
+                    </a>';
     //             return $row['image']
     // ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
     //         <img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">
