@@ -44,8 +44,8 @@ class PhotoController extends Controller
         ->withInput(['random_id' => $random_id]);
         }
 
-       // $ip = $request->ip();
-        $ip ='202.164.57.197';
+        $ip = $request->ip();
+       // $ip ='202.164.57.197';
         $userAgent = $request->header('User-Agent');
         $referer = $request->headers->get('referer');
 
@@ -200,7 +200,7 @@ class PhotoController extends Controller
         return back()->with('error', 'Captcha verification failed.');
     }
     $ip = $request->ip(); // real user IP
-    $ip ='202.164.57.197';
+   // $ip ='202.164.57.197';
     $userAgent = $request->header('User-Agent');
     $referer = $request->headers->get('referer');
 

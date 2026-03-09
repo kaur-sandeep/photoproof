@@ -14,7 +14,12 @@
 
             <h4 class="text-center mb-4">You forgot your password? Here you can easily retrieve a new password.</h4>
 
-            
+           @if(session('error'))
+                <div class="alert alert-danger">
+                    {{ session('error') }}
+                </div>
+            @endif
+
          @if ($errors->any())
             <div class="alert alert-danger">
                 <ul class="mb-0">

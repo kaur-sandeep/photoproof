@@ -114,11 +114,11 @@ class LoginController extends Controller
             ->with('success', 'Password reset link sent successfully to your email.');
 
         } catch (\Exception $e) {
-
+           
             Log::error('Password reset mail failed: ' . $e->getMessage());
 
-            return redirect()->back()
-                ->with('error', 'Something went wrong! Unable to send reset link.');
+            return redirect()->route('admin.forgot-password')
+            ->with('error', 'Email server error. Unable to send reset link.');
         }
     }
     
