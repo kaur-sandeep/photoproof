@@ -22,7 +22,7 @@
             </div>
         @endif
         <div class="card-header">
-            <h4>Settings</h4>
+            <h4><b>Settings</b></h4>
         </div>
         <form action="{{route('admin.setting.update')}}" method="POST">
             @csrf
@@ -49,7 +49,7 @@
 
                     </div>
                 </div>
-                <div class="row mb-3">
+                <!-- <div class="row mb-3">
                     <div class="col-md-4"><strong>Enable SMTP</strong></div>
                     <div class="col-md-8 d-flex align-items-center">
 
@@ -70,7 +70,7 @@
                         <span class="ms-2 fw-bold text-danger">No</span>
 
                     </div>
-                </div>
+                </div> -->
                 <div class="row mb-3">
                     <div class="col-md-4"><strong>SMTP Host</strong></div>
                     <div class="col-md-8">
