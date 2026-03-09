@@ -193,7 +193,7 @@ $(document).ready(function() {
                ${ispList ? `<b>ISP:</b> ${ispList}<br>` : ''}
                  <hr>
                  ${rowData.photo_url ? `<b>Image:</b><br>
-                    <img src="${rowData.photo_url}" style="width:100%; height:350px; border-radius:6px;">
+                    <img src="${rowData.photo_url}" style=" height:350px; border-radius:6px;">
                     <br>` : ''}
         <hr>
         ${rowData.latitude && rowData.longitude ? `
@@ -359,7 +359,7 @@ $(document).ready(function() {
                 ${rowData.isp ? `<b>ISP:</b> ${rowData.isp}<br>` : ''}
                 <hr>
                  ${rowData.image ? `<b>Image:</b><br>
-                    <img src="${rowData.image}" style="width:100%; height:350px; border-radius:6px;">
+                    <img src="${rowData.image}" style="height:350px; border-radius:6px;">
                     <br>` : ''}
                 <hr>
                 ${rowData.latitude && rowData.longitude ? `
@@ -666,7 +666,6 @@ $(document).ready(function() {
             { data: 'email', name: 'email' },
             { data: 'message', name: 'message' },
             { data: 'ip_address', name: 'ip_address'},
-            { data: 'device', name: 'device'},
             { data: 'device_type', name: 'device_type'},
             { data: 'country', name: 'country'},
             { data: 'region', name: 'region'},

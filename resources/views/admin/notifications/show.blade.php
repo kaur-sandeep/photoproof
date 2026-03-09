@@ -23,7 +23,7 @@
             <p><strong>IP Address:</strong> {{ $data->ip }}</p>
             <p><strong>Browser:</strong> {{ $data->browser }}</p>
             <p><strong>Platform:</strong> {{ $data->platform }}</p>
-            <p><strong>Device:</strong> {{ $data->device }}</p>
+            <!-- <p><strong>Device:</strong> {{ $data->device }}</p> -->
             <p><strong>Device Type:</strong> {{ $data->deviceType }}</p>
             <hr>
              <p><strong>Location:</strong> {{ $data->country }} , {{ $data->region}} , {{$data->city}} , {{$data->zip}}</p>

@@ -91,6 +91,15 @@ document.addEventListener("DOMContentLoaded", function () {
            current = index;
            document.getElementById('lightbox').classList.add('active');
            document.body.style.overflow = 'hidden';
+            const images = document.querySelectorAll('.gallery-image');
+
+          if (images.length <= 1) {
+              document.getElementById('lbPrev').style.display = 'none';
+              document.getElementById('lbNext').style.display = 'none';
+          } else {
+              document.getElementById('lbPrev').style.display = 'block';
+              document.getElementById('lbNext').style.display = 'block';
+          }
            updateLightbox();
          }
          

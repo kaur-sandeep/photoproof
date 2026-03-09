@@ -21,7 +21,6 @@
                         <th>Email</th>
                         <th>Message</th>
                         <th>IP Address</th>
-                        <th>Device</th>
                         <th>Device Type</th>
                          <th>Country</th>
                         <th>Region</th>
