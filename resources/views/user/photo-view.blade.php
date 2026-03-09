@@ -148,8 +148,11 @@
 
 <section class="second-row  wide-50 division ">
       <div class="container-fluid px-5">
-         <div class="row d-flex align-items-center">			
+         <div class="left_photoID">#{{ $photo->random_id }}</div>	
+         <div class="row d-flex align-items-center">	
+            	
 			<div class="col-sm-12 col-lg-9">
+                    
                     <div class="btn-cntr">
                          <span class="views-count">{{$photo->view_count}} Views</span>
                         <a href="{{route('photo.download', $photo->id)}}" class="download-icon">
@@ -160,7 +163,7 @@
                         </svg>
                         </a>
                     </div>
-                    <div class="photo_bx">
+                    <div id="mobile-image-box" class="photo_bx">
                         <div class="gallery-grid" id="galleryGrid">
                            <div class="gallery-item"  data-category="Landscape">
                               <img src="{{ $photo->photo_url }}"  loading="lazy">                               
@@ -193,16 +196,171 @@
                 @endphp	
                 <div class="ip-details-container">
                     <div class="details-top">This photo is available for {{ $daysAvailable }} days. | <a href="{{ url('/report/' . $photo->random_id) }}" class=""/>Report This Photo</a></div>
-                    <ul class="ip-details">
-					<!-- <li><strong>Name:</strong>{{ $photo->name }}</li> -->
-					<li><strong>Photo ID:</strong> {{ $photo->random_id }}</li>
-				
-                      @if(!empty($photo->word_api_date_time))
-					    <li><strong>Date & Time:</strong> {{$photo->word_api_date_time}}</li>
+                    
+                    <div class="photo_details">
+                        <div class="right_photoID">#{{ $photo->random_id }}</div>
+                        
+                            @if(!empty($photo->meta_data))
+
+                                @php
+                                
+                                    $width = $photo->meta_data['width'] ?? null;
+                                    $height = $photo->meta_data['height'] ?? null;
+                                    $orientation = $photo->meta_data['orientation'] ?? null;
+                                    $make = $photo->meta_data['make'] ?? null;
+                                    $model = $photo->meta_data['model'] ?? null;
+                                    $exposure_time = $photo->meta_data['exposure_time'] ?? null;
+                                    $f_number = $photo->meta_data['f_number'] ?? null;
+                                    $iso = $photo->meta_data['iso'] ?? null;
+                                    $focal_length = $photo->meta_data['focal_length'] ?? null;
+                                @endphp
+<div class="image-meta">
+                                @if($width && $height)
+                                    {{ $width }}x{{ $height }}
+                                @endif
+</div>
+                               <div class="image-meta"> @if($orientation)
+                                    {{ $orientation }}
+                                @endif
+</div>
+
+  <div class="right_photoID">Device & Camera </div>
+<div class="image-meta">
+  @if(!empty($photo->device_name ) && $photo->device_name != 0)					
+					<span> {{ $photo->device_name }}</span> 
+                     @endif
+ @if(!empty($photo->device_type) && $photo->device_type != 0)	
+					<span>{{ $photo->device_type }}   @if(!empty($photo->android_version ) && $photo->android_version != 0)					
+					/ {{ $photo->android_version }}
+                     @endif</span>
+
+
+                      @if(!empty($photo->ios_system_version ) && $photo->ios_system_version != 0)					
+					<span> {{ $photo->ios_system_version }}</span>
+                     @endif
+
+                      @if(!empty($photo->ios_identifier ) && $photo->ios_identifier != 0)					
+					<span>IOS Identifier:</strong> {{ $photo->ios_identifier }}</span> 
+                     @endif
+
                     @endif
+                      @if(!empty($photo->device_brand) && $photo->device_brand != 0)	
+					<!-- <li><strong>Device Brand:</strong> {{ $photo->device_brand }}</li>
+                     @endif
+                    @if(!empty($photo->device_model) && $photo->device_model != 0)	
+					    <li><strong>Device Model:</strong> {{ $photo->device_model }}</li>	
+                    @endif  -->
+
+                    
+
+                    <!--@if(!empty($photo->device_manufacturer ) && $photo->device_manufacturer != 0)					
+					<li><strong>Device Manufacturer:</strong> {{ $photo->device_manufacturer }}</li> 
+                     @endif -->
+
+                    
+
+
+                     <!--  @if(!empty($photo->android_sdk) && $photo->android_sdk != 0)					
+					<li><strong>Android Sdk :</strong> {{ $photo->android_sdk }}</li> 
+                     @endif -->
+
+
+
+                                <span>@if($make)
+                                    {{ $make }}
+</span>
+<span> 
+                                @endif
+                                  @if($model)
+                                    {{ $model }}
+</span>
+</div>
+<div class="image-meta">
+                              <span>  @endif
+                                   @if($exposure_time)
+                                    {{ $exposure_time }}s
+</span>
+<span>
+                                @endif
+                                   @if($f_number)
+                                    {{ $f_number }}
+</span>
+<span>
+                                @endif
+                                   @if($iso)
+                                    ISO{{ $iso }} 
+</span>
+<span>
+
+                                @endif
+                                   @if($focal_length)
+                                    {{ $focal_length }} mm
+                                @endif
+</span>
+
+
+
+
+
+</div>
+                                <!-- @foreach($photo->meta_data as $key => $value)
+                                    @if(!in_array($key, ['date_time_original', 'date_time']))
+                                        <p>
+                                            <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}
+                                        </p>
+                                    @endif
+                                @endforeach -->
+
+                                @endif
+                        
+                   <div class="right_photoID">Location</div>   
+                   <div class="image-meta">
+                   <span> @if(!empty($track->isp) && $track->isp != 0)					
+					{{ $track->isp }}                  @endif, 
+                    {{$photo->location}}</span></div>
+                   <div class="image-meta">
+                     @if(isset($photo->timezone, $photo->timezone))
+                       {{$photo->timezone }} 
+                    @elseif(isset($track->timezone, $track->timezone))
+                       {{$track->timezone}}
+                    @endif
+
+
+ @if(isset($photo->latitude, $photo->longitude))
+                       
+                             {{ number_format($photo->latitude, 8) }}° N, 
+                            {{ number_format($photo->longitude, 8) }}° E
+                      
+                    @elseif(isset($track->latitude, $track->longitude))
+                     
+                            {{ $track->latitude }}° N, {{ $track->longitude }}° E
+                       
+                    @endif
+                     @php
+                        $lat = $photo->latitude ?? $track->latitude ?? null;
+                        $lng = $photo->longitude ?? $track->longitude ?? null;
+                    @endphp
+                		@if(!empty($lat) && !empty($lng))
+                    <!-- @if(!empty($track->ip_address) && $track->ip_address != 0)				
+				    <li><strong>IP Address:</strong> {{ $track->ip_address }}</li>
+                    @endif -->
+
+</div>
+</div>
+                    
+                  
+                    
+                    
+                    	<!--<ul class="ip-details">
+				 <li><strong>Name:</strong>{{ $photo->name }}</li> -->
+					<!-- <li><strong>Photo ID:</strong> {{ $photo->random_id }}</li> -->
+				
+                     <!--  @if(!empty($photo->word_api_date_time))
+					    <li><strong>Date & Time:</strong> {{$photo->word_api_date_time}}</li> -->
+                   <!--  @endif
                      @if(!empty($photo->location))
 					    <li><strong>Location:</strong> {{$photo->location}}</li>
-                    @endif
+                    @endif -->
 
                     <!-- @if(isset($photo->country, $photo->country))
                         <li><strong>Country :</strong>  {{$photo->country }}  </li>
@@ -228,14 +386,14 @@
                          <li><strong>Zip:</strong> {{$track->zip}}</li>
                     @endif -->
 
-                      @if(isset($photo->timezone, $photo->timezone))
+                     <!--  @if(isset($photo->timezone, $photo->timezone))
                         <li><strong>Timezone: </strong>  {{$photo->timezone }}  </li>
                     @elseif(isset($track->timezone, $track->timezone))
                          <li><strong>Timezone:</strong> {{$track->timezone}}</li>
-                    @endif
+                    @endif -->
                    
 
-                   @if(isset($photo->latitude, $photo->longitude))
+                  <!-- @if(isset($photo->latitude, $photo->longitude))
                         <li>
                             <strong>Latitude & Longitude:</strong> 
                              {{ number_format($photo->latitude, 8) }}° N, 
@@ -246,12 +404,12 @@
                             <strong>Latitude & Longitude:</strong> 
                             {{ $track->latitude }}° N, {{ $track->longitude }}° E
                         </li>
-                    @endif
+                    @endif -->
                     <!-- @if(!empty($track->ip_address) && $track->ip_address != 0)				
 				    <li><strong>IP Address:</strong> {{ $track->ip_address }}</li>
                     @endif -->
                    
-                    @if(!empty($photo->device_type) && $photo->device_type != 0)	
+                    <!-- @if(!empty($photo->device_type) && $photo->device_type != 0)	
 					<li><strong>Device Type:</strong> {{ $photo->device_type }}</li>
                     @endif
                       @if(!empty($photo->device_brand) && $photo->device_brand != 0)	
@@ -276,10 +434,10 @@
 
                       @if(!empty($photo->android_sdk) && $photo->android_sdk != 0)					
 					<li><strong>Android Sdk :</strong> {{ $photo->android_sdk }}</li> 
-                     @endif
+                     @endif -->
 
 
-                      @if(!empty($photo->ios_system_version ) && $photo->ios_system_version != 0)					
+                     <!--  @if(!empty($photo->ios_system_version ) && $photo->ios_system_version != 0)					
 					<li><strong>IOS System Version:</strong> {{ $photo->ios_system_version }}</li> 
                      @endif
 
@@ -289,24 +447,12 @@
 
                       @if(!empty($track->isp) && $track->isp != 0)					
 					<li><strong>ISP:</strong> {{ $track->isp }}</li> 
-                     @endif
+                     @endif 
 
-                     @if(!empty($photo->meta_data))
-                    @foreach($photo->meta_data as $key => $value)
-                           @if(!in_array($key, ['date_time_original', 'date_time']))
-                            <li>
-                                <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}
-                            </li>
-                        @endif
-                    @endforeach
-                    @endif
+       
 
-				    </ul>
-                    @php
-                        $lat = $photo->latitude ?? $track->latitude ?? null;
-                        $lng = $photo->longitude ?? $track->longitude ?? null;
-                    @endphp
-                		@if(!empty($lat) && !empty($lng))
+				    </ul>-->
+                   
                 </div>
                     <div class="map">
                        <div class="map-preview" 
@@ -332,6 +478,7 @@
                             </div>
                         </div>
                     </div>
+                      </div>
                 @endif
                 @else
                     <p>No upload tracking data found.</p>
