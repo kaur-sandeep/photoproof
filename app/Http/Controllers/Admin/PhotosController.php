@@ -447,7 +447,58 @@ public function update(Request $request, $photo_id)
         return DateTime::dateFormat($reported_data->created_at) ?? '-';
         })
          ->addColumn('actions', function ($reported_data) {
-            return '<a href="'.route('reported.show', $reported_data->id).'" class="btn btn-sm btn-primary">View</a>';
+            // return '<a href="'.route('reported.show', $reported_data->id).'" class="btn btn-sm btn-primary">View</a>';
+            $browser = $reported_data->browser?? '';
+            $platform =$reported_data->platform?? '';
+            $deviceType = $reported_data->device_type?? '';
+            if (!empty($reported_data->country) && 
+                !empty($reported_data->region) && 
+                !empty($reported_data->city) && 
+                !empty($reported_data->zip)) {
+
+                $location = implode(',', [
+                    $reported_data->country,
+                    $reported_data->region,
+                    $reported_data->city,
+                    $reported_data->zip
+                ]);
+
+            } else {
+                $location = '';
+            }
+        //     return '<button 
+        //     class="btn btn-primary viewReported"
+        //     data-name="'.$reported_data->name.'"
+        //     data-email="'.$reported_data->email.'"
+        //     data-message="'.$reported_data->message.'"
+        //     data-browser="'.$browser.'"
+        //     data-platform="'.$platform.'"
+        //     data-devicetype="'.$deviceType.'"
+        //     data-ip="'.$reported_data->ip_address.'"
+        //     data-date="'.DateTime::dateFormat($reported_data->created_at).'"
+        //     data-location="'.$location.'"
+        //     data-bs-toggle="modal"
+        //     data-bs-target="#ReportModal">
+        //     View
+        // </button>';
+
+
+
+         return '<button 
+            class="btn btn-primary viewReported"
+            data-name="'.$reported_data->name.'"
+            data-email="'.$reported_data->email.'"
+            data-message="'.$reported_data->message.'"
+            data-browser="'.$browser.'"
+            data-platform="'.$platform.'"
+            data-devicetype="'.$deviceType.'"
+            data-ip="'.$reported_data->ip_address.'"
+            data-date="'.DateTime::dateFormat($reported_data->created_at).'"
+            data-location="'.$location.'"
+            data-bs-toggle="modal"
+            data-bs-target="#ReportModal">
+            View
+        </button>';
         })
         ->rawColumns(['image','photo_random_id','created_at','actions'])
         ->make(true);

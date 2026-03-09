@@ -64,12 +64,19 @@ class PhotoNotificationController extends Controller
         // $notification = PhotoReport::findOrFail($id);
         $notification = Notifications::findOrFail($id);
         // Mark as read if not already
-        if (!$notification->is_read) {
-            $notification->is_read = 1;
-            $notification->save();
-        }
+           if ($notification->is_read == 0) {
+                $notification->is_read = 1;
+                $notification->save();
+            }
         // Return a view and pass the notification
-        return view('admin.notifications.show', compact('notification'));
+            return response()->json([
+            'name' => $notification->name,
+            'email' => $notification->email,
+            'message' => $notification->message,
+            'type' => $notification->type,
+            'ip_address' => $notification->ip_address,
+            'date' => DateTime::dateFormat($notification->created_at)
+        ]);
     }
 
      public function reportShow($id)
@@ -106,7 +113,6 @@ if ($customSearch) {
 }
 
 $notifications = $notifications->get();
-
 return DataTables::of($notifications)
     ->addIndexColumn()
     ->addColumn('photo_random_id', function ($notifications) {
@@ -137,7 +143,45 @@ return DataTables::of($notifications)
         return $date;
     })
     ->addColumn('actions', function ($notifications) {
-        return '<a href="'.route('notifications.show', $notifications->id).'" class="btn btn-sm btn-primary">View</a>';
+        $data = json_decode($notifications->data, true);
+        $ip = $data['ip']?? '';
+        $message_data = $data['message'] ?? null;
+        $message = $message_data ? Str::limit($message_data, 100, '...') : '--';
+        $browser = $data['browser']?? '';
+        $platform = $data['platform']?? '';
+         $deviceType = $data['deviceType']?? '';
+            if (!empty( $data['country']) && 
+                !empty( $data['region']) && 
+                !empty( $data['city']) && 
+                !empty( $data['zip'])) {
+                $location = implode(',', [
+                     $data['country'],
+                    $data['region'],
+                    $data['city'],
+                     $data['zip']
+                ]);
+
+            } else {
+                $location = '';
+            }
+
+        
+        return '<button 
+        class="btn btn-primary viewNotification"
+        data-name="'.$notifications->name.'"
+        data-email="'.$notifications->email.'"
+        data-message="'.$message.'"
+        data-ip="'.$ip.'"
+        data-type="'.ucwords($notifications->type).'"
+        data-date="'.DateTime::dateFormat($notifications->created_at).'"
+        data-browser="'.$browser.'"
+        data-platform="'.$platform.'"
+        data-devicetype="'.$deviceType.'"
+        data-location="'.$location.'"
+        data-bs-toggle="modal"
+        data-bs-target="#shwonotificationModal">
+        View
+    </button>';
     })
     ->rawColumns(['name','actions','message','email','type','ip_address','date'])
     ->make(true);

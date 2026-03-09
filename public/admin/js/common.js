@@ -658,8 +658,46 @@ $(document).ready(function() {
         ]
     });
 });
+// $(document).on('click', '.viewReported', function(){
+//     $('#modal_name').text($(this).data('name'));
+//     $('#modal_email').text($(this).data('email'));
+//     $('#modal_message').text($(this).data('message'));
+//     $('#modal_browser').text($(this).data('browser'));
+//     $('#modal_platform').text($(this).data('platform'));
+//     $('#modal_deviceType').text($(this).data('devicetype'));
+//     $('#modal_ip').text($(this).data('ip'));  
+//     $('#modal_location').text($(this).data('location'));
+//     $('#modal_date').text($(this).data('date'));
+// });
 
+$(document).on('click', '.viewReported', function () {
 
+function toggleField(value, spanId, rowId){
+
+    // Convert to string and clean value
+    if(value !== undefined && value !== null){
+        value = value.toString().replace(/"/g,'').trim();
+    }
+
+    // Hide if empty
+    if(!value){
+        $('#'+rowId).hide();
+    }else{
+        $('#'+spanId).text(value);
+        $('#'+rowId).show();
+    }
+}
+toggleField($(this).data('name'),'name','row_name');
+toggleField($(this).data('email'),'email','row_email');
+toggleField($(this).data('message'),'message','row_message');
+toggleField($(this).data('browser'),'browser','row_browser');
+toggleField($(this).data('platform'),'platform','row_platform');
+toggleField($(this).data('devicetype'),'device','row_device');
+toggleField($(this).data('ip'),'ip','row_ip');
+toggleField($(this).data('date'),'date','row_date');
+toggleField($(this).data('location'),'location','row_location');
+
+});
 $(document).ready(function() {
     let table = $('#notificationList').DataTable({
         processing: true,
@@ -691,6 +729,45 @@ $(document).ready(function() {
         table.ajax.reload();  // Reload the table with the new filter value
     });
 });
+
+
+$(document).on('click', '.viewNotification', function(){
+    // $('#modal_name').text($(this).data('name'));
+    // $('#modal_email').text($(this).data('email'));
+    // $('#modal_message').text($(this).data('message'));
+    // $('#modal_ip').text($(this).data('ip'));
+    // $('#modal_type').text($(this).data('type'));
+    // $('#modal_date').text($(this).data('date'));
+
+
+    function toggleField(value, spanId, rowId){
+
+    // Convert to string and clean value
+    if(value !== undefined && value !== null){
+        value = value.toString().replace(/"/g,'').trim();
+    }
+
+    // Hide if empty
+    if(!value){
+        $('#'+rowId).hide();
+    }else{
+        $('#'+spanId).text(value);
+        $('#'+rowId).show();
+    }
+}
+toggleField($(this).data('name'),'name','row_name');
+toggleField($(this).data('email'),'email','row_email');
+toggleField($(this).data('message'),'message','row_message');
+toggleField($(this).data('browser'),'browser','row_browser');
+toggleField($(this).data('platform'),'platform','row_platform');
+toggleField($(this).data('devicetype'),'device','row_device');
+toggleField($(this).data('ip'),'ip','row_ip');
+toggleField($(this).data('type'),'type','row_type');
+toggleField($(this).data('date'),'date','row_date');
+toggleField($(this).data('location'),'location','row_location');
+
+});
+
 
 function toTitleCase(str) {
     return str.toLowerCase().split(' ').map(word => 
