@@ -26,3 +26,17 @@
 #notificationModalBody li.list-group-item {
     word-break: break-word;    /* Ensure long messages wrap */
 }
+
+
+
+table.dataTable thead th.sorting:before,
+table.dataTable thead th.sorting:after,
+table.dataTable thead th.sorting_asc:before,
+table.dataTable thead th.sorting_desc:after {
+    opacity: 1 !important;
+}
+
+table.dataTable thead th:first-child::before,
+table.dataTable thead th:first-child::after {
+    display: none !important;
+}

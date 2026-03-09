@@ -35,7 +35,7 @@ $(document).ready(function() {
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'profile_image', name: 'profile_image', orderable: false, searchable: false },
+            { data: 'profile_image', name: 'profile_image', searchable: false },
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'state', name: 'state' },
@@ -102,14 +102,14 @@ $(document).ready(function() {
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'photo', name: 'photo', orderable: false, searchable: false },
+            { data: 'photo', name: 'photo', searchable: false },
             { data: 'random_id', name: 'random_id' },
             { data: 'name', name: 'name' },
             { data: 'location', name: 'location' },
             { data: 'user_name', name: 'user_name' },
             { data:'created_at', name:'created_at'},
-            { data: 'view_count', name: 'view_count', orderable: false, searchable: false },
-            { data:'status', name:'status'},
+            { data: 'view_count', name: 'view_count',searchable: false },
+            { data:'status', name:'status',orderable: false},
             //  { data:'upload_track_record', name:'upload_track_record'},
               {
             data: null,
@@ -262,7 +262,6 @@ $(document).ready(function() {
               {
                 data: 'images',
                 name: 'images',
-                orderable: false,
                 searchable: false,
                 render: function(data, type, row) {
                     if (data) {
@@ -292,7 +291,7 @@ $(document).ready(function() {
                 `;
             }
         },
-         {data: 'status', name: 'status' },
+         {data: 'status', name: 'status',orderable: false},
         ]
         });
         $('#search-name').on('keyup', function() {
@@ -453,7 +452,7 @@ $(document).ready(function() {
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'profile_image', name: 'profile_image', orderable: false, searchable: false },
+            { data: 'profile_image', name: 'profile_image', searchable: false },
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'phone_number', name: 'phone_number' },
@@ -654,7 +653,7 @@ $(document).ready(function() {
             { data: 'city', name: 'city'},
             { data: 'zip', name: 'zip'},
             { data: 'created_at', name: 'created_at'},
-            { data: 'actions', name: 'actions'},
+            { data: 'actions', name: 'actions',orderable: false},
             
         ]
     });
@@ -683,7 +682,7 @@ $(document).ready(function() {
             { data: 'type', name: 'type' },
             { data: 'ip_address', name: 'ip_address'},
             { data: 'date', name: 'date'},
-            { data:'actions',name: 'actions'}
+            { data:'actions',name: 'actions',orderable: false,}
         ]
     });
 

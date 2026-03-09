@@ -16,5 +16,6 @@
 <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
 <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 <!-- AdminLTE v4 -->
+ <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
 <link rel="stylesheet" href="{{ asset('admin/css/adminlte.css') }}">
 <link rel="stylesheet" href="{{ asset('admin/css/custom.css') }}">
