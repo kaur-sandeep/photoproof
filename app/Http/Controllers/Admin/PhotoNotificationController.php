@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\PhotoReport;
-use App\Models\notifications;
+use App\Models\Notifications;
 use App\Helpers\DateTime;
 use Yajra\DataTables\DataTables;
 class PhotoNotificationController extends Controller
@@ -23,7 +23,7 @@ class PhotoNotificationController extends Controller
     public function getUnreadNotifications()
 {
     // $notifications = PhotoReport::where('is_read', 0)
-        $notifications = notifications::where('is_read', 0)    
+        $notifications = Notifications::where('is_read', 0)    
         ->orderBy('created_at', 'desc')
         ->take(5)
         ->get()
@@ -42,7 +42,7 @@ class PhotoNotificationController extends Controller
     public function markAsRead($id)
 {
     // $notification = PhotoReport::findOrFail($id);
-    $notification = notifications::findOrFail($id);
+    $notification = Notifications::findOrFail($id);
     $notification->is_read = 1;
     $notification->save();
 
@@ -52,7 +52,7 @@ class PhotoNotificationController extends Controller
     public function notifications()
     {
         // $notifications = PhotoReport::orderBy('created_at', 'desc')->paginate(10);
-        $notifications = notifications::orderBy('created_at', 'desc')->paginate(10);
+        $notifications = Notifications::orderBy('created_at', 'desc')->paginate(10);
         return view('admin.notifications.index', compact('notifications'));
     }
 
@@ -61,7 +61,7 @@ class PhotoNotificationController extends Controller
         
         // Find the notification or fail
         // $notification = PhotoReport::findOrFail($id);
-        $notification = notifications::findOrFail($id);
+        $notification = Notifications::findOrFail($id);
         // Mark as read if not already
         if (!$notification->is_read) {
             $notification->is_read = 1;
