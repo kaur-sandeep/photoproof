@@ -37,7 +37,7 @@
                     <a href="{{ route('admin.users') }}"
                        class="nav-link text-white">
                         <i class="bi bi-people me-2"></i>
-                        Users
+                        App Users
                     </a>
                 </li>
 

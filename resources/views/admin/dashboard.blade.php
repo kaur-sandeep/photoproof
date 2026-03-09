@@ -15,7 +15,7 @@
             <div class="card text-bg-primary">
                 <a href="{{ route('admin.users') }}" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
-                    <h5>Total Users</h5>
+                    <h5>Total App Users</h5>
                     <h3>{{$totalUsers}}</h3>
                 </div>
             </a>
@@ -37,7 +37,7 @@
             <div class="card text-bg-primary">
                 <a href="#" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
-                    <h5>Total Iphone Installations</h5>
+                    <h5>Total iPhone Installations</h5>
                     <h3>0</h3>
                 </div>
             </a>

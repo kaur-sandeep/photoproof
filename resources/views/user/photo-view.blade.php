@@ -252,7 +252,7 @@
                     @endif -->
                    
                     @if(!empty($photo->device_type) && $photo->device_type != 0)	
-					<li><strong>Device Type:</strong>{{ $photo->device_type }}</li>
+					<li><strong>Device Type:</strong> {{ $photo->device_type }}</li>
                     @endif
                       @if(!empty($photo->device_brand) && $photo->device_brand != 0)	
 					<li><strong>Device Brand:</strong> {{ $photo->device_brand }}</li>
@@ -293,7 +293,11 @@
 
                      @if(!empty($photo->meta_data))
                     @foreach($photo->meta_data as $key => $value)
-                        <li><strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}</li>
+                           @if(!in_array($key, ['date_time_original', 'date_time']))
+                            <li>
+                                <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}
+                            </li>
+                        @endif
                     @endforeach
                     @endif
 

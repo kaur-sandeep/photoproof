@@ -138,7 +138,7 @@ $(document).ready(function() {
     }
 
     var rowData = table.row(tr).data();
-
+console.log('rowdata is here333333333333r',rowData);
     if (!rowData) return;
 
     // var html = `
@@ -171,16 +171,16 @@ $(document).ready(function() {
                 <b>Timezone:</b> ${rowData.zip ?? ''}<br>
                 <b>Latitude:</b> ${rowData.latitude ?? ''}<br>
                 <b>Longitude:</b> ${rowData.longitude ?? ''}<br>
-                <b>IP Address:</b> ${rowData.ip_address ?? ''}<br>
+                <b>IP Address:</b>  ${[...new Set(rowData.user.photo_upload_tracks.map(t => t.ip_address))].join(', ')}<br>
                 <b>Device Type:</b> ${rowData.device_type ?? ''}<br>
                 <b>Device Brand:</b> ${rowData.device_brand ?? ''}<br>
                 <b>Device Model:</b> ${rowData.device_model ?? ''}<br>
                 <b>Device Name:</b> ${rowData.device_name ?? ''}<br>
                 <b>Device Manufacturer:</b> ${rowData.device_manufacturer ?? ''}<br>
-                <b>Android Version:</b> ${rowData.android_version ?? ''}<br>
-                <b>Android Sdk:</b> ${rowData.android_sdk ?? ''}<br>
-                <b>IOS System Version:</b> ${rowData.ios_system_version ?? ''}<br>
-                <b>IOS Identifier:</b> ${rowData.ios_identifier ?? ''}<br>
+                ${rowData.android_version ? `<b>Android Version:</b> ${rowData.android_version}<br>` : ''}
+                ${rowData.android_sdk ? `<b>Android Sdk:</b> ${rowData.android_sdk}<br>` : ''}
+                ${rowData.ios_system_version ? `<b>IOS System Version:</b> ${rowData.ios_system_version}<br>` : ''}
+                ${rowData.ios_identifier ? `<b>IOS Identifier:</b> ${rowData.ios_identifier}<br>` : ''}
                 <b>ISP:</b> ${rowData.isp ?? ''}<br>
         <hr>
         ${rowData.latitude && rowData.longitude ? `
@@ -339,10 +339,12 @@ $(document).ready(function() {
                 <b>Device Model:</b> ${rowData.device_model ?? ''}<br>
                 <b>Device Name:</b> ${rowData.device_name ?? ''}<br>
                 <b>Device Manufacturer:</b> ${rowData.device_manufacturer ?? ''}<br>
-                <b>Android Version:</b> ${rowData.android_version ?? ''}<br>
-                <b>Android Sdk:</b> ${rowData.android_sdk ?? ''}<br>
-                <b>IOS System Version:</b> ${rowData.ios_system_version ?? ''}<br>
-                <b>IOS Identifier:</b> ${rowData.ios_identifier ?? ''}<br>
+                ${rowData.android_version ? `<b>Android Version:</b> ${rowData.android_version}<br>` : ''}
+                ${rowData.android_sdk ? `<b>Android Sdk:</b> ${rowData.android_sdk}<br>` : ''}
+                ${rowData.ios_system_version ? `<b>IOS System Version:</b> ${rowData.ios_system_version}<br>` : ''}
+                ${rowData.ios_identifier ? `<b>IOS Identifier:</b> ${rowData.ios_identifier}<br>` : ''}
+
+
                 <b>ISP:</b> ${rowData.isp ?? ''}<br>
                 <hr>
                 ${rowData.latitude && rowData.longitude ? `
