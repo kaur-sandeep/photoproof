@@ -180,12 +180,16 @@ class PhotoController extends Controller
         return view('user.report-this-photo', compact('photo','daysAvailable'));
     }
     public function report_submit(Request $request, $random_id){
-       $request->validate([
-        'name' => 'required',
-        'email' => 'required|email',
-        'message' => 'required',
-        'g-recaptcha-response' => 'required'
-    ]);
+        $request->validate(
+            [
+                'name' => 'required',
+                'email' => 'required|email',
+                'message' => 'required',
+                'g-recaptcha-response' => 'required'
+            ],
+            [
+                'g-recaptcha-response.required' => 'Google captcha field is required.'
+            ]);
 
     // If captcha is enabled, then keep this
     $response = Http::asForm()->post(

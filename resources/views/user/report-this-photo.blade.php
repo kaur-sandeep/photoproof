@@ -27,22 +27,32 @@
                     <h2 class="h2-lg">Report This Photo</h2>	
                     <p>This verified photo is available for review for {{$daysAvailable}} days from capture. After that, access may expire for security and privacy protection.</p>
                     <div class="form-holder">
+                        @if ($errors->any())
+                            <div class="alert alert-danger">
+                                <ul style="margin-bottom:0;">
+                                    @foreach ($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                        @endif
                         <form class="row contact-form" action="{{ route('report.submit', $photo->random_id)}}" method="POST">
                             @csrf
-                            <div id="input-name" class="col-lg-4">
+                            <div class="input-id" class="col-lg-4">
                                 <input type="text" name="random_id" class="form-control name" value = "{{$photo->random_id}}" placeholder="ID:994265321" readonly> 
                             </div>
                             <div id="input-name" class="col-lg-4">
-                                <input type="text" name="name" class="form-control name" placeholder="Your name"> 
+                                <input type="text" name="name" class="form-control name" placeholder="Your name *" required> 
                             </div>	
                             <div id="input-email" class="col-lg-4">
-                                <input type="email" name="email" class="form-control email" placeholder="Email address"> 
+                                <input type="email" name="email" class="form-control email" placeholder="Email address *" required> 
                             </div>												
                             <div id="input-message" class="col-lg-12 input-message">
-                                <textarea class="form-control message" name="message" rows="6" placeholder="Write your Comment here ..."></textarea>
+                                <textarea class="form-control message" name="message" rows="6" placeholder="Write your Comment here ..." required></textarea>
                             </div> 
                             <div class="col-lg-12 mb-3">
                                  <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                                 
                             </div>
                             <div class="col-lg-12 m-top-15 form-btn text-left">	
                                 <button type="submit" class="btn btn-lightgreen submit">Submit</button>	

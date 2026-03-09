@@ -32,20 +32,20 @@
                     @csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">Name <span class="text-danger">*</span></label>
                     <input type="name" name ="name" class="form-control" id="name" placeholder="Enter Name">
                   </div>
                   <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">Email <span class="text-danger">*</span></label>
                     <input type="email" name ="email" class="form-control" id="email" placeholder="Enter Email">
                   </div>
                   <div class="form-group">
-                    <label for="password">Password</label>
+                    <label for="password">Password <span class="text-danger">*</span></label>
                     <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
                   </div>
                    <div class="form-group">
-                    <label for="number">Number</label>
-                    <input type="text" name ="number" class="form-control" id="number" placeholder="Enter Number">
+                    <label for="number">Phone Number <span class="text-danger">*</span></label>
+                    <input type="text" name ="phone_number" class="form-control" id="number" placeholder="Enter Phone Number">
                   </div>
                   <div class="form-group">
                     <label for="exampleInputFile">File input</label>

@@ -28,16 +28,16 @@
                     @csrf
                 <div class="card-body">
                   <div class="form-group">
-                    <label for="name">Name</label>
+                    <label for="name">Name <span class="text-danger">*</span></label>
                     <input type="name" name ="name" class="form-control" id="name" placeholder="Enter Name"  value="{{ $admin->name}}">
                   </div>
                   <div class="form-group">
-                    <label for="email">Email</label>
+                    <label for="email">Email <span class="text-danger">*</span></label>
                     <input type="email" name ="email" class="form-control" id="email" placeholder="Enter Email"  value = "{{ $admin->email }}" readonly>
                   </div>
                    <div class="form-group">
-                    <label for="number">Number</label>
-                    <input type="text" name ="number" class="form-control" id="number" placeholder="Enter Number"  value = "{{ $admin->phone_number }}" required>
+                    <label for="number">Phone Number <span class="text-danger">*</span></label>
+                    <input type="text" name ="phone_number" class="form-control" id="number" placeholder="Enter Number"  value = "{{ $admin->phone_number }}" >
                   </div>
 
                     <div class="mb-3">

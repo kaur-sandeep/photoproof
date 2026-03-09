@@ -71,7 +71,7 @@ class AdminController extends Controller
        $request->validate([
         'name'   => 'required|string|max:255',
         'email'  => 'required|email|unique:users,email',
-        'number' => 'required|numeric|digits_between:10,14',
+        'phone_number' => 'required|numeric|digits_between:10,14',
         'password' => 'required|min:6',
         'profile_image'  => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
@@ -83,7 +83,7 @@ class AdminController extends Controller
         Admin::create([
             'name' => $request->name,
             'email' => $request->email,
-            'phone_number' => $request->number,
+            'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
             'profile_image' => $imageName,
         ]);
@@ -192,7 +192,7 @@ class AdminController extends Controller
 
         $request->validate([
             'name'          => 'required|string|max:255',
-            'number'        => 'required|numeric|digits_between:10,14',
+            'phone_number'        => 'required|numeric|digits_between:10,14',
             'profile_image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
         ]);
 
@@ -201,7 +201,7 @@ class AdminController extends Controller
 
         // Update fields
         $admin->name = $request->name;
-        $admin->phone_number = $request->number;
+        $admin->phone_number = $request->phone_number;
 
         if ($request->hasFile('profile_image')) {
 

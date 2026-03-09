@@ -25,7 +25,7 @@
                     <!--begin::Body-->
                     <div class="card-body">
                        <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Name</label>
+                        <label for="exampleInputEmail1" class="form-label">Name <span class="text-danger">*</span></label>
                         <input
                           type="text"
                           name ="name"
@@ -35,7 +35,7 @@
                         />
                       </div>
                       <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Email</label>
+                        <label for="exampleInputEmail1" class="form-label">Email <span class="text-danger">*</span></label>
                         <input
                           type="email"
                           name="email"
@@ -45,7 +45,7 @@
                          readOnly/>
                       </div>
                       <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Phone Number</label>
+                        <label for="exampleInputEmail1" class="form-label">Phone Number <span class="text-danger">*</span></label>
                         <input
                           type="text"
                           name="number"
