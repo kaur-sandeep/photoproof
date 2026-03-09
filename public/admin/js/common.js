@@ -491,7 +491,7 @@ $('#userList').on('click', '.toggle-status', function () {
     // DELETE USER
     $('#userList').on('click', '.delete-user', function () {
         let id = $(this).data('id');
-        if (confirm("Are you sure you want to delete this user?")) {
+        if (confirm("Are you sure you want to delete this admin user?")) {
             $.get(window.APP_URL + '/admin/update/users/status', {
                 id: id,
                 status: -1
