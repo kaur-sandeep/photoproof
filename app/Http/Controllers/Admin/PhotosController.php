@@ -419,7 +419,7 @@ public function update(Request $request, $photo_id)
 
         ->addColumn('message', function ($reported_data) {
             return $reported_data->message 
-                ? Str::limit($reported_data->message, 50, '...') 
+                ? Str::limit($reported_data->message, 100, '...') 
                 : '--';
         })
         ->addColumn('ip_address', function ($reported_data) {

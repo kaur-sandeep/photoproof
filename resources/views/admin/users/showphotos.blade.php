@@ -24,7 +24,7 @@
             <table id="photodataTableList" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>S.No</th>
+                        <th>#</th>
                         <th>Images</th>
                         <th>Random Id</th>
                         <th>Name</th>

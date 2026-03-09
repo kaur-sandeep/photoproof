@@ -15,7 +15,7 @@
             <table id="activityList" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>S.No</th>
+                        <th>#</th>
                         <th>Admin</th>
                         <th>Action</th>
                         <th>Module</th>

@@ -14,7 +14,7 @@
             <table id="reportImagesList" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>S.No</th>
+                        <th>#</th>
                         <th>Photo</th>
                         <th>Photo ID</th>
                         <th>Name</th>

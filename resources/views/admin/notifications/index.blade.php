@@ -28,10 +28,11 @@
             <table id="notificationList" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>S.No</th>
+                        <th>#</th>
                         <th>Random Id</th>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Message</th>
                         <th>Type</th>
                         <th>IP Address</th>
                         <th>Date</th>

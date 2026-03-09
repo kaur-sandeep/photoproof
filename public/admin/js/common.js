@@ -580,26 +580,8 @@ $('#notificationBell').on('click', function() {
 });
 
 // Mark notification as read when clicking on row
-$(document).on('click', '.notificationRow', function() {
-    let id = $(this).data('id');
-
-    $.ajax({
-        url: window.APP_URL + '/admin/notifications/read/' + id,
-        type: 'POST',
-        data: {
-            _token: $('meta[name="csrf-token"]').attr('content')
-        },
-        success: function() {
-            // Mark row visually as read
-            // $(`li.notificationRow[data-id="${id}"]`).removeClass('bg-light');
-
-            // Refresh count and modal
-            fetchNotifications();
-        },
-        error: function() {
-            alert('Failed to mark notification as read.');
-        }
-    });
+$(document).on('click', '.notificationRow', function () {
+    window.location.href = window.APP_URL + '/admin/notifications';
 });
 
 // Optional: auto-refresh badge count every 15 seconds
@@ -697,6 +679,7 @@ $(document).ready(function() {
             { data: 'photo_random_id', name: 'photo_random_id'},
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
+            { data: 'message', name: 'message' },
             { data: 'type', name: 'type' },
             { data: 'ip_address', name: 'ip_address'},
             { data: 'date', name: 'date'},

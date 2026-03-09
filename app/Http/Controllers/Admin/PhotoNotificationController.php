@@ -8,6 +8,7 @@ use App\Models\PhotoReport;
 use App\Models\Notifications;
 use App\Helpers\DateTime;
 use Yajra\DataTables\DataTables;
+use Illuminate\Support\Str;
 class PhotoNotificationController extends Controller
 {
     // public function getUnreadNotifications()
@@ -117,6 +118,13 @@ return DataTables::of($notifications)
     ->addColumn('email', function ($notifications) {
         return $notifications->email ?? '-';
     })
+    ->addColumn('message', function ($notifications) {
+    $data = json_decode($notifications->data, true);
+    $message = $data['message'] ?? null;
+    return $message 
+        ? Str::limit($message, 100, '...') 
+        : '--';
+    })
     ->addColumn('type', function ($notifications) {
         return ucwords($notifications->type) ?? '--';
     })
@@ -131,7 +139,7 @@ return DataTables::of($notifications)
     ->addColumn('actions', function ($notifications) {
         return '<a href="'.route('notifications.show', $notifications->id).'" class="btn btn-sm btn-primary">View</a>';
     })
-    ->rawColumns(['name','actions','email','type','ip_address','date'])
+    ->rawColumns(['name','actions','message','email','type','ip_address','date'])
     ->make(true);
 }
 }
