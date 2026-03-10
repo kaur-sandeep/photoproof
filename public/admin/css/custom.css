@@ -40,3 +40,15 @@ table.dataTable thead th:first-child::before,
 table.dataTable thead th:first-child::after {
     display: none !important;
 }
+.admin-page-header {padding-bottom: 10px; float:left; width: 100%; display: flex; justify-content: space-between; align-items: center;}
+.admin-page-header h3 {font-size:1.1rem; font-weight: normal; color:#495057;}
+.admin-page-header h3 b{font-weight: 600;;}
+.admin-page-header a{margin: 0px !important;}
+.card {box-shadow: none; }
+.btn {font-size:.95rem;}
+th {background: #212529 !important; padding-top:15px !important; padding-bottom: 15px !important; font-size: .95rem; font-weight: 600; color:#fff !important}
+table.dataTable > thead .sorting::before, table.dataTable > thead .sorting::after, table.dataTable > thead .sorting_asc::before, table.dataTable > thead .sorting_asc::after, table.dataTable > thead .sorting_desc::before, table.dataTable > thead .sorting_desc::after, table.dataTable > thead .sorting_asc_disabled::before, table.dataTable > thead .sorting_asc_disabled::after, table.dataTable > thead .sorting_desc_disabled::before, table.dataTable > thead .sorting_desc_disabled::after{bottom:1.0rem;}
+.form-control, select {padding:.5rem .9rem !important; border-radius: 5px; border:1px solid #ced4da; box-shadow:none; }
+.dataTables_length select {padding-right:40px !important;}
+.table-striped > tbody > tr:nth-of-type(2n+1) > * {background: #f1faff !important;}
+td {vertical-align: middle;}

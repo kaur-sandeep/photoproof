@@ -424,11 +424,28 @@ $(document).ready(function() {
             { data: 'device_type', name: 'device_type' },
             // { data: 'referer', name: 'referer'},
             { data: 'user_agent', name: 'user_agent'},
-            { data: 'country', name: 'country'},
-            // { data: 'country_code', name: 'country_code'},
-            // { data: 'region', name: 'region'},
-            { data: 'region_name', name: 'region_name'},
-            { data: 'city', name: 'city'},
+            {
+                data: null,
+                name: 'location',
+                render: function (data, type, row) {
+
+                    let parts = [];
+
+                    if (row.city && row.city !== '-') {
+                        parts.push(row.city);
+                    }
+
+                    if (row.region_name && row.region_name !== '-') {
+                        parts.push(row.region_name);
+                    }
+
+                    if (row.country && row.country !== '-') {
+                        parts.push(row.country);
+                    }
+
+                    return parts.length ? parts.join(', ') : '-';
+                }
+            },
             // { data: 'zip', name: 'zip'},
             { data: 'latitude', name: 'latitude'},
             { data: 'longitude', name: 'longitude'},

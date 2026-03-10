@@ -37,11 +37,11 @@
                         <th>Device Type</th>
                         <!-- <th>Referer</th> -->
                         <th>User Agent</th>
-                        <th>Country</th>
+                        <th>Location</th>
                         <!-- <th>Country Code</th>
                         <th>Region </th> -->
-                        <th>Region Name</th>
-                        <th>City</th>
+                        <!-- <th>Region Name</th>
+                        <th>City</th> -->
                         <!-- <th>Zip</th> -->
                         <th>Latitude</th>
                         <th>Longitude</th>
