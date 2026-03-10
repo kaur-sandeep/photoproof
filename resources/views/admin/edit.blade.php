@@ -2,6 +2,9 @@
 @section('content')
 
 <div class="container-fluid">
+   <div class="admin-page-header">
+        <h3 class="card-title"><b>Edit Admin User </b></h3>
+    </div>
 
     <div class="row">
         @if(session('success'))
@@ -19,9 +22,6 @@
             </div>
         @endif
         <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Edit Admin User</h3>
-              </div>
               <!-- /.card-header -->
               <!-- form start -->
                  <form method="POST" action="{{ route('admin.update.users.data',$admin->id) }}" enctype="multipart/form-data">

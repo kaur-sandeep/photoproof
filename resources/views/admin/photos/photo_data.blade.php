@@ -19,12 +19,10 @@
 </style>
 
 <div class="container-fluid">
-
+  <div class="admin-page-header">
+        <h3 class="card-title"><b>Viewed/Verified Photo List({{$count}}) </b></h3>
+    </div>
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title"><b>Viewed/Verified Photo List({{$count}})</b></h3>
-        </div>
-
         <div class="card-body">
             <table id="verifiedphotoTableList" class="table table-bordered table-striped">
                 <thead>

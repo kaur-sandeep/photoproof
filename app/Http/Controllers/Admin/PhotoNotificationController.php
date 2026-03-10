@@ -53,8 +53,8 @@ class PhotoNotificationController extends Controller
     public function notifications()
     {
         // $notifications = PhotoReport::orderBy('created_at', 'desc')->paginate(10);
-        $notifications = Notifications::orderBy('created_at', 'desc')->paginate(10);
-        return view('admin.notifications.index', compact('notifications'));
+       $types = Notifications::distinct()->pluck('type');
+        return view('admin.notifications.index', compact('types'));
     }
 
     public function show($id)
@@ -168,6 +168,7 @@ return DataTables::of($notifications)
         
         return '<button 
         class="btn btn-primary viewNotification"
+        data-id="'.$notifications->id.'"
         data-name="'.$notifications->name.'"
         data-email="'.$notifications->email.'"
         data-message="'.$message.'"

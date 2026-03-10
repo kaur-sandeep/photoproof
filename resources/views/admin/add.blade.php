@@ -5,6 +5,9 @@
 @section('content')
 
 <div class="container-fluid">
+    <div class="admin-page-header">
+        <h3 class="card-title"><b>Add Admin User </b></h3>
+    </div>
 
     <div class="row">
   @if(session('success'))
@@ -23,9 +26,6 @@
             </div>
         @endif
         <div class="card card-primary">
-              <div class="card-header">
-                <h3 class="card-title">Add Admin User</h3>
-              </div>
               <!-- /.card-header -->
               <!-- form start -->
                  <form method="POST" action="{{ route('admin.store.users') }}" enctype="multipart/form-data">

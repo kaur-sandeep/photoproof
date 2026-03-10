@@ -5,11 +5,10 @@
 @section('content')
 
 <div class="container-fluid">
+    <div class="admin-page-header">
+        <h3 class="card-title"><b>Photos List </b></h3>
+    </div>
     <div class="card">
-        <div class="card-header">
-            <h3 class="card-title"><b>Photos List</b></h3>
-        </div>
-
         <div class="card-body">
             <table id="photoTableList" class="table table-bordered table-striped">
                 <thead>

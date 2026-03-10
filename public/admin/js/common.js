@@ -749,15 +749,16 @@ $(document).ready(function() {
 
 
 $(document).on('click', '.viewNotification', function(){
-    // $('#modal_name').text($(this).data('name'));
-    // $('#modal_email').text($(this).data('email'));
-    // $('#modal_message').text($(this).data('message'));
-    // $('#modal_ip').text($(this).data('ip'));
-    // $('#modal_type').text($(this).data('type'));
-    // $('#modal_date').text($(this).data('date'));
+    let notificationId = $(this).data('id');
+        $.ajax({
+            url: "/admin/notifications/read/" + notificationId,
+            type: "POST",
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content')
+            }
+        });
 
-
-    function toggleField(value, spanId, rowId){
+        function toggleField(value, spanId, rowId){
 
     // Convert to string and clean value
     if(value !== undefined && value !== null){
