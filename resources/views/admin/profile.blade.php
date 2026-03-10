@@ -23,8 +23,8 @@
          <form id="editprofileForm" method="POST" action="{{route('admin.profile.update')}}"  enctype="multipart/form-data">
              @csrf
                     <!--begin::Body-->
-                    <div class="card-body">
-                       <div class="mb-3">
+                    <div class="card-body row">
+                       <div class="mb-3 col-md-4">
                         <label for="exampleInputEmail1" class="form-label">Name <span class="text-danger">*</span></label>
                         <input
                           type="text"
@@ -34,7 +34,7 @@
                           value="{{ $user->name ?? 'na' }}"
                         />
                       </div>
-                      <div class="mb-3">
+                      <div class="mb-3 col-md-4">
                         <label for="exampleInputEmail1" class="form-label">Email <span class="text-danger">*</span></label>
                         <input
                           type="email"
@@ -44,7 +44,7 @@
                           value = "{{ $user->email }}"
                          readOnly/>
                       </div>
-                      <div class="mb-3">
+                      <div class="mb-3 col-md-4">
                         <label for="exampleInputEmail1" class="form-label">Phone Number <span class="text-danger">*</span></label>
                         <input
                           type="text"
@@ -55,7 +55,7 @@
                          />
                       </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3 col-md-4">
                       @if($user->profile_image)
                           <div class="mb-2">
                               <img src="{{ asset('storage/profile/'.$user->profile_image) }}"
@@ -74,7 +74,7 @@
                           </div>
                       @endif
 
-                  <div class="input-group">
+                  <div class="input-group col-md-4">
                       <input type="file" name="image" class="form-control" id="inputGroupFile02">
                       <label class="input-group-text" for="inputGroupFile02">Upload</label>
                   </div>
@@ -85,7 +85,8 @@
                   <!-- <div class="card-footer">
                     <button type="submit" class="btn btn-primary">Submit</button>
                   </div> -->
-                  <div class="card-footer d-flex justify-content-center gap-3">
+                  <!-- <div class="card-footer d-flex justify-content-center gap-3"> -->
+                    <div class="card-footer  gap-3">
                     <button type="submit" class="btn btn-primary">
                         Submit
                     </button>

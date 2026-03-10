@@ -649,9 +649,6 @@ $(document).ready(function() {
 
 $(document).ready(function() {
     let table = $('#reportImagesList').DataTable({
-         responsive: true,
-        scrollX: true,
-        autoWidth: false,
         processing: true,
         serverSide: true,
         ajax: window.APP_URL + '/admin/reported/images/list',  // Ensure this URL is correct
