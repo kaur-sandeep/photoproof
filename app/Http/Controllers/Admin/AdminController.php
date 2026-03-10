@@ -237,7 +237,7 @@ class AdminController extends Controller
             );
         }
 
-        return redirect()->back()->with('success', 'User updated successfully!');
+        return redirect()->back()->with('success', 'Admin User Updated Successfully!');
     }
 
     public function changePassword(){

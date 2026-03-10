@@ -26,21 +26,21 @@
               <!-- form start -->
                  <form method="POST" action="{{ route('admin.update.users.data',$admin->id) }}" enctype="multipart/form-data">
                     @csrf
-                <div class="card-body">
-                  <div class="form-group">
+                <div class="card-body row">
+                  <div class="form-group col-md-4">
                     <label for="name">Name <span class="text-danger">*</span></label>
                     <input type="name" name ="name" class="form-control" id="name" placeholder="Enter Name"  value="{{ $admin->name}}">
                   </div>
-                  <div class="form-group">
+                  <div class="form-group col-md-4">
                     <label for="email">Email <span class="text-danger">*</span></label>
                     <input type="email" name ="email" class="form-control" id="email" placeholder="Enter Email"  value = "{{ $admin->email }}" readonly>
                   </div>
-                   <div class="form-group">
+                   <div class="form-group col-md-4">
                     <label for="number">Phone Number <span class="text-danger">*</span></label>
                     <input type="text" name ="phone_number" class="form-control" id="number" placeholder="Enter Number"  value = "{{ $admin->phone_number }}" >
                   </div>
 
-                    <div class="mb-3">
+                    <div class="mb-3 col-md-4">
                       @if($admin->profile_image)
                           <div class="mb-2">
                               <img src="{{ asset('storage/profile/'.$admin->profile_image) }}"
@@ -59,7 +59,7 @@
                           </div>
                       @endif
 
-                  <div class="input-group">
+                  <div class="input-group col-md-4">
                       <input type="file" name="profile_image" class="form-control" id="inputGroupFile02">
                       <label class="input-group-text" for="inputGroupFile02">Upload</label>
                   </div>
