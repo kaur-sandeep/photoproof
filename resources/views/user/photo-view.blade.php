@@ -189,16 +189,16 @@
 			</div>
              
 			<div class="col-sm-12 col-lg-3">
-               
+                <div class="details-top">This photo is available for {{ $daysAvailable }} days.  <a href="{{ url('/report/' . $photo->random_id) }}" class=""/>Report This Photo</a></div>
                 @if($photo->uploadTrack)	
                   @php
                     $track = $photo->uploadTrack;
                 @endphp	
                 <div class="ip-details-container">
-                    <div class="details-top">This photo is available for {{ $daysAvailable }} days. | <a href="{{ url('/report/' . $photo->random_id) }}" class=""/>Report This Photo</a></div>
+                   
                     
                     <div class="photo_details">
-                        <div class="right_photoID">#{{ $photo->random_id }}</div>
+                        <!-- <div class="right_photoID">#{{ $photo->random_id }}</div> -->
                         
                             @if(!empty($photo->meta_data))
 
@@ -214,18 +214,20 @@
                                     $iso = $photo->meta_data['iso'] ?? null;
                                     $focal_length = $photo->meta_data['focal_length'] ?? null;
                                 @endphp
+                                 <div class="right_photoID">Device & Camera </div>
 <div class="image-meta">
-                                @if($width && $height)
-                                    {{ $width }}x{{ $height }}
-                                @endif
-</div>
-                               <div class="image-meta"> @if($orientation)
-                                    {{ $orientation }}
-                                @endif
-</div>
+                                <span>@if($width && $height)
+                                    {{ $width }} x {{ $height }}
+                                @endif</span>
 
-  <div class="right_photoID">Device & Camera </div>
-<div class="image-meta">
+                               <span> @if($orientation)
+                                    {{ $orientation }}
+                                @endif </span>
+                                <div class="clear"></div>
+<!-- </div>
+
+ 
+<div class="image-meta"> -->
   @if(!empty($photo->device_name ) && $photo->device_name != 0)					
 					<span> {{ $photo->device_name }}</span> 
                      @endif
@@ -287,8 +289,7 @@ function exifFraction($value) {
                                   @if($model)
                                     {{ $model }}
 </span>
-</div>
-<div class="image-meta">
+<div class="clear"></div>
                               <span>  @endif
                                    @if($exposure_time)
                                     {{ $exposure_time }}sec
@@ -316,43 +317,42 @@ function exifFraction($value) {
 
 
 </div>
-                                <!-- @foreach($photo->meta_data as $key => $value)
-                                    @if(!in_array($key, ['date_time_original', 'date_time']))
-                                        <p>
-                                            <strong>{{ ucfirst(str_replace('_', ' ', $key)) }}:</strong> {{ $value }}
-                                        </p>
-                                    @endif
-                                @endforeach -->
+                    
 
                                 @endif
                         
                    <div class="right_photoID">Location</div>   
                    <div class="image-meta">
+                   
                    <span> @if(!empty($track->isp) && $track->isp != 0)					
-					{{ $track->isp }}                  @endif, 
-                    {{$photo->location}}</span></div>
-                   <div class="image-meta">
+					{{ $track->isp }}@endif, {{$photo->location}}</span>
+                    <div class="clear"></div>
+                   <span>
+                    Timezone: 
                      @if(isset($photo->timezone, $photo->timezone))
-                       {{$photo->timezone }} 
+                       {{$photo->timezone }} ,
                     @elseif(isset($track->timezone, $track->timezone))
                        {{$track->timezone}}
                     @endif
 
-
+</span>
+<div class="clear"></div>
+<span>
  @if(isset($photo->latitude, $photo->longitude))
                        
-                             {{ number_format($photo->latitude, 8) }}° N, 
-                            {{ number_format($photo->longitude, 8) }}° E
+                             Lat:{{ number_format($photo->latitude, 8) }}° N, 
+                             Long: {{ number_format($photo->longitude, 8) }}° E
                       
                     @elseif(isset($track->latitude, $track->longitude))
                      
-                            {{ $track->latitude }}° N, {{ $track->longitude }}° E
+                           Lat: {{ $track->latitude }}° N, Long{{ $track->longitude }}° E
                        
                     @endif
                      @php
                         $lat = $photo->latitude ?? $track->latitude ?? null;
                         $lng = $photo->longitude ?? $track->longitude ?? null;
                     @endphp
+</span>
                 		@if(!empty($lat) && !empty($lng))
                     <!-- @if(!empty($track->ip_address) && $track->ip_address != 0)				
 				    <li><strong>IP Address:</strong> {{ $track->ip_address }}</li>

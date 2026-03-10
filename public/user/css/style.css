@@ -3029,9 +3029,22 @@ ul.listoption li svg { position: absolute; left: 0; top: 8px; }
 .photo_bx .overlayinfo { position: absolute; bottom: 1px; padding: 19px; width: 100%; }
 .photo_bx .overlayinfo p { margin-bottom: 2px; }
 .photo_bx .overlayinfo p strong{ font-weight:600 }
-.ip-details-container{ background: #0d264d; border: 1px solid rgba(255,255,255,0.07); margin: 0px !important; height: calc( 700px - 280px ); padding:50px 0px 0px 0px; border-radius: 10px; overflow:auto;  }
-.details-top{ position: absolute; top: 0px; padding: 15px 10px; width: 100%; background: rgba(0,0,0,.2); font-weight:600;}
-.details-top a{color:#1fda69; text-decoration:underline;}
+.ip-details-container{ background: #0d264d; border: 1px solid rgba(255,255,255,0.07); margin: 0px !important; max-height: calc( 700px - 280px ); padding:00px 0px 0px 0px; border-radius: 10px; overflow:auto;  }
+.details-top{/*position: absolute;
+  top: 0px;
+  background: rgba(0,0,0,.2);
+  margin-bottom: 10px;
+  background: #00d85c;  border-radius: 5px;
+  padding: 15px 10px;*/
+ padding-bottom: 10px;
+  width: 100%;
+  font-weight: 600;
+  display: flex;
+  justify-content: space-between;
+  align-content: center;
+  align-items: center;}
+.details-top a{color:#fff; background: #00d85c; padding:5px 10px; font-weight: normal; border-radius: 5px; text-decoration:none;}
+.details-top a:hover{background: #29467d;}
 ul.ip-details{ margin: 0px !important; height: 100%; padding: 15px; overflow-y:auto;  }
 .ip-details{ overflow-y:auto; }
 .ip-details::-webkit-scrollbar{ width:8px; }
@@ -3218,6 +3231,6 @@ footer .os-version span svg {
 
 .left_photoID{padding:15px; text-align: center; font-size: 2.2rem; font-weight: 600; }
 .photo_details {float:left; width:100%; background: #0b1f40;}
-.right_photoID {float:left; padding:10px; border-radius: 5px; font-weight: 600; width:100%; background: #0d264d; }
-.image-meta {float:left; width:100%; padding:5px 10px;}
-.image-meta span{padding-right: 15px; text-transform: capitalize;}
+.right_photoID {float:left; padding:10px; border-radius: 0px; font-weight: 600; width:100%; background: #29467d; }
+.image-meta {float:left; width:100%; padding:10px 10px;}
+.image-meta span{padding-right: 15px; text-transform: capitalize; font-size:15px; line-height: 28px;; }
