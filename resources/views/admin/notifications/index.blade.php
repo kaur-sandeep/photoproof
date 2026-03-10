@@ -32,7 +32,7 @@
                         <th>Random Id</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Message</th>
+                        <!-- <th>Message</th> -->
                         <th>Type</th>
                         <th>IP Address</th>
                         <th>Date</th>

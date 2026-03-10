@@ -645,7 +645,7 @@ $(document).ready(function() {
             { data: 'photo_random_id', name: 'photo_random_id'},
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
-            { data: 'message', name: 'message' },
+            // { data: 'message', name: 'message' },
             { data: 'ip_address', name: 'ip_address'},
             { data: 'device_type', name: 'device_type'},
             { data: 'country', name: 'country'},

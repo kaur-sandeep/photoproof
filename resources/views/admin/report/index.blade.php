@@ -19,7 +19,7 @@
                         <th>Photo ID</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Message</th>
+                        <!-- <th>Message</th> -->
                         <th>IP Address</th>
                         <th>Device Type</th>
                          <th>Country</th>

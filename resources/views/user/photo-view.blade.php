@@ -264,7 +264,20 @@
 					<li><strong>Android Sdk :</strong> {{ $photo->android_sdk }}</li> 
                      @endif -->
 
+@php
+function exifFraction($value) {
+    if (!$value) return null;
 
+    if (str_contains($value, '/')) {
+        [$num, $den] = explode('/', $value);
+        if ($den != 0) {
+            return round($num / $den, 2);
+        }
+    }
+
+    return $value;
+}
+@endphp
 
                                 <span>@if($make)
                                     {{ $make }}
@@ -278,12 +291,12 @@
 <div class="image-meta">
                               <span>  @endif
                                    @if($exposure_time)
-                                    {{ $exposure_time }}s
+                                    {{ $exposure_time }}sec
 </span>
 <span>
                                 @endif
                                    @if($f_number)
-                                    {{ $f_number }}
+                                   f/{{ exifFraction($f_number) }}
 </span>
 <span>
                                 @endif
@@ -294,7 +307,7 @@
 
                                 @endif
                                    @if($focal_length)
-                                    {{ $focal_length }} mm
+                                    {{ exifFraction($focal_length) }} mm
                                 @endif
 </span>
 
