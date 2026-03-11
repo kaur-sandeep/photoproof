@@ -400,10 +400,12 @@ public function update(Request $request, $photo_id)
         ->addColumn('image', function ($reported_data) {
         $photo = PhotoDetail::where('random_id', $reported_data->photo_random_id)->first();
         $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-        return '<img src="' . ($photo->photo
-            ? asset('storage/' . $photo->photo)
+        $image = !empty($photo?->photo) ? asset('storage/'.$photo->photo) : $default;
+      
+        return '<img src="' . ($image
+            ? asset('storage/' .$image)
             : $default) . '" width="40" height="40" class="rounded-circle">';
-    })
+        })
         ->addColumn('photo_random_id', function ($reported_data) {
             return $reported_data->photo_random_id ?? '--';
         })

@@ -2,6 +2,9 @@
 @section('content')
 
 <div class="container-fluid">
+    <div class="admin-page-header">
+        <h3 class="card-title"><b>Profile Information </b></h3>
+    </div>
 
     <div class="row">
   @if(session('success'))
