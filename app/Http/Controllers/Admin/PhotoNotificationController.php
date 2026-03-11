@@ -24,7 +24,8 @@ class PhotoNotificationController extends Controller
     public function getUnreadNotifications()
 {
     // $notifications = PhotoReport::where('is_read', 0)
-        $notifications = Notifications::where('is_read', 0)    
+        $notifications = Notifications::where('state', '!=', -1)
+        ->where('is_read', 0)
         ->orderBy('created_at', 'desc')
         ->take(5)
         ->get()
@@ -98,7 +99,7 @@ class PhotoNotificationController extends Controller
 
     public function list(Request $request){
         
-   $notifications = notifications::query();
+   $notifications = Notifications::query();
 
 // Check if there's a custom search query
 $customSearch = request()->input('type'); // Assuming the custom search field is called 'custom_search'
@@ -112,7 +113,8 @@ if ($customSearch) {
     });
 }
 
-$notifications = $notifications->get();
+$notifications = $notifications
+    ->where('state', '!=', -1)->get();
 return DataTables::of($notifications)
     ->addIndexColumn()
     ->addColumn('photo_random_id', function ($notifications) {
@@ -186,5 +188,16 @@ return DataTables::of($notifications)
     })
     ->rawColumns(['name','actions','message','email','type','ip_address','date'])
     ->make(true);
+}
+
+public function unreadCount(Request $request,$id){
+   
+ $notification = Notifications::findOrFail($id);
+  
+    $notification->is_read = 1;
+    $notification->save();
+    $newCount = Notifications::where('is_read', false)
+                            ->count();  // Count unread notifications
+    return response()->json(['newCount' => $newCount]);
 }
 }

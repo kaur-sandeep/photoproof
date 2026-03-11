@@ -149,6 +149,25 @@
 <section class="second-row  wide-50 division ">
       <div class="container-fluid px-5">
          <div class="left_photoID">#{{ $photo->random_id }}</div>	
+         <div class="col-md-12 mx-auto">
+			      <!-- <div class="verifyphoto"> -->
+                   <form method="POST" action="{{ route('photo.search') }}"  class="verifyphoto">
+					<label>Verify a New photo</label>
+					<!-- <input type="text" name="photoid" class="form-control" placeholder="Enter Photo ID •  e.g. 9865XXXXX"> 
+                    <a href="verify-photo.html" class="btn btn-lightgreen submit ">Verify</a> -->
+
+                    
+                        @csrf
+                        <input type="text" name="random_id" class="form-control" value="{{ old('random_id') }}"  placeholder="Enter Photo ID •  e.g. 9865XXXXX" required >
+                        <button  class="btn btn-lightgreen submit " type="submit">Verify</button>
+                  
+				  <!-- </div> -->
+
+                </form>
+                    @if(session('error'))
+                        <p style="color:red">{{ session('error') }}</p>
+                    @endif
+               </div>
          <div class="row d-flex align-items-center">	
             	
 			<div class="col-sm-12 col-lg-9">
@@ -321,14 +340,29 @@ function exifFraction($value) {
 
                                 @endif
                         
+
+ <div class="right_photoID">Capture Details</div>   
+ 
+                   <div class="image-meta">
+ <div class="clear"></div>
+                       @if(!empty($photo->word_api_date_time))
+                                    Date & Time : {{$photo->word_api_date_time}}
+                                @endif 
+                                      <div class="clear"></div>
+                </div>
                    <div class="right_photoID">Location</div>   
                    <div class="image-meta">
                    
-                   <span> @if(!empty($track->isp) && $track->isp != 0)					
-					{{ $track->isp }}@endif, {{$photo->location}}</span>
+                   <span> 
+                    
+                   @if(!empty($track->isp) && $track->isp != 0)					
+					ISP : {{ $track->isp }}@endif
+                    <div class="clear"></div>
+                    Location : 
+                    {{$photo->location}}</span>
                     <div class="clear"></div>
                    <span>
-                    Timezone: 
+                    Timezone : 
                      @if(isset($photo->timezone, $photo->timezone))
                        {{$photo->timezone }} ,
                     @elseif(isset($track->timezone, $track->timezone))
@@ -340,18 +374,20 @@ function exifFraction($value) {
 <span>
  @if(isset($photo->latitude, $photo->longitude))
                        
-                             Lat:{{ number_format($photo->latitude, 8) }}° N, 
+                             Lat : {{ number_format($photo->latitude, 8) }}° N, 
                              Long: {{ number_format($photo->longitude, 8) }}° E
                       
                     @elseif(isset($track->latitude, $track->longitude))
                      
-                           Lat: {{ $track->latitude }}° N, Long{{ $track->longitude }}° E
+                           Lat : {{ $track->latitude }}° N, Long{{ $track->longitude }}° E
                        
                     @endif
                      @php
                         $lat = $photo->latitude ?? $track->latitude ?? null;
                         $lng = $photo->longitude ?? $track->longitude ?? null;
                     @endphp
+
+                  
 </span>
                 		@if(!empty($lat) && !empty($lng))
                     <!-- @if(!empty($track->ip_address) && $track->ip_address != 0)				

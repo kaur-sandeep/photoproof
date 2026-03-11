@@ -4,6 +4,9 @@
 
 @section('content')
 <div class="container mt-5">
+       <div class="admin-page-header">
+        <h3 class="card-title"><b>Settings </b></h3>
+    </div>
     <div class="card">
 
     @if(session('success'))
@@ -21,13 +24,13 @@
                 </ul>
             </div>
         @endif
-        <div class="card-header">
+        <!-- <div class="card-header">
             <h4><b>Settings</b></h4>
-        </div>
+        </div> -->
         <form action="{{route('admin.setting.update')}}" method="POST">
             @csrf
-            <div class="card-body">
-            <div class="row mb-3">
+            <div class="card-body row">
+            <div class="row mb-3 col-md-4">
                     <div class="col-md-4"><strong>Enable Email</strong></div>
                         <div class="col-md-8 d-flex align-items-center">
 
@@ -71,7 +74,7 @@
 
                     </div>
                 </div> -->
-                <div class="row mb-3">
+                <div class="row mb-3 col-md-4">
                     <div class="col-md-4"><strong>SMTP Host</strong></div>
                     <div class="col-md-8">
                         <input type="text" name="smtp_host" class="form-control" 
@@ -79,7 +82,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
+                <div class="row mb-3 col-md-4">
                     <div class="col-md-4"><strong>SMTP Port</strong></div>
                     <div class="col-md-8">
                         <input type="number" name="smtp_port" class="form-control" 
@@ -87,7 +90,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
+                <div class="row mb-3 col-md-4">
                     <div class="col-md-4"><strong>SMTP Username</strong></div>
                     <div class="col-md-8">
                         <input type="text" name="smtp_username" class="form-control" 
@@ -95,7 +98,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
+                <div class="row mb-3 col-md-4">
                     <div class="col-md-4"><strong>SMTP Password</strong></div>
                     <div class="col-md-8">
                         <input type="password" name="smtp_password" class="form-control" 
@@ -103,7 +106,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
+                <div class="row mb-3 col-md-4">
                     <div class="col-md-4"><strong>SMTP Encryption</strong></div>
                     <div class="col-md-8">
                         <select name="smtp_encryption" class="form-control">
@@ -114,7 +117,7 @@
                     </div>
                 </div>
 
-                <div class="row mb-3">
+                <div class="row mb-3 col-md-4">
                     <div class="col-md-4"><strong>Delete Photos After (Days)</strong></div>
                     <div class="col-md-8">
                         <input type="number" name="delete_photos_after_days" class="form-control" min="1"

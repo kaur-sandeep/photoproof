@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 
 $schedule = app(Schedule::class);
 $schedule->command(DeleteOldPhotos::class)->dailyAt('00:00');
+// $schedule->command(DeleteOldPhotos::class)->everyFiveMinutes();

@@ -78,6 +78,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/notifications', [PhotoNotificationController::class,'notifications'])->name('notifications.index');
         Route::get('/notifications/{id}', [PhotoNotificationController::class, 'show'])->name('notifications.show');
         Route::get('/notificationList/list', [PhotoNotificationController::class, 'list']);
+        Route::post('/notifications/unread-count/{id}', [PhotoNotificationController::class,'unreadCount']);
+        
 
         
         

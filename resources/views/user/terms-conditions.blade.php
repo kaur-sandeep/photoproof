@@ -25,10 +25,10 @@
          <div class="row d-flex align-items-center">
 			<div class="col-12 ">
 				<h3 class="mt-0">Agreement to Terms</h3>
-				<p>These Terms &amp; Conditions (&ldquo;Terms&rdquo;) govern your access to and use of the <strong>PhotoProof</strong> mobile application (&ldquo;App&rdquo;, &ldquo;Service&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;).</p>
-				<p>By downloading, installing, or using PhotoProof, you agree to be bound by these Terms. If you do not agree, you must not use the App.</p>
+				<p>These Terms &amp; Conditions (&ldquo;Terms&rdquo;) govern your access to and use of the <strong>Photo Proof</strong> mobile application (&ldquo;App&rdquo;, &ldquo;Service&rdquo;, &ldquo;we&rdquo;, &ldquo;our&rdquo;, or &ldquo;us&rdquo;).</p>
+				<p>By downloading, installing, or using Photo Proof, you agree to be bound by these Terms. If you do not agree, you must not use the App.</p>
 				<p  style="margin-bottom:0"><strong>Description of Service</strong></p>
-				<p>PhotoProof is a mobile application that enables users to:</p>
+				<p>Photo Proof is a mobile application that enables users to:</p>
 				<ul>
 					<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg>  Capture photos within the app environment</li>
 					<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg>  Automatically record live GPS location, date, time, and timezone</li>
@@ -36,9 +36,9 @@
 					<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg>  Display selected metadata on image templates</li>
 					<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg>  Share or save verified images</li>
 				</ul>
-				<p>PhotoProof is designed to improve authenticity and reduce photo-based misrepresentation.</p>
+				<p>Photo Proof is designed to improve authenticity and reduce photo-based misrepresentation.</p>
 				<p>Internet &amp; GPS Requirement</p>
-				<p style="margin-bottom:0"><strong>PhotoProof requires:</strong></p>
+				<p style="margin-bottom:0"><strong>Photo Proof requires:</strong></p>
 				<ul>
 					<li>An active internet connection</li>
 					<li>GPS/location services enabled</li>
@@ -75,10 +75,10 @@
 				</ul>
 				<p>Users retain ownership of photos they capture, subject to the rights granted in this agreement.</p>
 				<h3>Data &amp; Privacy</h3>
-				<p>Your use of PhotoProof is also governed by our <strong>Privacy Policy</strong>, which explains how we collect, use, and protect your data.</p>
+				<p>Your use of Photo Proof is also governed by our <strong>Privacy Policy</strong>, which explains how we collect, use, and protect your data.</p>
 				<p>By using the App, you consent to data practices described in the Privacy Policy.</p>
 				<h3>Prohibited Uses</h3>
-				<p>You may not use PhotoProof to:</p>
+				<p>You may not use Photo Proof to:</p>
 				<ul>
 					<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg>  Engage in unlawful activities</li>
 					<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg>  Harass, defame, or violate rights of others</li>
@@ -96,7 +96,7 @@
 				</ul>
 				<p>You may discontinue use of the App at any time.</p>
 				<h3>Disclaimer of Warranties</h3>
-				<p>PhotoProof is provided &ldquo;AS IS&rdquo; and &ldquo;AS AVAILABLE.&rdquo;</p>
+				<p>Photo Proof is provided &ldquo;AS IS&rdquo; and &ldquo;AS AVAILABLE.&rdquo;</p>
 				<p>We do not guarantee:</p>
 				<ul>
 					<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg>  That the App will be error-free or uninterrupted</li>

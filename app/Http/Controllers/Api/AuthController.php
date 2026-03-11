@@ -246,6 +246,10 @@ class AuthController extends Controller
             'city' => $request->city,
             'zip' => $request->zip,
             'timezone' => $request->timezone,
+            'display_name' => $request->display_name,
+            'display_location' => $request->display_location,
+            'display_self_photo' => $request->display_self_photo,
+            'display_qrcode' => $request->display_qrcode,
             'meta_data'=>json_decode($request->meta_data)
         ]);
         $ip = $request->ip();

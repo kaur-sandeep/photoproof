@@ -22,13 +22,13 @@
                            Don't Just Take Photos.<br><span class="text-white">Capture Proof.</span>
                         </h2>
                         <p class="p-lg animated" data-animation="fadeInUp" data-animation-delay="400">
-                           With PhotoProof, every image becomes a verified document backed by live metadata and secure validation. Download PhotoProof today and ensure your visual records are trusted, traceable, and tamper-resistant.
+                           With Photo Proof, every image becomes a verified document backed by live metadata and secure validation. Download Photo Proof today and ensure your visual records are trusted, traceable, and tamper-resistant.
                         </p>
                         <div class="hero-stores-badge animated" data-animation="fadeInUp" data-animation-delay="500">
                             <a href="https://apps.apple.com/us/app/photo-proof/id6759238577" class="store" target="_blank">
                            <img class="appstore-white" src="{{ asset('user/images/store_badges/appstore.png') }}" width="155" height="50" alt="appstore-logo">
                            </a>	
-                          <a href="https://play.google.com/store/apps/details?id=com.photoproof" class="store"  target="_blank">
+                          <a href="https://play.google.com/store/apps/details?id=com.Photo Proof" class="store"  target="_blank">
                            <img class="googleplay-white" src="{{ asset('user/images/store_badges/googleplay.png') }}" width="164" height="50" alt="googleplay-logo">
                            </a>
                            <div class="os-version">
@@ -100,12 +100,12 @@
                               Built for Real Proof, <span class="text-white">Not Just Pictures</span>
                            </h2>
                            <p class="animated" data-animation="fadeInLeft" data-animation-delay="600">
-                              PhotoProof is a secure, enterprise-grade photo verification app engineered to capture indisputable evidence. Every photo is embedded with live GPS coordinates, precise date and time, local timezone, and a unique traceable Verification ID — all sourced from secured servers, not the device.
+                              Photo Proof is a secure, enterprise-grade photo verification app engineered to capture indisputable evidence. Every photo is embedded with live GPS coordinates, precise date and time, local timezone, and a unique traceable Verification ID — all sourced from secured servers, not the device.
                            </p>
                            <p class="animated" data-animation="fadeInLeft" data-animation-delay="600">
                               Photos cannot be edited, reused, or uploaded from a gallery. The app requires an active internet connection and GPS signal to function, ensuring all metadata reflects real-world conditions at the exact moment of capture.
                            </p>
-                           <div class="intro-highlight animated" data-animation="fadeInLeft" data-animation-delay="600">"When proof truly matters, PhotoProof delivers with confidence."</div>
+                           <div class="intro-highlight animated" data-animation="fadeInLeft" data-animation-delay="600">"When proof truly matters, Photo Proof delivers with confidence."</div>
                         </div>
                      </div>
                   </div>
@@ -165,7 +165,7 @@
                         <div class="usecases-num">01</div>
                         <img src="{{ asset('user/images/usecase1.png')}}" class="img-fluid"/>
 						<h4>Buyer and Seller</h4>
-                        <p>PhotoProof of item being with you with your current location and time embedded when your buyer asks for an image.</p>
+                        <p>Photo Proof of item being with you with your current location and time embedded when your buyer asks for an image.</p>
                      </div>
                   </div>
                   <div class="col-sm-6 col-lg-4 reveal reveal-delay-1 visible mb-3 animated" data-animation="fadeInRight" data-animation-delay="400">
@@ -445,7 +445,7 @@
             <div class="container">
                <div class="row d-flex align-items-center">
                   <h2 class="h2-xs animated fadeInLeft visible text-center mb-5 w-100" data-animation="fadeInRight" data-animation-delay="300">
-                     How PhotoProof Stops<br/>Common Photo Fraud
+                     How Photo Proof Stops<br/>Common Photo Fraud
                   </h2>
                   <div class="col-md-12">
                      <div class="row g-4 align-items-stretch">
@@ -457,7 +457,7 @@
                                        <use href="#ic-x-circle"></use>
                                     </svg>
                                  </div>
-                                 <span style="font-size:20px;font-weight:700;color:#EF4444;">Without PhotoProof</span>
+                                 <span style="font-size:20px;font-weight:700;color:#EF4444;">Without Photo Proof</span>
                               </div>
                               <div class="fraud-item">
                                  <svg class="svg-icon" width="28" height="28" style="color:#EF4444;margin-top:2px;flex-shrink:0">
@@ -499,7 +499,7 @@
                                        <use href="#ic-shield-check-fill"></use>
                                     </svg>
                                  </div>
-                                 <span style="font-size:20px;font-weight:700;color:#1fda69;">With PhotoProof</span>
+                                 <span style="font-size:20px;font-weight:700;color:#1fda69;">With Photo Proof</span>
                               </div>
                               <div class="fraud-item">
                                  <svg class="svg-icon" width="28" height="28" style="color:#1fda69;margin-top:2px;flex-shrink:0">
@@ -535,7 +535,7 @@
                         </div>
                      </div>
                      <div class="fraud-highlight reveal reveal-delay-3 mt-4 visible">
-                        <p style="font-size:16px; letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">The PhotoProof Rule</p>
+                        <p style="font-size:16px; letter-spacing:2px;text-transform:uppercase;margin-bottom:10px;">The Photo Proof Rule</p>
                         <div class="fraud-highlight-text">"No Internet. No GPS. No Capture."</div>
                         <p style="font-size:18px;color:var(--text-secondary);margin-top:10px;margin-bottom:0;">Three conditions that guarantee every photo is real, current, and location-verified.</p>
                      </div>
@@ -549,9 +549,9 @@
                <div class="row">
                   <div class="col-md-10 offset-md-1 section-title">
                      <!-- Title 	-->	
-                     <h2 class="h2-lg">Industries That<br/>Benefit from PhotoProof</h2>
+                     <h2 class="h2-lg">Industries That<br/>Benefit from Photo Proof</h2>
                      <!-- Text -->
-                     <p>PhotoProof is ideal for sectors where visual evidence must be trusted:
+                     <p>Photo Proof is ideal for sectors where visual evidence must be trusted:
                      </p>
                   </div>
                   <!-- End row --> 	
@@ -621,9 +621,9 @@
                   <div class="col-lg-10 offset-lg-1">
                      <div class="join-team text-center m-top-25">
                         <!-- Title -->
-                        <h4 class="h4-md text-white"><span>Why Organizations Choose PhotoProof?</span></h4>
+                        <h4 class="h4-md text-white"><span>Why Organizations Choose Photo Proof?</span></h4>
                         <!-- Text -->	
-                        <p>In a world where evidence can be fabricated, organizations need a solution they can trust unconditionally. PhotoProof delivers enterprise-grade documentation that stands up to legal scrutiny, audit requirements, and regulatory compliance.
+                        <p>In a world where evidence can be fabricated, organizations need a solution they can trust unconditionally. Photo Proof delivers enterprise-grade documentation that stands up to legal scrutiny, audit requirements, and regulatory compliance.
                         </p>
                      </div>
                   </div>

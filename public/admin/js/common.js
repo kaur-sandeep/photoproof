@@ -745,43 +745,118 @@ $(document).ready(function() {
 });
 
 
+// $(document).on('click', '.viewNotification', function(){
+//     let notificationId = $(this).data('id');
+//     // mark notification visually as read (optional)
+//     $(this).closest('.notification-item').removeClass('unread');
+//         $.ajax({
+//             url: "/admin/notifications/read/" + notificationId,
+//             type: "POST",
+//             data: {
+//                 _token: $('meta[name="csrf-token"]').attr('content')
+//             }
+//         });
+
+//         function toggleField(value, spanId, rowId){
+
+//     // Convert to string and clean value
+//     if(value !== undefined && value !== null){
+//         value = value.toString().replace(/"/g,'').trim();
+//     }
+
+//     // Hide if empty
+//     if(!value){
+//         $('#'+rowId).hide();
+//     }else{
+//         $('#'+spanId).text(value);
+//         $('#'+rowId).show();
+//     }
+// }
+// toggleField($(this).data('name'),'name','row_name');
+// toggleField($(this).data('email'),'email','row_email');
+// toggleField($(this).data('message'),'message','row_message');
+// toggleField($(this).data('browser'),'browser','row_browser');
+// toggleField($(this).data('platform'),'platform','row_platform');
+// toggleField($(this).data('devicetype'),'device','row_device');
+// toggleField($(this).data('ip'),'ip','row_ip');
+// toggleField($(this).data('type'),'type','row_type');
+// toggleField($(this).data('date'),'date','row_date');
+// toggleField($(this).data('location'),'location','row_location');
+
+// });
+
+
+
+
+
 $(document).on('click', '.viewNotification', function(){
     let notificationId = $(this).data('id');
-        $.ajax({
-            url: "/admin/notifications/read/" + notificationId,
-            type: "POST",
-            data: {
-                _token: $('meta[name="csrf-token"]').attr('content')
+    
+    // Immediately decrease notification count on the frontend
+    let currentCount = parseInt($('#notificationCount').text());
+    if (!isNaN(currentCount)) {
+        // Decrease the count by 1
+        let newCount = currentCount - 1;
+        $('#notificationCount').text(newCount);
+        
+        // Hide the notification count badge if the count is 0
+        if (newCount === 0) {
+            $('#notificationCount').hide(); // Hides the count element completely
+        }
+    }
+
+    // Mark notification visually as read (optional)
+    $(this).closest('.notification-item').removeClass('unread');
+    $.ajax({
+        url: "/admin/notifications/unread-count/" + notificationId,
+        type: "POST",
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(response) {
+            // Update notification count from the server's response
+            let updatedCount = response.newCount;
+            $('#notificationCount').text(updatedCount);
+            
+            // If the count is 0, hide the notification count element
+            if (updatedCount === 0) {
+                $('#notificationCount').hide();
+            } else {
+                $('#notificationCount').show();
             }
-        });
+        }
+    });
+    
+    // Handle dynamic data inside the modal
+    function toggleField(value, spanId, rowId) {
+        // Convert to string and clean value
+        if (value !== undefined && value !== null) {
+            value = value.toString().replace(/"/g, '').trim();
+        }
 
-        function toggleField(value, spanId, rowId){
-
-    // Convert to string and clean value
-    if(value !== undefined && value !== null){
-        value = value.toString().replace(/"/g,'').trim();
+        // Hide if empty
+        if (!value) {
+            $('#' + rowId).hide();
+        } else {
+            $('#' + spanId).text(value);
+            $('#' + rowId).show();
+        }
     }
 
-    // Hide if empty
-    if(!value){
-        $('#'+rowId).hide();
-    }else{
-        $('#'+spanId).text(value);
-        $('#'+rowId).show();
-    }
-}
-toggleField($(this).data('name'),'name','row_name');
-toggleField($(this).data('email'),'email','row_email');
-toggleField($(this).data('message'),'message','row_message');
-toggleField($(this).data('browser'),'browser','row_browser');
-toggleField($(this).data('platform'),'platform','row_platform');
-toggleField($(this).data('devicetype'),'device','row_device');
-toggleField($(this).data('ip'),'ip','row_ip');
-toggleField($(this).data('type'),'type','row_type');
-toggleField($(this).data('date'),'date','row_date');
-toggleField($(this).data('location'),'location','row_location');
-
+    // Toggle fields in the modal with data attributes
+    toggleField($(this).data('name'), 'name', 'row_name');
+    toggleField($(this).data('email'), 'email', 'row_email');
+    toggleField($(this).data('message'), 'message', 'row_message');
+    toggleField($(this).data('browser'), 'browser', 'row_browser');
+    toggleField($(this).data('platform'), 'platform', 'row_platform');
+    toggleField($(this).data('devicetype'), 'device', 'row_device');
+    toggleField($(this).data('ip'), 'ip', 'row_ip');
+    toggleField($(this).data('type'), 'type', 'row_type');
+    toggleField($(this).data('date'), 'date', 'row_date');
+    toggleField($(this).data('location'), 'location', 'row_location');
 });
+
+
 
 
 function toTitleCase(str) {

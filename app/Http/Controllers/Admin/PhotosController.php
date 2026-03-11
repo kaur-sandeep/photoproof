@@ -394,7 +394,7 @@ public function update(Request $request, $photo_id)
     }
 
     public function reportedImagesList(){
-        $reported_data = PhotoReport::orderBy('created_at', 'desc')->get();
+        $reported_data = PhotoReport::orderBy('created_at', 'desc')->where('state', '!=', -1)->get();
         return DataTables::of($reported_data)
         ->addIndexColumn()
         ->addColumn('image', function ($reported_data) {

@@ -34,7 +34,11 @@ class PhotoDetail extends Model
         'region_name',
         'city',
         'zip',
-        'meta_data'
+        'display_name_flag',
+        'display_location_flag',
+        'display_self_photo_flag',
+        'display_qrcode',
+        'display_qrcode_flag'
     ];
 
     protected $casts = [

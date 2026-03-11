@@ -23,15 +23,15 @@
       <div class="container">
          <div class="row d-flex align-items-center">
 			<div class="col-12 ">
-			<p>Welcome to <strong>PhotoProof</strong> (&quot;App&quot;, &quot;we&quot;, &quot;our&quot;, or &quot;us&quot;).</p>
-			<p>PhotoProof is designed to capture verifiable photos with real-time metadata including GPS location, date, time, timezone, and a unique verification ID. We are committed to protecting your privacy and ensuring transparency about how your information is collected, used, and safeguarded.</p>
-			<p>By using PhotoProof, you agree to the practices described in this Privacy Policy.</p>
+			<p>Welcome to <strong>Photo Proof</strong> (&quot;App&quot;, &quot;we&quot;, &quot;our&quot;, or &quot;us&quot;).</p>
+			<p>Photo Proof is designed to capture verifiable photos with real-time metadata including GPS location, date, time, timezone, and a unique verification ID. We are committed to protecting your privacy and ensuring transparency about how your information is collected, used, and safeguarded.</p>
+			<p>By using Photo Proof, you agree to the practices described in this Privacy Policy.</p>
 
 			<h3>Information We Collect</h3>
-			<p>To provide secure and verifiable photo capture services, PhotoProof collects the following types of information:</p>
+			<p>To provide secure and verifiable photo capture services, Photo Proof collects the following types of information:</p>
 
 			<h3>Automatically Collected Information</h3>
-			<p>When you use PhotoProof to capture a photo, we collect:</p>
+			<p>When you use Photo Proof to capture a photo, we collect:</p>
 			<ul>
 				<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg> GPS location data&nbsp;</li>
 				<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg> Date and time of capture</li>
@@ -50,7 +50,7 @@
 			<p>We do not access your device gallery unless explicitly permitted by you.</p>
 
 			<h3>Location &amp; Internet Requirements</h3>
-			<p>PhotoProof requires:</p>
+			<p>Photo Proof requires:</p>
 			<ul>
 				<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg> Active internet connection</li>
 				<li><svg width="8" height="8" style="color:var(--accent-cyan)"><use href="#ic-dot"></use></svg> GPS/location services enabled</li>

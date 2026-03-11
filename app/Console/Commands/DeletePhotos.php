@@ -111,7 +111,7 @@ class DeletePhotos extends Command
             $this->info("Updated PhotoReport state for photo ID: {$photo->random_id }");
 
             // Update notifications
-            Notification::where('photo_random_id', $photo->random_id )
+            Notifications::where('photo_random_id', $photo->random_id )
                 ->update(['state' => -1]);
 
             $this->info("Updated Notification state for photo ID: {$photo->random_id }");
