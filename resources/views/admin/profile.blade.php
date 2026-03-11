@@ -97,6 +97,10 @@
                     <a href="{{ route('admin.change.password') }}" class="btn btn-warning">
                         Change Password
                     </a>
+
+                     <a href="{{ route('admin.users.data') }}" class="btn btn-secondary">
+                        Back
+                    </a>
                 </div>
                   <!--end::Footer-->
                 </form>
