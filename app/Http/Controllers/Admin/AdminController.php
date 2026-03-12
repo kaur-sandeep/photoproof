@@ -276,11 +276,10 @@ class AdminController extends Controller
         return view('admin.settings',compact('settings'));
     }
 
-     public function updateSettings(Request $request)
+    public function updateSettings(Request $request)
     {
         $request->validate([
             'email_enabled'=>'required|boolean',
-            // 'smtp_enabled' => 'required|boolean',
             'smtp_host' => 'nullable|string',
             'smtp_port' => 'nullable|numeric',
             'smtp_username' => 'nullable|string',
@@ -295,7 +294,7 @@ class AdminController extends Controller
         }
 
         $settings->email_enabled = $request->email_enabled;
-        // $settings->smtp_enabled = $request->smtp_enabled;
+        $settings->smtp_enabled = 1;
         $settings->smtp_host = $request->smtp_host;
         $settings->smtp_port = $request->smtp_port;
         $settings->smtp_username = $request->smtp_username;

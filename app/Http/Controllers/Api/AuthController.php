@@ -196,7 +196,7 @@ class AuthController extends Controller
             // If not found → create new guest user
             if (!$user) {
                 $user = User::create([
-                    'name' => 'Guest',
+                    'name' => $request->display_name,
                     'email' => $request->email,
                     'password' => bcrypt('guest123'), // temporary password
                     'plan_id' => \App\Models\Plan::where('name', 'Free')->first()->id
@@ -254,7 +254,7 @@ class AuthController extends Controller
             'meta_data'=>json_decode($request->meta_data)
         ]);
         $ip = $request->ip();
-         $ip ='202.164.57.197';
+        // $ip ='202.164.57.197';
         // $ip ='192.168.0.90';
         $userAgent = $request->header('User-Agent');
         $referer = $request->headers->get('referer');
@@ -326,23 +326,45 @@ class AuthController extends Controller
         if ($settings && $settings->email_enabled) {
             $photoUrl = $photo->photo_url; // from accessor
 
+          $photoUrl = $photo->photo_url; // from accessor
+              $photopageurl = 'https://photoproof.cogniter.com/photo/'.$request->id;  
+
+
             $slot = '
-                <p>Hello '.$user->name.',</p>
+<table width="100%" align="center" cellpadding="0" cellspacing="0" style="font-family:Arial,sans-serif;">
+<tr>
+<td style="font-family:Arial,sans-serif;">
 
-                <p>Your photo has been uploaded successfully.</p>
+<p>Hello '.$user->name.',</p>
 
-                <p><strong>Photo ID:</strong> '.$photo->random_id.'</p>
-                <p><strong>Location:</strong> '.$photo->location.'</p>
-                <p><strong>Date Time:</strong> '.$photo->word_api_date_time.'</p>
+<p>Your photo has been uploaded successfully. Please find the details below:</p>
 
-                <p><strong>Share this link with anyone for proof varification :</strong><br>
-                <a href="'.$photoUrl.'" target="_blank">'.$photoUrl.'</a></p>
+<p><strong>Photo ID:</strong> '.$photo->random_id.'<br>
+<strong>Location:</strong> '.$photo->location.'<br>
+<strong>Date Time:</strong> '.$photo->word_api_date_time.'</p>
 
-                <hr>
+<p>Share this link with anyone for proof verification:<br>
 
-                <p><strong>Photo Preview:</strong></p>
-                <img src="'.$photoUrl.'" width="300" style="max-width:100%;">
-            ';
+<a href="'.$photopageurl.'" target="_blank" style="color:#1a73e8;">
+'.$photopageurl.'
+</a>
+</p>
+
+<hr>
+
+<p><strong>Photo Preview:</strong></p>
+
+<p>
+    <img src="'.$photoUrl.'" width="300" style="display:block;border:0;">
+</p>
+
+
+
+
+</td>
+</tr>
+</table>
+';
 
             // Send email to user
             $user->notify(new CommonMailNotification(

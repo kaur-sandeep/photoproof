@@ -233,7 +233,9 @@
                                     $iso = $photo->meta_data['iso'] ?? null;
                                     $focal_length = $photo->meta_data['focal_length'] ?? null;
                                 @endphp
-                                 <div class="right_photoID">Device & Camera </div>
+                                 <div class="right_photoID">Photo & Device Information 
+                              
+                                 </div>
 <div class="image-meta">
                                 <span>@if($width && $height)
                                     {{ $width }} x {{ $height }}
@@ -316,7 +318,7 @@ function exifFraction($value) {
 <span>
                                 @endif
                                    @if($f_number)
-                                   f/{{ exifFraction($f_number) }}
+                                   f{{ exifFraction($f_number) }}
 </span>
 <span>
                                 @endif
