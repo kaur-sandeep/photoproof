@@ -342,7 +342,7 @@ function exifFraction($value) {
 
                                 @endif
                         
-
+<!-- 
  <div class="right_photoID">Capture Details</div>   
  
                    <div class="image-meta">
@@ -351,7 +351,7 @@ function exifFraction($value) {
                                     Date & Time : {{$photo->word_api_date_time}}
                                 @endif 
                                       <div class="clear"></div>
-                </div>
+                </div> -->
                    <div class="right_photoID">Location</div>   
                    <div class="image-meta">
                    
