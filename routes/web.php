@@ -8,11 +8,16 @@ use App\Http\Controllers\Admin\PhotosController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\PhotoNotificationController;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Controllers\Api\PlanController;
 Route::get('/', function () {
     return redirect()->route('photo.search.form');
 });
+
+Route::get('/plans', function () {
+    return redirect()->route('plans');
+});
+
 Route::prefix('admin')->group(function () {
-    // Public Routes
     Route::get('/login', [LoginController::class, 'showLogin'])->name('admin.login');
     Route::post('/login', [LoginController::class, 'login']);
 
@@ -107,6 +112,8 @@ Route::prefix('admin')->group(function () {
     ->name('report.submit');
     Route::get('/photo/download/{id}', [PhotoController::class, 'download'])
         ->name('photo.download');
+    Route::get('/plans', [PlanController::class, 'plans'])
+        ->name('plans');
     Route::get('/phpinfo', function() {
     phpinfo();
 });

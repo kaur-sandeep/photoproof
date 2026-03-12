@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PlanController;
 
 // Route::post('/register', [AuthController::class, 'register']);
 // Route::post('/login', [AuthController::class, 'login']);
@@ -9,6 +10,8 @@ use App\Http\Controllers\Api\AuthController;
     Route::post('/upload_photo', [AuthController::class, 'uploadPhoto']);
     Route::get('/photos', [AuthController::class, 'getPhotos']);
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+    Route::get('/plans', [PlanController::class, 'plans'])->name('plans');
+    
 
 // });
 // Route::post('forgot-password', [AuthController::class, 'forgotPassword']);

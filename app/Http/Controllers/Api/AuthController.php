@@ -247,10 +247,10 @@ class AuthController extends Controller
             'city' => $request->city,
             'zip' => $request->zip,
             'timezone' => $request->timezone,
-            'display_name' => $request->display_name,
-            'display_location' => $request->display_location,
-            'display_self_photo' => $request->display_self_photo,
-            'display_qrcode' => $request->display_qrcode,
+            'display_name_flag' => $request->display_name_flag,
+            'display_location_flag' => $request->display_location_flag,
+            'display_self_photo_flag' => $request->display_self_photo_flag,
+            'display_qrcode_flag' => $request->display_qrcode_flag,
             'meta_data'=>json_decode($request->meta_data)
         ]);
         $ip = $request->ip();
@@ -311,7 +311,7 @@ class AuthController extends Controller
         // save data into notifications table //
 
             Notifications::create([
-            'photo_random_id' => $random_id,
+            'photo_random_id' => $request->id,
             'name' => $request->name,
             'email' => $request->email,
             'type'=>'upload photo',

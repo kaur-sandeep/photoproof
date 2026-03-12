@@ -69,7 +69,7 @@
                           </div>
                       @else
                           <div class="mb-2">
-                              <img src="{{ asset('images/default-user.png') }}"
+                              <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
                                   alt="Default Image"
                                   width="120"
                                   height="120"
