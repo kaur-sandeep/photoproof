@@ -43,7 +43,7 @@
                 <!-- /.card-body -->
                 <div class="card-footer">
                   <button type="submit" class="btn btn-primary">Submit</button>
-                   <a href="{{ route('admin.users.data') }}" class="btn btn-secondary">
+                   <a href="{{ route('admin.profile') }}" class="btn btn-secondary">
                         Back
                     </a>
                 </div>

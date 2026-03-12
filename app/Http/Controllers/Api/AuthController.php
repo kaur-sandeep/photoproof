@@ -17,6 +17,7 @@ use App\Notifications\CommonMailNotification;
 use App\Models\PhotoUploadTrack;
 use Jenssegers\Agent\Agent;
 use App\Models\Setting;
+use App\Models\Notifications;
 
 class AuthController extends Controller
 {
@@ -288,6 +289,34 @@ class AuthController extends Controller
             'org' => $location['org'] ?? null,
             'as_name' => $location['as'] ?? null,
             'ip_query' => $location['query'] ?? null,
+        ]);
+
+        $data = json_encode([
+        'userAgent' => $userAgent,
+        'referer' => $referer,
+        'browser' => $browser,
+        'platform' => $platform,
+        'device' => $device,
+        'deviceType' => $deviceType,
+        'ip' => $ip,
+        'country' => $location['country'] ?? null,
+        'region' => $location['regionName'] ?? null,
+        'city' => $location['city'] ?? null,
+        'zip' => $location['zip'] ?? null,
+        'latitude' => $location['lat'] ?? null,
+        'longitude' => $location['lon'] ?? null,
+        'timezone' => $location['timezone'] ?? null,
+        ]);
+        
+        // save data into notifications table //
+
+            Notifications::create([
+            'photo_random_id' => $random_id,
+            'name' => $request->name,
+            'email' => $request->email,
+            'type'=>'upload photo',
+            'data' => $data, 
+            'is_read' => false
         ]);
 
         // send email to user
