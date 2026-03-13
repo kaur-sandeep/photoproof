@@ -52,3 +52,12 @@ table.dataTable > thead .sorting::before, table.dataTable > thead .sorting::afte
 .dataTables_length select {padding-right:40px !important;}
 .table-striped > tbody > tr:nth-of-type(2n+1) > * {background: #f1faff !important;}
 td {vertical-align: middle;}
+.custom-unread-row {
+    background-color: #fff7e6 !important;
+    font-weight: 600;
+}
+
+.custom-read-row {
+    background-color: #ffffff !important;
+    font-weight: normal;
+}

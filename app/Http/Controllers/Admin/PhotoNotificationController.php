@@ -27,7 +27,7 @@ class PhotoNotificationController extends Controller
         $notifications = Notifications::where('state', '!=', -1)
         ->where('is_read', 0)
         ->orderBy('created_at', 'desc')
-        ->take(5)
+        // ->take(5)
         ->get()
         ->map(function ($item) {
 
@@ -117,6 +117,9 @@ $notifications = $notifications
     ->where('state', '!=', -1)->get();
 return DataTables::of($notifications)
     ->addIndexColumn()
+    ->setRowClass(function ($notifications) {
+    return $notifications->is_read == 0 ? 'custom-unread-row' : 'custom-read-row';
+})
     ->addColumn('photo_random_id', function ($notifications) {
         return $notifications->photo_random_id ?? '--';
     })
@@ -197,6 +200,8 @@ public function unreadCount(Request $request,$id){
     $notification->is_read = 1;
     $notification->save();
     $newCount = Notifications::where('is_read', false)
+                            ->orderBy('created_at', 'desc')
+                            // ->take(5)
                             ->count();  // Count unread notifications
     return response()->json(['newCount' => $newCount]);
 }
