@@ -10,7 +10,13 @@ class PlanController extends Controller
 {
     public function plans()
     {
-        $plans = Plan::where('state', '!=', -1)->get();
+        // $plans = Plan::where('state', '!=', -1)->get();
+        // return response()->json([
+        //     'status' => true,
+        //     'data' => $plans
+        // ]);
+
+        $plans = Plan::where('state', '!=', -1)->first();
         return response()->json([
             'status' => true,
             'data' => $plans
