@@ -92,6 +92,18 @@
 
             </ul>
             @endif
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="{{ route('admin.deleted.photos') }}"
+                       class="nav-link text-white">
+                       <i class="bi bi-trash3 me-2"></i>
+                        Deleted Photos
+                    </a>
+                </li>
+
+            </ul>
+
             <ul class="nav flex-column">
 
                 <li class="nav-item">

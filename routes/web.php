@@ -61,6 +61,9 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/photos', [PhotosController::class, 'index'])->name('admin.photos');
         Route::get('/photos/list', [PhotosController::class, 'list'])->name('admin.photos.list');
+        Route::get('/deleted/photos', [PhotosController::class, 'deletedPhoto'])->name('admin.deleted.photos');
+        Route::get('/deleted/photos/list', [PhotosController::class, 'deletedPhotoslist']);
+        
         Route::get('/photos/show/{id}', [PhotosController::class, 'show'])->name('admin.photos.show');
         Route::get('/photos/showdata/{id}', [PhotosController::class, 'showdata'])->name('admin.photos.showdata');
         Route::get('/photos/update/data', [PhotosController::class, 'updateStatus'])->name('admin.photos.update.status');

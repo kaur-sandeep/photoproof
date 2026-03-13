@@ -148,8 +148,9 @@
 
 <section class="second-row  wide-50 division ">
       <div class="container-fluid px-5">
+        <div class="photo_view_Top">
          <div class="left_photoID">#{{ $photo->random_id }}</div>	
-         <div class="col-md-12 mx-auto">
+         <div class="">
 			      <!-- <div class="verifyphoto"> -->
                    <form method="POST" action="{{ route('photo.search') }}"  class="verifyphoto">
 					<label>Verify a New photo</label>
@@ -168,6 +169,7 @@
                         <p style="color:red">{{ session('error') }}</p>
                     @endif
                </div>
+</div>
          <div class="row d-flex align-items-center">	
             	
 			<div class="col-sm-12 col-lg-9">
@@ -208,7 +210,18 @@
 			</div>
              
 			<div class="col-sm-12 col-lg-3">
-                <div class="details-top">This photo is available for {{ $daysAvailable }} days.  <a href="{{ url('/report/' . $photo->random_id) }}" class=""/>Report This Photo</a></div>
+                
+                <div class="details-top">
+                    <span>This photo is available for {{ $daysAvailable }} days.
+
+<p> @if(!empty($photo->word_api_date_time))
+                                  Uploaded on: {{$photo->word_api_date_time}}
+                                @endif </p>
+
+                    </span>
+                    
+                <span><a href="{{ url('/report/' . $photo->random_id) }}" class=""/>Report This Photo</a></span>
+                </div>
                 @if($photo->uploadTrack)	
                   @php
                     $track = $photo->uploadTrack;
@@ -342,8 +355,8 @@ function exifFraction($value) {
 
                                 @endif
                         
-<!-- 
- <div class="right_photoID">Capture Details</div>   
+
+ <!-- <div class="right_photoID">Capture Details</div>   
  
                    <div class="image-meta">
  <div class="clear"></div>
@@ -351,7 +364,7 @@ function exifFraction($value) {
                                     Date & Time : {{$photo->word_api_date_time}}
                                 @endif 
                                       <div class="clear"></div>
-                </div> -->
+                </div>  -->
                    <div class="right_photoID">Location</div>   
                    <div class="image-meta">
                    

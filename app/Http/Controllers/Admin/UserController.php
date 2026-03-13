@@ -105,7 +105,7 @@ return DataTables::of($users)
     ->addColumn('profile_image', function ($user) {
         $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
         return '<img src="' . ($user->profile_image
-            ? asset('storage/profile/' . $user->profile_image)
+            ? asset('storage/' . $user->profile_image)
             : $default) . '" width="40" height="40" class="rounded-circle">';
     })
   ->addColumn('country', function ($user) {

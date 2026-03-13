@@ -252,6 +252,43 @@ $('#photoTableList').on('click', '.toggle-state', function () {
 
 });
     
+
+$(document).ready(function() {
+    let table = $('#deletedphotoTableList').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: window.APP_URL + '/admin/deleted/photos/list',  // Ensure this URL is correct
+
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'photo', name: 'photo', searchable: false },
+            { data: 'random_id', name: 'random_id' },
+            { data: 'name', name: 'name' },
+            { data: 'location', name: 'location' },
+            { data: 'user_name', name: 'user_name' },
+            { data:'created_at', name:'created_at'},
+            // { data: 'view_count', name: 'view_count',searchable: false },
+            // { data:'status', name:'status',orderable: false},
+            //  { data:'upload_track_record', name:'upload_track_record'},
+        //       {
+        //     data: null,
+        //     name: 'action',
+        //     orderable: false,
+        //     searchable: false,
+        //     render: function(data, type, row) {
+        //         return `
+        //             <button class="btn btn-info btn-sm viewTrackBtn">
+        //                 View
+        //             </button>
+        //         `;
+        //     }
+        // },
+            // { data: 'actions', name: 'actions', orderable: false, searchable: false }
+            
+        ]
+    });
+});
+
 $(document).ready(function() {
     let table = $('#photodataTableList').DataTable({
         processing: true,
