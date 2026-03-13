@@ -253,6 +253,7 @@ class AuthController extends Controller
             'display_qrcode_flag' => $request->display_qrcode_flag,
             'meta_data'=>json_decode($request->meta_data)
         ]);
+        
         $ip = $request->ip();
         // $ip ='202.164.57.197';
         // $ip ='192.168.0.90';
@@ -312,7 +313,7 @@ class AuthController extends Controller
 
             Notifications::create([
             'photo_random_id' => $request->id,
-            'name' => $request->name,
+            'name' => $request->display_name,
             'email' => $request->email,
             'type'=>'upload photo',
             'data' => $data, 

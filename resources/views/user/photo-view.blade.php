@@ -274,13 +274,13 @@
                       @if(!empty($photo->ios_system_version ) && $photo->ios_system_version != 0)					
 					<span> {{ $photo->ios_system_version }}</span>
                      @endif
-
+<!-- 
                       @if(!empty($photo->ios_identifier ) && $photo->ios_identifier != 0)					
 					<span>IOS Identifier:</strong> {{ $photo->ios_identifier }}</span> 
                      @endif
 
-                    @endif
-                      @if(!empty($photo->device_brand) && $photo->device_brand != 0)	
+                    @endif -->
+                      <!-- @if(!empty($photo->device_brand) && $photo->device_brand != 0)	 -->
 					<!-- <li><strong>Device Brand:</strong> {{ $photo->device_brand }}</li>
                      @endif
                     @if(!empty($photo->device_model) && $photo->device_model != 0)	
