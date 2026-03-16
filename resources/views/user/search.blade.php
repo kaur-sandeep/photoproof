@@ -28,7 +28,7 @@
                             <a href="https://apps.apple.com/us/app/photo-proof/id6759238577" class="store" target="_blank">
                            <img class="appstore-white" src="{{ asset('user/images/store_badges/appstore.png') }}" width="155" height="50" alt="appstore-logo">
                            </a>	
-                          <a href="https://play.google.com/store/apps/details?id=com.Photo Proof" class="store"  target="_blank">
+                          <a href="https://play.google.com/store/apps/details?id=com.photoproof" class="store"  target="_blank">
                            <img class="googleplay-white" src="{{ asset('user/images/store_badges/googleplay.png') }}" width="164" height="50" alt="googleplay-logo">
                            </a>
                            <div class="os-version">
@@ -232,7 +232,7 @@
                               <div class="step-title">Install &amp; Allow Access</div>
                               <div class="step-detail">Install the app and grant location and camera permissions. These are required to ensure metadata authenticity.</div>
                               <div class="step-bottom">
-                                 <svg width="200" height="200" viewBox="0 0 72 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                 <svg width="100" height="100" viewBox="0 0 72 64" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <!-- Phone -->
                                     <rect x="14" y="6" width="28" height="52" rx="6" stroke="#38d762" stroke-width="2"/>
                                     <!-- Download Arrow (Install) -->
@@ -264,7 +264,7 @@
                               <div class="step-title">Take a Snap</div>
                               <div class="step-detail">App retrieves time, timezone, and exact location from secure servers and embeds it into the image. Data is NOT user-editable</div>
                               <div class="step-bottom">
-                                 <svg width="200" height="200" viewBox="0 0 96 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                 <svg width="100" height="100" viewBox="0 0 96 72" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <!-- Camera Body -->
                                     <rect x="28" y="20" width="40" height="28" rx="6" stroke="#38d762" stroke-width="2"/>
                                     <!-- Camera Top -->
@@ -302,9 +302,9 @@
                                  </svg>
                                  </div> -->
                               <div class="step-title">Save &amp; Share Proof</div>
-                              <div class="step-detail">Save to gallery or share with embedded timestamp, location, unique ID, and optionally your photo and name as verifiable proof.</div>
+                              <div class="step-detail">Save to gallery or share with embedded QR code, timestamp, location, unique ID, and optionally your photo and name as verifiable proof.</div>
                               <div class="step-bottom">
-                                 <svg width="200" height="200" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                 <svg width="100" height="100" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
 								  <!-- SAVE (Main Icon) -->
 								  <path d="M32 12V36" stroke="#38d762" stroke-width="2" stroke-linecap="round"/>
 								  <path d="M26 30L32 36L38 30" stroke="#38d762" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -323,6 +323,16 @@
                               </div>
                            </div>
                         </div>
+						<div class="col-md-12 mt-4">
+							<div class="ratio ratio-16x9">
+							<video style="width:100%" controls>
+							  <source src="{{ asset('user/images/PhotoProof__Capture_Proof.mp4')}}" type="video/mp4">
+							  <source src="{{ asset('user/images/PhotoProof__Capture_Proof.webm')}}" type="video/webm">
+							  Your browser does not support the video tag.
+							</video>
+							</div>
+						</div>
+						
                      </div>
                   </div>
                </div>
