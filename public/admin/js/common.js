@@ -970,8 +970,8 @@ function toTitleCase(str) {
     ).join(' ');
 }
 
-// Example
-item.type = toTitleCase(item.type);
+// // Example
+// item.type = toTitleCase(item.type);
 
 
 });

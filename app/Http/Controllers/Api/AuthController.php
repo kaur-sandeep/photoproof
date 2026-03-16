@@ -263,7 +263,7 @@ class AuthController extends Controller
         $browser = $agent->browser();
         $platform = $agent->platform();
         $device = $agent->device();
-        $deviceType = $agent->isMobile() ? 'Mobile' : 'Desktop';
+        $deviceType = 'Mobile';
 
         $location = $this->getLocationFromIp($ip);
       
@@ -507,13 +507,17 @@ public function forgotPassword(Request $request)
     public function updateProfile(Request $request)
     {
         $user = User::where('email', $request->email)->first();
-
+        $imagePath=null;
+        if ($request->hasFile('profile_image')) {
+            $imagePath = $request->file('profile_image')->store('profiles', 'public');
+        }
         if (!$user) {
              $freePlan = \App\Models\Plan::where('name', 'Free')->first();
                 $user = User::create([
                     'name' => $request->name ,
                     'email' => $request->email,
                     'password' => bcrypt('guest123'), // temporary password
+                    'profile_image'=>$imagePath,
                     'plan_id' => \App\Models\Plan::where('name', 'Free')->first()->id
                 ]);
                    return response()->json([
@@ -541,7 +545,6 @@ public function forgotPassword(Request $request)
         }
 
         if ($request->hasFile('profile_image')) {
-
             if ($user->profile_image && \Storage::disk('public')->exists($user->profile_image)) {
                 \Storage::disk('public')->delete($user->profile_image);
             }
