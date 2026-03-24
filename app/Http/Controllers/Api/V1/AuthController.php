@@ -518,6 +518,13 @@ public function forgotPassword(Request $request)
                     'email' => $request->email,
                     'password' => bcrypt('guest123'), // temporary password
                     'profile_image'=>$imagePath,
+                    'location'=>$request->location,
+                    'country'=>$request->country,
+                    'city'=>$request->city,
+                    'region_name'=>$request->region_name,
+                    'zip'=>$request->zip,
+                    'device_type'=>$request->device_type,
+                    'timezone'=>$request->timezone,
                     'plan_id' => \App\Models\Plan::where('name', 'Free')->first()->id
                 ]);
                    return response()->json([

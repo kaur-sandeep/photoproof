@@ -38,7 +38,7 @@
                 <a href="#" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Total iPhone Installations</h5>
-                    <h3>0</h3>
+                    <h3>{{ $iosInstalls }}</h3>
                 </div>
             </a>
             </div>
@@ -49,7 +49,7 @@
                  <a href="#" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Total Android Installations</h5>
-                    <h3>0</h3>
+                    <h3>{{ $androidInstalls }}</h3>
                 </div>
                 </a>
             </div>

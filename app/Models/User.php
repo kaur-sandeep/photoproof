@@ -31,6 +31,13 @@ class User extends Authenticatable implements MustVerifyEmail
         'phone_number',
         'plan_id',
         'state',
+        'location',
+        'country',
+        'city',
+        'region_name',
+        'zip',
+        'device_type',
+        'timezone',
     ];
 
     /**

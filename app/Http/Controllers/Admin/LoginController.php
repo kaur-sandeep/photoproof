@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use App\Models\User;
 use App\Models\PhotoDetail;
 use App\Helpers\ActivityLogger;
-
+use App\Models\AppInstall;
 class LoginController extends Controller
 {
     public function showLogin()
@@ -71,7 +71,10 @@ class LoginController extends Controller
         $totalUsers = User::count();
         $totalPhotos = PhotoDetail::count();
         $totalViews = PhotoDetail::sum('view_count');
-        return view('admin.dashboard',compact('totalUsers','totalPhotos','totalViews'));
+        $androidInstalls = AppInstall::where('platform', 'android')->count();
+       $iosInstalls = AppInstall::where('platform', 'ios')->count();
+
+        return view('admin.dashboard',compact('totalUsers','totalPhotos','totalViews','androidInstalls', 'iosInstalls'));
     }
 
     public function profile()

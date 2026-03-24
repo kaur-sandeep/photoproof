@@ -109,28 +109,23 @@ return DataTables::of($users)
             : $default) . '" width="40" height="40" class="rounded-circle">';
     })
   ->addColumn('country', function ($user) {
-        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
-        return $track?->country ?? '--';
+        return $user->country ?? '--';
     })
     ->addColumn('city', function ($user) {
-        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
-        return $track?->city ?? '--';
+        return $user->city ?? '--';
     })
     ->addColumn('state', function ($user) {
-        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
-        return $track?->region_name ?? '--';
+        return $user->region_name ?? '--';
     })
     ->addColumn('zip', function ($user) {
-        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
-        return $track?->zip ?? '--';
+        return $user->zip ?? '--';
     })
     ->addColumn('device', function ($user) {
-        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
-        return $track?->device_type ?? '--';
+        return $user->device_type ?? '--';
     })
-        ->addColumn('timezone', function ($user) {
-        $track = $user->photos->firstWhere('uploadTrack', '!=', null)?->uploadTrack;
-        return $track?->timezone ?? '--';
+    ->addColumn('timezone', function ($user) {
+            return $user->timezone ?? '--';
+       
     })
     ->addColumn('created_at', fn($user) => DateTime::dateFormat($user->created_at)?? '--')
      ->addColumn('photo_count', function ($user) {

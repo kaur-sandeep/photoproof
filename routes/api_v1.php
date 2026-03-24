@@ -1,7 +1,7 @@
 <?php
 use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\PlanController;
-
+use App\Http\Controllers\Api\V1\InstallController;
 // Route::post('/register', [AuthController::class, 'register']);
 // Route::post('/login', [AuthController::class, 'login']);
 // Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -12,7 +12,7 @@ use App\Http\Controllers\Api\V1\PlanController;
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::get('/plans', [PlanController::class, 'plans'])->name('plans');
     Route::get('/test_version', [AuthController::class, 'testVersion']);
-
+    Route::post('/track-install', [InstallController::class, 'trackInstall']);
 // });
 // Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
 // Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
