@@ -25,6 +25,10 @@ class UserController extends Controller
     public function index(){
         return view('admin.users.index');
     }
+
+    public function unsubscribe(){
+        return view('user.unsubscribe');
+    }
     
     
     // public function list(Request $request)
@@ -95,7 +99,7 @@ class UserController extends Controller
 
 
     public function list(Request $request){
-    $users = User::with('photos.uploadTrack')->withCount('photos')->orderBy('created_at', 'desc')->get();
+    $users = User::with('photos.uploadTrack')->withCount('photos')->where('state','!=',-1)->orderBy('created_at', 'desc')->get();
   
 
 return DataTables::of($users)
