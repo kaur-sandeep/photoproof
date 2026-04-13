@@ -124,13 +124,15 @@ return DataTables::of($users)
     ->addColumn('zip', function ($user) {
         return $user->zip ?? '--';
     })
+ 
     ->addColumn('device', function ($user) {
-        return $user->device_type ?? '--';
+        return $user->device_type == 'android' ? 'Android' :
+            ($user->device_type == 'ios' ? 'IOS' : '--');
     })
-    ->addColumn('timezone', function ($user) {
-            return $user->timezone ?? '--';
+    // ->addColumn('timezone', function ($user) {
+    //         return $user->timezone ?? '--';
        
-    })
+    // })
     ->addColumn('created_at', fn($user) => DateTime::dateFormat($user->created_at)?? '--')
      ->addColumn('photo_count', function ($user) {
             return '<span class="badge bg-info" style="

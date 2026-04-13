@@ -45,7 +45,7 @@ $(document).ready(function() {
             { data: 'zip', name: 'zip' },
             // { data: 'phone_number', name: 'phone_number' },
             { data: 'device', name: 'device'},
-            { data: 'timezone', name: 'timezone'},
+            // { data: 'timezone', name: 'timezone'},
             { data: 'created_at', name: 'created_at'},
             { data: 'photo_count', name: 'photo_count', orderable: false, searchable: false },
            

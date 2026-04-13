@@ -641,4 +641,56 @@
                <!-- END JOIN TEAM BUTTON -->
             </div>
          </section>
+         <section  id="contact-us" class="contact-section bg-lightgrey wide-60">
+    <div class="container">
+        <h2 class="text-center mb-4">Contact Us</h2>
+         <p style="text-align: center;">
+        Need assistance or have a query? Share your details below and our team will connect with you shortly.
+         </p>
+
+        @if(session('success'))
+            <p style="color:green">{{ session('success') }}</p>
+        @endif
+
+        @if($errors->any())
+            <p style="color:red">{{ $errors->first() }}</p>
+        @endif
+
+        <form  class="row contact-form" action="{{ route('contact_submit') }}" method="POST">
+            @csrf
+          
+            <div class="col-lg-4 mb-3">
+                <input type="text" name="name" class="form-control" placeholder="Your name *" value="{{ old('name') }}" required> 
+            </div>	
+
+            <div class="col-lg-4 mb-3">
+                <input type="email" name="email" class="form-control" placeholder="Email address *" value="{{ old('email') }}" required> 
+            </div>		
+
+            <div class="col-lg-4 mb-3">
+               <input type="text" name="phone_number" 
+                  class="form-control" 
+                  placeholder="Phone number " 
+                  value="{{ old('phone_number') }}" 
+                  pattern="[0-9]{10,15}" 
+                  maxlength="15"
+                  inputmode="numeric"
+                  oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+                  >
+            </div>										
+
+            <div class="col-lg-12 mb-3">
+                <textarea class="form-control" name="message" rows="6" placeholder="Write your message...*" required>{{ old('message') }}</textarea>
+            </div> 
+
+            <div class="col-lg-12 mb-3">
+                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+            </div>
+
+            <div class="col-lg-12">
+                <button type="submit" class="btn btn-lightgreen">Submit</button>	
+            </div>
+        </form>
+    </div>
+</section>
  @endsection

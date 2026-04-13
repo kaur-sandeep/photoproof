@@ -12,6 +12,8 @@ use App\Models\PhotoReport;
 use Illuminate\Support\Facades\Notification;
 use App\Notifications\CommonMailNotification;
 use App\Models\Notifications;
+use App\Models\Contact;
+
 class PhotoController extends Controller
 {
    public function searchForm()
@@ -336,5 +338,126 @@ class PhotoController extends Controller
         return response()->download($path);
     }
     
+
+    
+public function contact_submit(Request $request)
+{
+    // ✅ Validation
+    $request->validate([
+        'name' => 'required|string|max:100',
+        'email' => 'required|email',
+        'phone_number' => 'nullable|digits_between:10,15',
+        'message' => 'required|min:5',
+        'g-recaptcha-response' => 'required'
+    ]);
+
+    // ✅ reCAPTCHA verify
+    $response = Http::asForm()->post('https://www.google.com/recaptcha/api/siteverify', [
+        'secret' => env('RECAPTCHA_SECRET_KEY'),
+        'response' => $request->input('g-recaptcha-response'),
+        'remoteip' => $request->ip()
+    ]);
+
+    if (!$response->json('success')) {
+        return back()->withErrors(['captcha' => 'Captcha failed'])->withInput();
+    }
+
+    // ✅ Save in DB (optional)
+    Contact::create($request->all());
+
+    // ✅ Extra info (same like your existing code)
+    $ip = $request->ip(); // real user IP
+    $ip ='202.164.57.197';
+    $userAgent = $request->header('User-Agent');
+    $referer = $request->headers->get('referer');
+
+    $agent = new Agent();
+    $browser = $agent->browser();
+    $platform = $agent->platform();
+    $device = $agent->device();
+    $deviceType = $agent->isMobile() ? 'Mobile' : 'Desktop';
+
+    // Get location from IP (if you already have this function)
+    $location = $this->getLocationFromIp($ip);
+    $currentDateTime = Carbon::now()->format('d M Y, h:i A');
+    // ✅ Email content (same pattern as your code)
+    $slot = '
+        <p>Dear Admin,</p>
+
+        <p>A new contact request has been submitted:</p>
+
+        <hr>
+
+        <p><strong>User Details:</strong></p>
+        <p><strong>Name:</strong> '.$request->name.'</p>
+        <p><strong>Email:</strong> '.$request->email.'</p>
+    ';
+
+    if($request->phone_number){
+        $slot .= '<p><strong>Phone:</strong> '.$request->phone_number.'</p>';
+    }
+
+    $slot .= '
+        <p><strong>Message:</strong><br>'.nl2br(e($request->message)).'</p>
+       
+
+        <hr>
+
+        <p><strong>System Info:</strong></p>
+        <p><strong>IP Address:</strong> '.$ip.'</p>
+        <p><strong>Browser:</strong> '.$browser.'</p>
+        <p><strong>Device:</strong> '.$deviceType.'</p>
+        <p><strong>Country:</strong> '.$location['country'].'</p>
+        <p><strong>City:</strong> '.$location['city'].'</p>
+         <p><strong>Date & Time:</strong> '.$currentDateTime.'</p>
+        <hr>
+    ';
+
+    // ✅ Send mail using your existing method
+    $admin = env('ADMIN_EMAIL');
+
+    if ($admin) {
+        Notification::route('mail', $admin)
+            ->notify(new CommonMailNotification(
+                'New Contact Request',
+                $slot
+            ));
+    }
+
+       $data = json_encode([
+            'userAgent' => $userAgent,
+            'referer' => $referer,
+            'browser' => $browser,
+            'platform' => $platform,
+            'device' => $device,
+            'deviceType' => $deviceType,
+            'ip' => $ip,
+            'country' => $location['country'] ?? null,
+            'region' => $location['regionName'] ?? null,
+            'city' => $location['city'] ?? null,
+            'zip' => $location['zip'] ?? null,
+            'latitude' => $location['lat'] ?? null,
+            'longitude' => $location['lon'] ?? null,
+            'timezone' => $location['timezone'] ?? null,
+            'message' => $request->message,
+        ]);
+        
+        // save data into notifications table //
+
+        Notifications::create([
+            'photo_random_id' => '',
+            'name' => $request->name,
+            'email' => $request->email,
+            'type'=>'contact us',
+            'data' => $data, 
+            'is_read' => false
+        ]);
+
+    
+    return redirect()->route('contact.thankyou');
+   // return back()->with('success', 'Message sent successfully!');
+}
+
+
 
 }

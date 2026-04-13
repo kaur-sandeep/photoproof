@@ -3268,3 +3268,6 @@ footer .os-version span svg {
   .left_photoID {text-align: center;}
   .verifyphoto {padding-bottom: 10px;}
 }
+html {
+    scroll-behavior: smooth;
+}

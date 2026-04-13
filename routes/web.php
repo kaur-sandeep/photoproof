@@ -118,6 +118,11 @@ Route::prefix('admin')->group(function () {
         ->name('photo.download');
     Route::get('/plans', [PlanController::class, 'plans'])
         ->name('plans');
+
+    Route::post('/contact-submit', [PhotoController::class, 'contact_submit'])->name('contact_submit');
+    Route::get('/contact-thank-you', function () {
+            return view('user.contact_thankyou');
+        })->name('contact.thankyou');
     Route::get('/phpinfo', function() {
     phpinfo();
 });
