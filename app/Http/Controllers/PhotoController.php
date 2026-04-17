@@ -268,9 +268,11 @@ class PhotoController extends Controller
         'data' => $data, 
         'is_read' => false
     ]);
+     $settings = Setting::first();
 
+     $admin = $settings->admin_email ?? env('ADMIN_EMAIL');
     //send email
-    $admin = env('ADMIN_EMAIL');
+    //$admin = env('ADMIN_EMAIL');
     // dd($admin);
     if ($admin) {
             $photo = PhotoDetail::where('random_id', $random_id)->first();
@@ -292,9 +294,8 @@ class PhotoController extends Controller
                 <p><strong>IP Address:</strong>'.$ip.'</p>
                 <p><strong>Browser:</strong>'.$browser.'</p>
                 <p><strong>Device:</strong>'.$device.'</p>
-                <p><strong>Country:</strong>'.$location['country'] .'</p>
-                <p><strong>City:</strong>'.$location['city'] .'</p>
-
+               <p><strong>Country:</strong>'.(is_array($location) && isset($location['country']) ? $location['country'] : 'N/A').'</p>
+                <p><strong>City:</strong>'.(is_array($location) && isset($location['city']) ? $location['city'] : 'N/A').'</p>
                 <hr>
 
                 <p><strong>Photo Preview:</strong></p>
@@ -305,12 +306,9 @@ class PhotoController extends Controller
                 <hr>
 
                 <p>Please review this report at your earliest convenience.</p>
-
-                <p>Regards,<br>
-                Photo Proof System</p>
             ';
-           
-        Notification::route('mail', env('ADMIN_EMAIL'))
+           $emails = array_map('trim', explode(',', $admin));
+        Notification::route('mail', $emails)
             ->notify(new CommonMailNotification(
                 'New Photo Report - '.$photo->random_id,
                 $slot
@@ -367,7 +365,7 @@ public function contact_submit(Request $request)
 
     // ✅ Extra info (same like your existing code)
     $ip = $request->ip(); // real user IP
-    $ip ='202.164.57.197';
+    //$ip ='202.164.57.197';
     $userAgent = $request->header('User-Agent');
     $referer = $request->headers->get('referer');
 
@@ -407,17 +405,19 @@ public function contact_submit(Request $request)
         <p><strong>IP Address:</strong> '.$ip.'</p>
         <p><strong>Browser:</strong> '.$browser.'</p>
         <p><strong>Device:</strong> '.$deviceType.'</p>
-        <p><strong>Country:</strong> '.$location['country'].'</p>
-        <p><strong>City:</strong> '.$location['city'].'</p>
+        <p><strong>Country:</strong>'.(is_array($location) && isset($location['country']) ? $location['country'] : 'N/A').'</p>
+                <p><strong>City:</strong>'.(is_array($location) && isset($location['city']) ? $location['city'] : 'N/A').'</p>
          <p><strong>Date & Time:</strong> '.$currentDateTime.'</p>
         <hr>
     ';
 
     // ✅ Send mail using your existing method
-    $admin = env('ADMIN_EMAIL');
-
+    //$admin = env('ADMIN_EMAIL');
+    $settings = Setting::first();
+     $admin = $settings->admin_email ?? env('ADMIN_EMAIL');
     if ($admin) {
-        Notification::route('mail', $admin)
+          $emails = array_map('trim', explode(',', $admin));
+        Notification::route('mail', $emails)
             ->notify(new CommonMailNotification(
                 'New Contact Request',
                 $slot

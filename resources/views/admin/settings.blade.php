@@ -125,6 +125,14 @@
                     </div>
                 </div>
 
+                <div class="row mb-3 col-md-4">
+                    <div class="col-md-4"><strong>Admin Email</strong></div>
+                    <div class="col-md-8">
+                        <input type="text" name="admin_email" class="form-control"
+                            value="{{ old('admin_email', $settings->admin_email ?? '') }}">
+                    </div>
+                </div>
+
             </div>
 
             <div class="card-footer text-end">

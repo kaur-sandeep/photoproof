@@ -286,6 +286,7 @@ class AdminController extends Controller
             'smtp_password' => 'nullable|string',
             'smtp_encryption' => 'nullable|string|in:tls,ssl,',
             'delete_photos_after_days' => 'required|numeric|min:1',
+            'admin_email' => 'nullable|string',
         ]);
 
         $settings = Setting::first();
@@ -301,6 +302,7 @@ class AdminController extends Controller
         $settings->smtp_password = $request->smtp_password;
         $settings->smtp_encryption = $request->smtp_encryption;
         $settings->delete_photos_after_days = $request->delete_photos_after_days;
+        $settings->admin_email = $request->admin_email;
         $settings->save();
 
         return back()->with('success', 'Settings updated successfully');

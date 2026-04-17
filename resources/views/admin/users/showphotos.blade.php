@@ -9,7 +9,7 @@
             <h5 class="d-flex align-items-center gap-3 mb-0">
                  <?php $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";?>
                 <img src="{{ $user->profile_image 
-        ? asset('storage/profile/' . $user->profile_image) 
+        ? asset('storage/' . $user->profile_image) 
         :  $default }}"
                     width="45"
                     height="45"

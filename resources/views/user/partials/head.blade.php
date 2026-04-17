@@ -10,12 +10,18 @@
       <meta charset="utf-8">
       <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
       <meta name="author" content="DSAThemes"/>
-      <meta name="description" content="MobiCom - Mobile App Landing Page Template"/>
-      <meta name="keywords" content="Responsive, HTML5 template, DSAThemes, Mobile, Application, One Page, Landing, Mobile App">
+        <title>Photoproof | Secure Image Verification & Digital Proof App</title>
+      <meta name="description" content="Verify image authenticity with Photoproof. Our tool ensures evidence integrity via secure in-app capture and live GPS metadata. Prevent AI fakes today!">
+      <meta name="keywords" content="Photoproof, image verification tool, secure photo capture, digital proof app, GPS metadata camera, prevent image manipulation, authentic photos, digital evidence integrity.">
+      <meta property="og:type" content="website">
+      <meta property="og:url" content="https://photoproof.cogniter.com/">
+      <meta property="og:title" content="Photoproof | Capture Proof, Not Just Photos">
+      <meta property="og:description" content="Stop relying on unverified gallery photos. Use Photoproof for secure in-app capture and real-time GPS metadata verification.">
+	<meta property="og:image" content="https://photoproof.cogniter.com/user/images/og-image.png">
       <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
       <meta name="csrf-token" content="{{ csrf_token() }}">
       <!-- SITE TITLE -->
-      <title>Photo Proof Verified - Capture Proof, Not Just Photos</title>
+
       <!-- FAVICON AND TOUCH ICONS  -->
       <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
       <link rel="icon" href="images/favicon.ico" type="image/x-icon">

@@ -16,6 +16,7 @@ class Setting extends Model
         'smtp_password',
         'smtp_encryption',
         'delete_photos_after_days',
+        'admin_email',
     ];
 
     // Cast smtp_enabled to boolean
