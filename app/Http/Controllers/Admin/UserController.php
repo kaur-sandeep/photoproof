@@ -145,7 +145,24 @@ return DataTables::of($users)
              '.$user->photos_count.'
             </a></span>';
         })
-    ->rawColumns(['profile_image', 'photo_count'])
+     ->addColumn('status', function ($user) {
+                if ($user->state == 1) {
+                    return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$user->id.'" data-status="-1">Active</button>';
+                }
+                if ($user->state == -1) {
+                    return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$user->id.'" data-status="1">Inactive</button>';
+                    
+                }
+                return '<span class="badge bg-danger">Deleted</span>';
+        })
+        ->addColumn('actions', function ($user) {
+            // return '<a href="'.route('admin.users.show.data', $admins->id).'" class="btn btn-sm btn-primary">View</a>
+            //         <a href="'.route('admin.users.edit.data', $admins->id).'" class="btn btn-sm btn-warning">Edit</a>
+            //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$admins->id.'">Delete</button>';
+             return '<button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
+            
+        })
+    ->rawColumns(['profile_image', 'photo_count','status','actions'])
     ->make(true);
     }
     public function create(){
@@ -239,18 +256,47 @@ return DataTables::of($users)
     // }
 
 
-    public function updateStatus(Request $request){
-        $id = $request->input('id');
-        $status = $request->input('status');
+    // public function updateStatus(Request $request){
+    //     $id = $request->input('id');
+    //     $status = $request->input('status');
+    //     $request->validate([
+    //         'id' => 'required',
+    //         'status' => 'required|in:-1,0,1'
+    //     ]);
+
+    //     $status = (string) $request->status;
+    //     $user = User::findOrFail($request->id);
+    //     $user->state = $status;
+    //     $user->save();
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'User status updated successfully'
+    //     ]);
+    // }
+
+    public function updateStatus(Request $request)
+    {
         $request->validate([
             'id' => 'required',
             'status' => 'required|in:-1,0,1'
         ]);
 
-        $status = (string) $request->status;
-        $user = User::findOrFail($request->id);
-        $user->state = $status;
-        $user->save();
+        $User = User::findOrFail($request->id);
+
+        // ✅ Get old status before update
+        $oldStatus = $User->state;
+
+        // ✅ Update status
+        $User->state = $request->status;
+        $User->save();
+
+        // ✅ Convert status to readable text
+        $statusText = [
+            -1 => 'Deleted',
+            0  => 'Inactive',
+            1  => 'Active',
+        ];
+
         return response()->json([
             'success' => true,
             'message' => 'User status updated successfully'

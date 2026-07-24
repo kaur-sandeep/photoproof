@@ -31,9 +31,8 @@
                         <!-- <th>Time Zone</th> -->
                         <th>Registered On</th>
                         <th>Photos</th>
-                      
-                        <!-- <th>Status</th>
-                        <th>Actions</th> -->
+                        <th>Status</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
             </table>

@@ -49,8 +49,8 @@ $(document).ready(function() {
             { data: 'created_at', name: 'created_at'},
             { data: 'photo_count', name: 'photo_count', orderable: false, searchable: false },
            
-            // { data: 'status', name: 'status', orderable: false, searchable: false },
-            // { data: 'actions', name: 'actions', orderable: false, searchable: false }
+            { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false }
         ]
     });
 
@@ -60,7 +60,7 @@ $('#userTableList').on('click', '.toggle-status', function () {
     let status = $(this).data('status');
     if (confirm("Are you sure?")) {
        $.ajax({
-    url: window.APP_URL + 'users/update/data',
+    url: window.APP_URL + '/admin/users/update/data',
     type: "get",
     data: {
         id: id,

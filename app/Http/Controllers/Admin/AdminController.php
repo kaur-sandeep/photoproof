@@ -285,7 +285,9 @@ class AdminController extends Controller
             'smtp_username' => 'nullable|string',
             'smtp_password' => 'nullable|string',
             'smtp_encryption' => 'nullable|string|in:tls,ssl,',
+            'daily_photos_limit' => 'required|numeric|min:1',
             'delete_photos_after_days' => 'required|numeric|min:1',
+            'deleted_photos_after' => 'required|numeric|min:1',
             'admin_email' => 'nullable|string',
         ]);
 
@@ -301,7 +303,9 @@ class AdminController extends Controller
         $settings->smtp_username = $request->smtp_username;
         $settings->smtp_password = $request->smtp_password;
         $settings->smtp_encryption = $request->smtp_encryption;
+        $settings->daily_photos_limit = $request->daily_photos_limit;
         $settings->delete_photos_after_days = $request->delete_photos_after_days;
+        $settings->deleted_photos_after = $request->deleted_photos_after;
         $settings->admin_email = $request->admin_email;
         $settings->save();
 

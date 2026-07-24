@@ -78,7 +78,7 @@ class DeletePhotos extends Command
     public function handle()
     { 
        $settings = Setting::first();
-        $days = $settings->delete_photos_after_days ?? 30;
+        $days = $settings->deleted_photos_after;
 
         $photos = PhotoDetail::where('created_at', '<', now()->subDays($days))
                     ->where('state', '!=', -1)

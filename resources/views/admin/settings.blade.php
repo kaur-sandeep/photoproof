@@ -118,10 +118,26 @@
                 </div>
 
                 <div class="row mb-3 col-md-4">
+                    <div class="col-md-4"><strong>Daily Photos Upload Limit </strong></div>
+                    <div class="col-md-8">
+                        <input type="number" name="daily_photos_limit" class="form-control" min="1"
+                               value="{{ old('daily_photos_limit', $settings->daily_photos_limit ?? '') }}">
+                    </div>
+                </div>
+
+                <div class="row mb-3 col-md-4">
                     <div class="col-md-4"><strong>Delete Photos After (Days)</strong></div>
                     <div class="col-md-8">
                         <input type="number" name="delete_photos_after_days" class="form-control" min="1"
                                value="{{ old('delete_photos_after_days', $settings->delete_photos_after_days ?? '') }}">
+                    </div>
+                </div>
+
+                <div class="row mb-3 col-md-4">
+                    <div class="col-md-4"><strong>Deleted Photos After (Admin)</strong></div>
+                    <div class="col-md-8">
+                        <input type="number" name="deleted_photos_after" class="form-control" min="1"
+                               value="{{ old('deleted_photos_after', $settings->deleted_photos_after ?? '') }}">
                     </div>
                 </div>
 
