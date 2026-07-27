@@ -10,6 +10,8 @@ Route::prefix('v1')->group(base_path('routes/api_v1.php'));
 
     Route::post('/upload_photo', [AuthController::class, 'uploadPhoto']);
     Route::get('/photos', [AuthController::class, 'getPhotos']);
+    // Route::get('/search_photo/{random_id}', [AuthController::class, 'search_photo']);
+    Route::post('/search_photo', [AuthController::class, 'search_photo']);
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::get('/plans', [PlanController::class, 'plans'])->name('plans');
     

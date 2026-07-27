@@ -11,6 +11,7 @@ use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\URL;
 use App\Models\PhotoDetail;
+use App\Models\PhotoView;
 use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 use App\Notifications\CommonMailNotification;
@@ -381,6 +382,86 @@ class AuthController extends Controller
             'photo' => $photo
         ]);
     }
+    
+    public function search_photo(Request $request)
+    {
+        $random_id = $request->input('random_id');
+        // dd('in the serach photo');
+        $photo = PhotoDetail::with(['user', 'uploadTrack'])
+            ->where('random_id', $random_id)
+            ->where('state', 1)
+            ->first();
+
+        if (!$photo) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No record found',
+            ], 404);
+        }
+
+        $ip = $request->ip();
+        $userAgent = $request->header('User-Agent');
+        $referer = $request->headers->get('referer');
+
+        $agent = new Agent();
+
+        $browser    = $agent->browser();
+        $platform   = $agent->platform();
+        $device     = $agent->device();
+        $deviceType = $agent->isMobile() ? 'Mobile' : 'Desktop';
+        $location   = $this->getLocationFromIp($ip);
+
+        $alreadyViewed = PhotoView::where('photo_detail_id', $photo->id)
+            ->where('ip_address', $ip)
+            ->where('browser', $browser)
+            ->where('platform', $platform)
+            ->where('device', $device)
+            ->whereDate('created_at', today())
+            ->exists();
+
+        if (!$alreadyViewed) {
+            $photo->increment('view_count');
+
+            PhotoView::create([
+                'photo_detail_id' => $photo->id,
+                'ip_address'      => $ip,
+                'browser'         => $browser,
+                'platform'        => $platform,
+                'device'          => $device,
+                'device_type'     => $deviceType,
+                'referer'         => $referer,
+                'user_agent'      => $userAgent,
+                'country'         => $location['country'] ?? null,
+                'country_code'    => $location['countryCode'] ?? null,
+                'region'          => $location['region'] ?? null,
+                'region_name'     => $location['regionName'] ?? null,
+                'city'            => $location['city'] ?? null,
+                'zip'             => $location['zip'] ?? null,
+                'latitude'        => $location['lat'] ?? null,
+                'longitude'       => $location['lon'] ?? null,
+                'timezone'        => $location['timezone'] ?? null,
+                'isp'             => $location['isp'] ?? null,
+                'org'             => $location['org'] ?? null,
+                'as_name'         => $location['as'] ?? null,
+                'ip_query'        => $location['query'] ?? null,
+            ]);
+        }
+
+        $setting   = Setting::first();
+        $totalDays = (int) ($setting->delete_photos_after_days ?? 0);
+
+        $created = $photo->created_at instanceof Carbon ? $photo->created_at : Carbon::parse($photo->created_at);
+        $daysElapsed = $created->diffInDays(Carbon::now());
+        $daysAvailable = (int) round($totalDays - $daysElapsed);
+
+        // ── FIX: JSON response ki jagah, view() ki jagah ──
+        return response()->json([
+            'success'        => true,
+            'photo'          => $photo,
+            'days_available' => $daysAvailable,
+        ]);
+    }
+
  public function getPhotos(Request $request)
 {
     $search = $request->search;

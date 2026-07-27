@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Setting;
 use App\Helpers\ActivityLogger;
 use App\Helpers\DateTime;
+use App\Models\Plan;
 class AdminController extends Controller
 {
     public function index(){
@@ -308,7 +309,7 @@ class AdminController extends Controller
         $settings->deleted_photos_after = $request->deleted_photos_after;
         $settings->admin_email = $request->admin_email;
         $settings->save();
-
+        Plan::query()->update(['photo_limit' => $request->daily_photos_limit]);
         return back()->with('success', 'Settings updated successfully');
     }
 }
