@@ -140,9 +140,18 @@ $(document).ready(function() {
     var rowData = table.row(tr).data();
     if (!rowData) return;
 
-      const ips = [...new Set((rowData.user?.photo_upload_tracks || [])
-                .map(t => t.ip_address)
-                .filter(Boolean))];
+    console.log('rowData:', rowData);
+console.log('rowData.user:', rowData?.user);
+console.log('photo_upload_tracks:', rowData?.user?.photo_upload_tracks);
+
+
+const matchedTrack = (rowData.user?.photo_upload_tracks || [])
+    .find(t => t.photo_detail_id === rowData.id); 
+    // 👆 field name check kar lena — ho sakta hai t.random_id ho ya kuch aur
+
+const uploadIp = matchedTrack?.ip_address ?? '';
+const uploadIsp = matchedTrack?.isp ?? '';
+
 
     const ispList = [...new Set((rowData.user?.photo_upload_tracks || [])
                         .map(t => t.isp)
@@ -178,7 +187,7 @@ $(document).ready(function() {
                 ${rowData.location ? `<b>Location:</b> ${rowData.location}<br>` : ''}
                 ${rowData.latitude ? `<b>Latitude:</b> ${rowData.latitude}<br>` : ''}
                 ${rowData.longitude ? `<b>Longitude:</b> ${rowData.longitude}<br>` : ''}
-                ${ips.length ? `<b>IP Address:</b> ${ips.join(', ')}<br>` : ''}
+                ${uploadIp ? `<b>IP Address:</b> ${uploadIp}<br>` : ''}
                 ${rowData.device_type ? `<b>Device Type:</b> ${rowData.device_type}<br>` : ''}
                 ${rowData.timezone ? `<b>Timezone:</b> ${rowData.timezone}<br>` : ''}  
                 ${rowData.device_brand ? `<b>Device Brand:</b> ${rowData.device_brand}<br>` : ''}

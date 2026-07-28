@@ -78,10 +78,10 @@ class DeletePhotos extends Command
     public function handle()
     { 
        $settings = Setting::first();
-        $days = $settings->deleted_photos_after;
+       $soft_delete= $settings->delete_photos_after_days;
+       
 
-        $photos = PhotoDetail::where('created_at', '<', now()->subDays($days))
-                    ->where('state', '!=', -1)
+        $photos = PhotoDetail::where('created_at', '<', now()->subDays($soft_delete))
                     ->get();
 
         foreach ($photos as $photo) {
@@ -125,5 +125,35 @@ class DeletePhotos extends Command
         }
 
         $this->info("Photos older than {$days} days updated successfully!");
+
+        $permanent_deleted = $settings->deleted_photos_after;
+        $photos = PhotoDetail::where('created_at', '<', now()->subDays($permanent_deleted))->get();
+        foreach ($photos as $photo) {
+            if (Storage::disk('public')->exists($photo->photo)) {
+                Storage::disk('public')->delete($photo->photo);
+                $this->info("Deleted file: {$photo->photo}");
+            }
+            if ($photo->uploadTrack) {
+                $photo->uploadTrack()->delete();
+                $this->info("Deleted related uploadTrack for photo ID: {$photo->id}");
+            }
+            if ($photo->views()->exists()) {
+                $photo->views()->delete();
+                $this->info("Deleted related views for photo ID: {$photo->id}");
+            }
+            if (PhotoReport::where('photo_random_id', $photo->random_id)->exists()) {
+                PhotoReport::where('photo_random_id', $photo->random_id)->delete();
+                $this->info("Deleted related PhotoReport for photo ID: {$photo->id}");
+            }
+
+            if (Notifications::where('photo_random_id', $photo->random_id)->exists()) {
+                Notifications::where('photo_random_id', $photo->random_id)->delete();
+                $this->info("Deleted related Notification for photo ID: {$photo->id}");
+            }
+            $photo->delete();
+            $this->info("Deleted DB record for photo ID: {$photo->id}");
+        }
+        $this->info("Photos older than {$permanent_deleted} days deleted successfully!");
+
     }
 }

@@ -193,130 +193,130 @@ class PhotoController extends Controller
                 'g-recaptcha-response.required' => 'Google captcha field is required.'
             ]);
 
-    // If captcha is enabled, then keep this
-    $response = Http::asForm()->post(
-        'https://www.google.com/recaptcha/api/siteverify',
-        [
-            'secret' => env('RECAPTCHA_SECRET_KEY'),
-            'response' => $request->input('g-recaptcha-response'),
-        ]
-    );
+        // If captcha is enabled, then keep this
+            $response = Http::asForm()->post(
+                'https://www.google.com/recaptcha/api/siteverify',
+                [
+                    'secret' => env('RECAPTCHA_SECRET_KEY'),
+                    'response' => $request->input('g-recaptcha-response'),
+                ]
+            );
 
-    if (!$response->json()['success']) {
-        return back()->with('error', 'Captcha verification failed.');
-    }
-    $ip = $request->ip(); // real user IP
-   // $ip ='202.164.57.197';
-    $userAgent = $request->header('User-Agent');
-    $referer = $request->headers->get('referer');
+            if (!$response->json()['success']) {
+                return back()->with('error', 'Captcha verification failed.');
+            }
+            $ip = $request->ip(); // real user IP
+            // $ip ='202.164.57.197';
+            $userAgent = $request->header('User-Agent');
+            $referer = $request->headers->get('referer');
 
-    $agent = new Agent();
-    $browser = $agent->browser();
-    $platform = $agent->platform();
-    $device = $agent->device();
-    $deviceType = $agent->isMobile() ? 'Mobile' : 'Desktop';
+            $agent = new Agent();
+            $browser = $agent->browser();
+            $platform = $agent->platform();
+            $device = $agent->device();
+            $deviceType = $agent->isMobile() ? 'Mobile' : 'Desktop';
 
-    // Get location from IP (if you already have this function)
-    $location = $this->getLocationFromIp($ip);
-    PhotoReport::create([
-        'photo_random_id' => $random_id,
-        'name' => $request->name,
-        'email' => $request->email,
-        'message' => $request->message,
-        'is_read' => 0,
-        'ip_address' => $ip,
-        'browser' => $browser,
-        'platform' => $platform,
-        'device' => $device,
-        'device_type' => $deviceType,
-        'user_agent' => $userAgent,
-        'referer' => $referer,
-        'country' => $location['country'] ?? null,
-        'region' => $location['regionName'] ?? null,
-        'city' => $location['city'] ?? null,
-        'zip' => $location['zip'] ?? null,
-        'latitude' => $location['lat'] ?? null,
-        'longitude' => $location['lon'] ?? null,
-        'timezone' => $location['timezone'] ?? null,
-    ]);
+            // Get location from IP (if you already have this function)
+            $location = $this->getLocationFromIp($ip);
+            PhotoReport::create([
+                'photo_random_id' => $random_id,
+                'name' => $request->name,
+                'email' => $request->email,
+                'message' => $request->message,
+                'is_read' => 0,
+                'ip_address' => $ip,
+                'browser' => $browser,
+                'platform' => $platform,
+                'device' => $device,
+                'device_type' => $deviceType,
+                'user_agent' => $userAgent,
+                'referer' => $referer,
+                'country' => $location['country'] ?? null,
+                'region' => $location['regionName'] ?? null,
+                'city' => $location['city'] ?? null,
+                'zip' => $location['zip'] ?? null,
+                'latitude' => $location['lat'] ?? null,
+                'longitude' => $location['lon'] ?? null,
+                'timezone' => $location['timezone'] ?? null,
+            ]);
 
-        $data = json_encode([
-            'userAgent' => $userAgent,
-            'referer' => $referer,
-            'browser' => $browser,
-            'platform' => $platform,
-            'device' => $device,
-            'deviceType' => $deviceType,
-            'ip' => $ip,
-            'country' => $location['country'] ?? null,
-            'region' => $location['regionName'] ?? null,
-            'city' => $location['city'] ?? null,
-            'zip' => $location['zip'] ?? null,
-            'latitude' => $location['lat'] ?? null,
-            'longitude' => $location['lon'] ?? null,
-            'timezone' => $location['timezone'] ?? null,
-            'message' => $request->message,
-        ]);
-        
-        // save data into notifications table //
+            $data = json_encode([
+                'userAgent' => $userAgent,
+                'referer' => $referer,
+                'browser' => $browser,
+                'platform' => $platform,
+                'device' => $device,
+                'deviceType' => $deviceType,
+                'ip' => $ip,
+                'country' => $location['country'] ?? null,
+                'region' => $location['regionName'] ?? null,
+                'city' => $location['city'] ?? null,
+                'zip' => $location['zip'] ?? null,
+                'latitude' => $location['lat'] ?? null,
+                'longitude' => $location['lon'] ?? null,
+                'timezone' => $location['timezone'] ?? null,
+                'message' => $request->message,
+            ]);
+            
+            // save data into notifications table //
 
-        Notifications::create([
-        'photo_random_id' => $random_id,
-        'name' => $request->name,
-        'email' => $request->email,
-        'type'=>'report photo',
-        'data' => $data, 
-        'is_read' => false
-    ]);
-     $settings = Setting::first();
+                Notifications::create([
+                'photo_random_id' => $random_id,
+                'name' => $request->name,
+                'email' => $request->email,
+                'type'=>'report photo',
+                'data' => $data, 
+                'is_read' => false
+            ]);
+            $settings = Setting::first();
 
-     $admin = $settings->admin_email ?? env('ADMIN_EMAIL');
-    //send email
-    //$admin = env('ADMIN_EMAIL');
-    // dd($admin);
-    if ($admin) {
-            $photo = PhotoDetail::where('random_id', $random_id)->first();
-            if($photo){
-               $slot = '
-                <p>Dear Admin,</p>
+            $admin = $settings->admin_email ?? env('ADMIN_EMAIL');
+            //send email
+            //$admin = env('ADMIN_EMAIL');
+            // dd($admin);
+            if ($admin) {
+                    $photo = PhotoDetail::where('random_id', $random_id)->first();
+                    if($photo){
+                    $slot = '
+                        <p>Dear Admin,</p>
 
-                <p>A new photo report has been submitted on the system. Please find the details below:</p>
+                    <p>A new photo report has been submitted on the system. Please find the details below:</p>
 
-                <hr>
+                    <hr>
 
-                <p><strong>Photo Details:</strong></p>
-                <p><strong>Photo ID:</strong> '.$photo->random_id.'</p>
-                <hr>
-                <p><strong>Reporter Information:</strong></p>
-                <p><strong>Name:</strong> '.$request->name.'</p>
-                <p><strong>Email:</strong> '.$request->email.'</p>
-                <p><strong>Message:</strong><br>'.nl2br(e($request->message)).'</p>
-                <p><strong>IP Address:</strong>'.$ip.'</p>
-                <p><strong>Browser:</strong>'.$browser.'</p>
-                <p><strong>Device:</strong>'.$device.'</p>
-               <p><strong>Country:</strong>'.(is_array($location) && isset($location['country']) ? $location['country'] : 'N/A').'</p>
-                <p><strong>City:</strong>'.(is_array($location) && isset($location['city']) ? $location['city'] : 'N/A').'</p>
-                <hr>
+                    <p><strong>Photo Details:</strong></p>
+                    <p><strong>Photo ID:</strong> '.$photo->random_id.'</p>
+                    <hr>
+                    <p><strong>Reporter Information:</strong></p>
+                    <p><strong>Name:</strong> '.$request->name.'</p>
+                    <p><strong>Email:</strong> '.$request->email.'</p>
+                    <p><strong>Message:</strong><br>'.nl2br(e($request->message)).'</p>
+                    <p><strong>IP Address:</strong>'.$ip.'</p>
+                    <p><strong>Browser:</strong>'.$browser.'</p>
+                    <p><strong>Device:</strong>'.$device.'</p>
+                <p><strong>Country:</strong>'.(is_array($location) && isset($location['country']) ? $location['country'] : 'N/A').'</p>
+                    <p><strong>City:</strong>'.(is_array($location) && isset($location['city']) ? $location['city'] : 'N/A').'</p>
+                    <hr>
 
-                <p><strong>Photo Preview:</strong></p>
-                <p>
-                    <img src="'.$photo->photo_url.'" width="300" style="max-width:100%; border:1px solid #ddd; padding:5px;">
-                </p>
+                    <p><strong>Photo Preview:</strong></p>
+                    <p>
+                        <img src="'.$photo->photo_url.'" width="300" style="max-width:100%; border:1px solid #ddd; padding:5px;">
+                    </p>
 
-                <hr>
+                    <hr>
 
-                <p>Please review this report at your earliest convenience.</p>
-            ';
-           $emails = array_map('trim', explode(',', $admin));
-        Notification::route('mail', $emails)
-            ->notify(new CommonMailNotification(
-                'New Photo Report - '.$photo->random_id,
-                $slot
-            ));
+                    <p>Please review this report at your earliest convenience.</p>
+                ';
+            $emails = array_map('trim', explode(',', $admin));
+            Notification::route('mail', $emails)
+                ->notify(new CommonMailNotification(
+                    'New Photo Report - '.$photo->random_id,
+                    $slot
+                ));
+            }
+            
         }
-        
-    }
-    return redirect()->route('thank-you');
+        return redirect()->route('thank-you');
     }
 
     public function report_photo(){
