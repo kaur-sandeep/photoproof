@@ -3271,3 +3271,62 @@ footer .os-version span svg {
 html {
     scroll-behavior: smooth;
 }
+
+
+/* FAQ Section */
+.faq-item-wrap {
+  border: 1px solid rgba(56, 215, 98, 0.15);
+  border-radius: 12px;
+  overflow: hidden;
+  background: #0c1634;
+  transition: border-color .3s;
+}
+.faq-item-wrap.open {
+  border-color: rgba(56, 215, 98, 0.35);
+}
+.faq-question {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 18px 24px;
+  cursor: pointer;
+  font-size: 18px;
+  font-weight: 500;
+  color: #fdfdfd;
+  transition: background .2s;
+}
+.faq-question:hover {
+  background: rgba(56, 215, 98, 0.04);
+}
+.faq-item-wrap.open .faq-question {
+  background: rgba(56, 215, 98, 0.05);
+}
+.faq-num {
+  font-size: 26px;
+  font-weight: 700;
+  color: #38d762;
+  min-width: 28px;
+  flex-shrink: 0;
+}
+.faq-chevron {
+  margin-left: auto;
+  font-size: 22px;
+  color: #38d762;
+  font-weight: 300;
+  line-height: 1;
+  transition: transform .25s;
+  flex-shrink: 0;
+}
+.faq-item-wrap.open .faq-chevron {
+  transform: rotate(45deg);
+}
+.faq-answer {
+  display: none;
+  padding: 15px 24px 20px 25px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #c0c8d8;
+}
+.faq-item-wrap.open .faq-answer {
+  display: block;
+}

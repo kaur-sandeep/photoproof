@@ -18,9 +18,9 @@
                <div class="row hero-row-200">
                   <div class="col-md-6 d-flex align-items-center">
                      <div class="hero-txt white-color">
-                        <h2 class="h2-lg animated" data-animation="fadeInRight" data-animation-delay="300">
-                           Don't Just Take Photos.<br><span class="text-white">Capture Proof.</span>
-                        </h2>
+                        <h1 class="h2-lg animated" data-animation="fadeInRight" data-animation-delay="300">
+                           Don't Just Take Photos.<br><span class="text-white"> Capture Verified Photo Proof with Photoproof.</span>
+                        </h1>
                         <p class="p-lg animated" data-animation="fadeInUp" data-animation-delay="400">
                            With Photo Proof, every image becomes a verified document backed by live metadata and secure validation. Download Photo Proof today and ensure your visual records are trusted, traceable, and tamper-resistant.
                         </p>
@@ -125,31 +125,31 @@
             <div class="screenshots-wrap">
                <div class="screens-carousel">
                   <div class="carousel-item">
-                     <img src="{{ asset('user/images/portfolio/screen-1.png')}}" alt="screenshot">
+                     <img src="{{ asset('user/images/portfolio/screen-1.png')}}" alt="Photoproof Verified App Logo and Startup Screen">
                   </div>
                   <div class="carousel-item">
-                     <img src="{{ asset('user/images/portfolio/screen-2.png')}}" alt="screenshot">
+                     <img src="{{ asset('user/images/portfolio/screen-2.png')}}" alt="Secure Gallery Interface showing Verified Photos with unique IDs">
                   </div>
                   <div class="carousel-item">
-                     <img src="{{ asset('user/images/portfolio/screen-3.png')}}" alt="screenshot">
+                     <img src="{{ asset('user/images/portfolio/screen-3.png')}}" alt="Real-time GPS Camera Interface for Tamper-proof Photo Capture">
                   </div>
                   <div class="carousel-item">
-                     <img src="{{ asset('user/images/portfolio/screen-4.png')}}" alt="screenshot">
+                     <img src="{{ asset('user/images/portfolio/screen-4.png')}}" alt="Photo Confirmation Screen with Server-locked Metadata and GPS">
                   </div>
                   <div class="carousel-item">
-                     <img src="{{ asset('user/images/portfolio/screen-5.png')}}" alt="screenshot">
+                     <img src="{{ asset('user/images/portfolio/screen-5.png')}}" alt="Photo Confirmation Screen with Server-locked Metadata and GPS">
                   </div>
                   <div class="carousel-item">
-                     <img src="{{ asset('user/images/portfolio/screen-6.png')}}" alt="screenshot">
+                     <img src="{{ asset('user/images/portfolio/screen-6.png')}}" alt="Secure Gallery Interface showing Verified Photos with unique IDs">
                   </div>
                   <div class="carousel-item">
-                     <img src="{{ asset('user/images/portfolio/screen-7.png')}}" alt="screenshot">
+                     <img src="{{ asset('user/images/portfolio/screen-7.png')}}" alt="Photoproof App Settings for GPS, Timestamp, and User Preferences">
                   </div>
                   <div class="carousel-item">
-                     <img src="{{ asset('user/images/portfolio/screen-8.png')}}" alt="screenshot">
+                     <img src="{{ asset('user/images/portfolio/screen-8.png')}}" alt="User Profile Management and Security Settings in Photoproof">
                   </div>
                   <div class="carousel-item">
-                     <img src="{{ asset('user/images/portfolio/screen-9.png')}}" alt="screenshot">
+                     <img src="{{ asset('user/images/portfolio/screen-9.png')}}" alt="Photoproof App Settings for GPS, Timestamp, and User Preferences ">
                   </div>
                </div>
             </div>
@@ -692,5 +692,132 @@
             </div>
         </form>
     </div>
+</section>
+<section class="wide-60 division" style="background: linear-gradient(to bottom, #030c26 0%, #0e1836 100%);">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-10 offset-md-1 section-title">
+        <h2 class="h2-lg">Frequently Asked <span class="text-white">Questions</span></h2>
+        <p>Everything you need to know about verified photo capture</p>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-10 offset-md-1">
+        <div class="accordion" id="faqAccordion">
+
+          <div class="faq-item-wrap mb-3">
+            <div class="faq-question" data-target="faq1">
+              <span class="faq-num">01</span>
+              <span>What is a photo proof and how does it work?</span>
+              <span class="faq-chevron">+</span>
+            </div>
+            <div class="faq-answer" id="faq1">
+              A photo proof is a digitally verified image that serves as indisputable evidence of an event, location, or transaction. Unlike standard photos, PhotoProof captures images in real-time, embedding tamper-proof metadata like server-side GPS and timestamps that cannot be edited or faked.
+            </div>
+          </div>
+
+          <div class="faq-item-wrap mb-3">
+            <div class="faq-question" data-target="faq2">
+              <span class="faq-num">02</span>
+              <span>Which vendors offer GPS proof of service and timestamped photos?</span>
+              <span class="faq-chevron">+</span>
+            </div>
+            <div class="faq-answer" id="faq2">
+              While many apps offer basic tagging, PhotoProof is a leading vendor specializing in GPS proof of service. We provide high-security, source-verified digital media that ensures field officers or contractors are physically present at the site, backed by a Unique Verification ID for every capture.
+            </div>
+          </div>
+
+          <div class="faq-item-wrap mb-3">
+            <div class="faq-question" data-target="faq3">
+              <span class="faq-num">03</span>
+              <span>Why is an image validation tool for outlet visit proof necessary?</span>
+              <span class="faq-chevron">+</span>
+            </div>
+            <div class="faq-answer" id="faq3">
+              Standard gallery uploads are prone to fraud, where users can upload old or edited images. An image validation tool like PhotoProof blocks gallery access, ensuring that outlet visit proof is captured live — making it 100% reliable for retail audits and compliance.
+            </div>
+          </div>
+
+          <div class="faq-item-wrap mb-3">
+            <div class="faq-question" data-target="faq4">
+              <span class="faq-num">04</span>
+              <span>How does PhotoProof prevent GPS spoofing in field reports?</span>
+              <span class="faq-chevron">+</span>
+            </div>
+            <div class="faq-answer" id="faq4">
+              PhotoProof does not rely on the phone's internal clock or manipulated GPS settings. Instead, it pulls location and time data directly from secure servers, making it impossible for users to spoof their coordinates or backdate their reports.
+            </div>
+          </div>
+
+          <div class="faq-item-wrap mb-3">
+            <div class="faq-question" data-target="faq5">
+              <span class="faq-num">05</span>
+              <span>Can I upload existing photos from my phone gallery to the app?</span>
+              <span class="faq-chevron">+</span>
+            </div>
+            <div class="faq-answer" id="faq5">
+              No. To maintain digital integrity, PhotoProof strictly blocks gallery uploads. Every image must be captured live through the app's secure camera interface to ensure the "When" and "Where" are authentic.
+            </div>
+          </div>
+
+          <div class="faq-item-wrap mb-3">
+            <div class="faq-question" data-target="faq6">
+              <span class="faq-num">06</span>
+              <span>What is a Unique Verification ID and how do I use it?</span>
+              <span class="faq-chevron">+</span>
+            </div>
+            <div class="faq-answer" id="faq6">
+              Every photo captured via PhotoProof is assigned a Unique Verification ID — a digital fingerprint. You can enter this ID into our Verification Portal to instantly cross-check the photo's original GPS, date, and time data.
+            </div>
+          </div>
+
+          <div class="faq-item-wrap mb-3">
+            <div class="faq-question" data-target="faq7">
+              <span class="faq-num">07</span>
+              <span>Is PhotoProof suitable for rental property inspections and security deposits?</span>
+              <span class="faq-chevron">+</span>
+            </div>
+            <div class="faq-answer" id="faq7">
+              Yes. It is the perfect tool for owner and tenant move-in/move-out inspections. By using tamper-proof verified photos, both parties have a secure record of the property's condition, preventing disputes over security deposits.
+            </div>
+          </div>
+
+          <div class="faq-item-wrap mb-3">
+            <div class="faq-question" data-target="faq8">
+              <span class="faq-num">08</span>
+              <span>How does this tool benefit B2B logistics and proof of delivery?</span>
+              <span class="faq-chevron">+</span>
+            </div>
+            <div class="faq-answer" id="faq8">
+              PhotoProof eliminates "missing package" claims by providing secure, timestamped delivery evidence. Logistics companies can provide clients with a verification link that proves exactly when and where a package was dropped off.
+            </div>
+          </div>
+
+          <div class="faq-item-wrap mb-3">
+            <div class="faq-question" data-target="faq9">
+              <span class="faq-num">09</span>
+              <span>Are the verified photos audit-ready for professional compliance?</span>
+              <span class="faq-chevron">+</span>
+            </div>
+            <div class="faq-answer" id="faq9">
+              Absolutely. PhotoProof generates audit-ready digital media that meets the standards for construction site progress, KYC documentation, and professional field audits. The server-locked metadata ensures the data stands up to any internal or external scrutiny.
+            </div>
+          </div>
+
+          <div class="faq-item-wrap mb-3">
+            <div class="faq-question" data-target="faq10">
+              <span class="faq-num">10</span>
+              <span>How can I verify a photo if I am not the one who took it?</span>
+              <span class="faq-chevron">+</span>
+            </div>
+            <div class="faq-answer" id="faq10">
+              If you receive a photo with a PhotoProof watermark or ID, simply visit our website and enter the Verification ID in the search bar. The system will display the verified original details, confirming if the image is genuine or has been tampered with.
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
  @endsection

@@ -34,5 +34,16 @@ const randomImage = images[Math.floor(Math.random() * images.length)];
 
 // Change IMAGE src instead of background
 document.getElementById("hdrright").src = randomImage;
+// FAQ Accordion
+document.querySelectorAll('.faq-question').forEach(function(q) {
+  q.addEventListener('click', function() {
+    var item = this.closest('.faq-item-wrap');
+    var wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item-wrap.open').forEach(function(i) {
+      i.classList.remove('open');
+    });
+    if (!wasOpen) item.classList.add('open');
+  });
+});
 </script>
 
