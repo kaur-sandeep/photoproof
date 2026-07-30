@@ -60,10 +60,12 @@
                   <div class="form-group col-md-4">
                     <label for="subscription_plan">Subscription Plan<span class="text-danger">*</span></label>
                    <select name="subscription_plan" class="form-control" id="subscription_plan">
-                    <option value="">Select Subscription Plan</option>
-                    <option value="1">Basic</option>
-                    <option value="2">Standard</option>
-                    <option value="3">Premium</option>
+                    <option value="">Please Select Plan</option>
+                      @foreach($allPlans as $plan)
+                    <option value="{{ $plan->id }}">
+                            {{ $plan->name }}
+                        </option>
+                    @endforeach
                    </select>
                   </div>
                  

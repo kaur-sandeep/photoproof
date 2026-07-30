@@ -128,6 +128,7 @@
   }
 </style>
 
+
 <section class="second-row no-bg wide-50 division org-page">
   <div class="container">
     <div class="org-wrapper mx-auto">
@@ -135,11 +136,22 @@
       <div class="org-card">
         <div class="org-card-title">Create Organization</div>
         <div class="org-card-subtitle">Fill in the details below to register your organization with Photo Proof.</div>
+@if(session('success'))
+    <div id="flash-message" class="org-alert org-alert-success">
+        {{ session('success') }}
+    </div>
+@endif
 
-        {{-- <div class="org-alert org-alert-success">Organization created successfully.</div> --}}
-        {{-- <div class="org-alert org-alert-danger"><ul><li>Organization email is required.</li></ul></div> --}}
-
-        <form method="POST" action="{{ url('/organization') }}" enctype="multipart/form-data">
+@if($errors->any())
+    <div id="flash-message" class="org-alert org-alert-danger">
+        <ul class="mb-0">
+            @foreach($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+       <form method="POST" action="{{ route('organization.store') }}">
           @csrf
 
           <div class="org-form">
@@ -191,4 +203,17 @@
   </div>
 </section>
 
+<script>
+    setTimeout(function () {
+        const flash = document.getElementById('flash-message');
+        if (flash) {
+            flash.style.transition = 'opacity 0.5s ease';
+            flash.style.opacity = '0';
+
+            setTimeout(() => {
+                flash.remove();
+            }, 500);
+        }
+    }, 3000); // Hide after 3 seconds
+</script>
 @endsection

@@ -15,6 +15,7 @@ class Organization extends Model
         'mobile_number',
         'password',
         'subscription_plan',
+        'message',
         'state',
         'created_by'
         

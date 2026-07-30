@@ -40,26 +40,29 @@
                   </div>
                   <div class="form-group col-md-4">
                     <label for="owner_name">Owner Name <span class="text-danger"></span></label>
-                    <input type="text" name ="owner_name" class="form-control" id="owner_name" placeholder="Enter Owner Name" value="{{ $organization->owner_name}}">  
+                    <input type="text" name ="owner_name" class="form-control" id="owner_name" placeholder="Enter Owner Name" value="{{ $user_data->name}}">  
                   </div>
                   <div class="form-group col-md-4">
                     <label for="organization_email"> Email Address <span class="text-danger">*</span></label>
-                    <input type="email" name ="organization_email" class="form-control" id="organization_email" placeholder="Enter Email" value="{{ $organization->organization_email}}" readonly  >
+                    <input type="email" name ="organization_email" class="form-control" id="organization_email" placeholder="Enter Email" value="{{ $user_data->email}}" readonly  >
                   </div>
                   
                    <div class="form-group col-md-4">
                     <label for="mobile_number">Mobile  Number <span class="text-danger"></span></label>
-                    <input type="text" name ="mobile_number" class="form-control" id="mobile_number" placeholder="Enter Mobile Number" value="{{ $organization->mobile_number}}">
+                    <input type="text" name ="mobile_number" class="form-control" id="mobile_number" placeholder="Enter Mobile Number" value="{{ $user_data->phone_number}}">
                   </div>
                  
 
                   <div class="form-group col-md-4">
                     <label for="subscription_plan">Subscription Plan<span class="text-danger">*</span></label>
                         <select name="subscription_plan" class="form-control" id="subscription_plan">
-                            <option value="">Select Subscription Plan</option>
-                            <option value="1" {{ old('subscription_plan', $organization->subscription_plan ?? '') == 1 ? 'selected' : '' }}>Basic</option>
-                            <option value="2" {{ old('subscription_plan', $organization->subscription_plan ?? '') == 2 ? 'selected' : '' }}>Standard</option>
-                            <option value="3" {{ old('subscription_plan', $organization->subscription_plan ?? '') == 3 ? 'selected' : '' }}>Premium</option>
+                          <option value="">Please Select Plan</option>
+                             @foreach($allPlans as $plan)
+                            <option value="{{ $plan->id }}"
+                                {{ old('subscription_plan', $organization->subscription_plan ?? '') == $plan->id ? 'selected' : '' }}>
+                                {{ $plan->name }}
+                            </option>
+                          @endforeach
                         </select>
                   </div>
                  

@@ -131,7 +131,7 @@ Route::prefix('admin')->group(function () {
     Route::get('/plans', [PlanController::class, 'plans'])
         ->name('plans');
     Route::get('/organization', [OrganizationsController::class, 'index'])->name('organization');
-        
+    Route::post('/organization/store', [OrganizationsController::class, 'store'])->name('organization.store');
 
     Route::post('/contact-submit', [PhotoController::class, 'contact_submit'])->name('contact_submit');
     Route::get('/contact-thank-you', function () {
