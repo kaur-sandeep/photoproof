@@ -214,6 +214,6 @@
                 flash.remove();
             }, 500);
         }
-    }, 3000); // Hide after 3 seconds
+    }, 15000); // Hide after 15 seconds
 </script>
 @endsection

@@ -10,6 +10,7 @@ use Laravel\Sanctum\HasApiTokens;
 use App\Notifications\VerifyEmailCustom;
 use App\Models\PhotoDetail;
 use App\Models\photo_upload_tracks;
+use App\Models\EmployeeOtp;
 use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
@@ -78,5 +79,10 @@ class User extends Authenticatable implements MustVerifyEmail
      public function photo_upload_tracks()
     {
         return $this->hasMany(PhotoUploadTrack::class); // Adjust this if it's a different type of relationship
+    }
+
+    public function employeeOtps()
+    {
+        return $this->hasMany(EmployeeOtp::class);
     }
 }

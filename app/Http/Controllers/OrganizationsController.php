@@ -22,7 +22,7 @@ class OrganizationsController extends Controller
         $request->validate([
             'organization_name'   => 'required|string|max:255',
             'organization_email'  => 'required|email|unique:users,email',
-            'mobile_number' => 'numeric|digits_between:10,14',
+            // 'mobile_number' => 'numeric|digits_between:10,14',
             'password' => 'required|min:6',
         ]);
 
