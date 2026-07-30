@@ -79,6 +79,9 @@ class DeletePhotos extends Command
     { 
        $settings = Setting::first();
        $soft_delete= $settings->delete_photos_after_days;
+       $permanent_delete= $settings->deleted_photos_after;
+       dd($soft_delete, $permanent_delete);
+
        
 
         $photos = PhotoDetail::where('created_at', '<', now()->subDays($soft_delete))

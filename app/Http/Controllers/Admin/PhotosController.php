@@ -27,7 +27,7 @@ class PhotosController extends Controller
      $isSuperAdmin  = auth()->check() && auth()->user()->getRoleNames()->contains('super-admin');
     // $photos = PhotoDetail::with('user')->where('state', '!=', -1)->get();
     $photos = PhotoDetail::with('user.photo_upload_tracks') // load user and their uploadTrack
-    ->where('state', '!=', -1)
+    // ->where('state', '!=', -1)
     ->orderBy('created_at', 'desc')
     ->get();
 
@@ -145,6 +145,10 @@ class PhotosController extends Controller
             }
             if ($photo->state == 0) {
                 return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$photo->id.'" data-state="1">Inactive</button>';
+                
+            }
+             if ($photo->state == -1) {
+                return '<span style="color: red;">Deleted</span>';
                 
             }
         }else{

@@ -11,6 +11,7 @@
                 <li class="nav-item nl-simple"><a class="nav-link" href="/terms-conditions">Terms of Service</a></li>
                 <li class="nav-item nl-simple"><a class="nav-link" href="/privacy-policy">Privacy Policy</a></li>
                 <li class="nav-item nl-simple"><a class="nav-link" href="{{ url('/') }}#contact-us">Contact us</a></li>
+                <li class="nav-item nl-simple"><a class="nav-link" href="{{ url('/organization') }}">Create Organization </a></li>
                 </ul>
             </div>
         </div>

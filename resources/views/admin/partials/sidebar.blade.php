@@ -30,6 +30,18 @@
                 </li>
 
             </ul>
+
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="{{ route('admin.organization.data') }}"
+                       class="nav-link text-white">
+                        <i class="bi bi-buildings me-2"></i>
+                        Organization
+                    </a>
+                </li>
+
+            </ul>
+
             @endif
             <ul class="nav flex-column">
 
@@ -93,7 +105,7 @@
             </ul>
             @endif
 
-            <ul class="nav flex-column">
+            <!-- <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="{{ route('admin.deleted.photos') }}"
                        class="nav-link text-white">
@@ -102,7 +114,7 @@
                     </a>
                 </li>
 
-            </ul>
+            </ul> -->
 
             <ul class="nav flex-column">
 

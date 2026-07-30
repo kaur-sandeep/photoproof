@@ -3,6 +3,8 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\OrganizationController;
+use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\PhotoController;
 use App\Http\Controllers\Admin\PhotosController;
 use App\Http\Controllers\Admin\ActivityController;
@@ -30,7 +32,17 @@ Route::prefix('admin')->group(function () {
         Route::get('/users/data/list', [AdminController::class, 'list'])->name('admin.users.data.list');
         Route::get('/user/create', [AdminController::class, 'create'])->name('admin.users.create');
         Route::post('/users/add', [AdminController::class, 'addUser'])->name('admin.store.users');
-        
+
+        Route::get('/organization', [OrganizationController::class, 'index'])->name('admin.organization.data');
+        Route::get('/organizations/list/', [OrganizationController::class, 'list'])->name('admin.organization.list');
+        Route::get('/organizations/show/{organizationId}', [OrganizationController::class, 'showOrganization'])->name('admin.organization.show.data');
+        Route::get('/organizations/edit/{organizationId}', [OrganizationController::class, 'editOrganization'])->name('admin.organization.edit.data');
+        Route::post('/organization/update/{organizationId}', [OrganizationController::class, 'updateOrganization'])->name('admin.update.organization');
+        Route::get('/update/organizations/status', [OrganizationController::class, 'updateStatus'])->name('admin.update.organizations.status');
+
+        Route::get('/organization/create', [OrganizationController::class, 'create'])->name('admin.organization.create');
+        Route::post('/organization/add', [OrganizationController::class, 'addOrganization'])->name('admin.store.organization');
+
         Route::get('/update/users/status', [AdminController::class, 'updateStatus'])->name('admin.update.users.status');
         Route::get('/edit/users/{userId}', [AdminController::class, 'editUsers'])->name('admin.users.edit.data');
         Route::post('/update/users/{userId}', [AdminController::class, 'updateUsers'])->name('admin.update.users.data');
@@ -118,6 +130,8 @@ Route::prefix('admin')->group(function () {
         ->name('photo.download');
     Route::get('/plans', [PlanController::class, 'plans'])
         ->name('plans');
+    Route::get('/organization', [OrganizationsController::class, 'index'])->name('organization');
+        
 
     Route::post('/contact-submit', [PhotoController::class, 'contact_submit'])->name('contact_submit');
     Route::get('/contact-thank-you', function () {

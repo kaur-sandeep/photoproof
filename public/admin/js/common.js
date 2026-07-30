@@ -694,6 +694,64 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
+    let table = $('#organizationList').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: window.APP_URL + '/admin/organizations/list/',  // Ensure this URL is correct
+
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'organization_name', name: 'organization_name' },
+            { data: 'organization_email', name: 'organization_email' },
+            { data: 'organization_code', name: 'organization_code' },
+            { data: 'plan', name: 'plan' },
+            { data: 'limit', name: 'limit'},
+            { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'organization_created', name: 'organization_created', orderable: false, searchable: false },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false }
+        ]
+    });
+
+    // STATUS TOGGLE
+$('#organizationList').on('click', '.toggle-status', function () {
+    let id = $(this).data('id');
+    let status = $(this).data('status');
+    if (confirm("Are you sure you want to change the status?")) {
+       $.ajax({
+    url: window.APP_URL + '/admin/update/organizations/status',
+    type: "get",
+    data: {
+        id: id,
+        status: status
+    },
+    success: function (response) {
+        console.log("SUCCESS:", response);
+        table.ajax.reload(null, false);
+    },
+    error: function (xhr) {
+        console.log("STATUS CODE:", xhr.status);
+        console.log("RESPONSE:", xhr.responseText);
+        alert("Failed. Check console.");
+    }
+});
+    }
+});
+    // DELETE USER
+    $('#organizationList').on('click', '.delete-user', function () {
+        let id = $(this).data('id');
+        if (confirm("Are you sure you want to delete this organization?")) {
+            $.get(window.APP_URL + '/admin/update/organizations/status', {
+                id: id,
+                status: -1
+            }, function () {
+                table.ajax.reload(null, false);
+            });
+        }
+    });
+});
+
+
+$(document).ready(function() {
     let table = $('#reportImagesList').DataTable({
         processing: true,
         serverSide: true,

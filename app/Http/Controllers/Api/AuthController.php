@@ -20,6 +20,7 @@ use App\Models\PhotoUploadTrack;
 use Jenssegers\Agent\Agent;
 use App\Models\Setting;
 use App\Models\Notifications;
+use Illuminate\Support\Facades\Notification;
 
 
 class AuthController extends Controller
