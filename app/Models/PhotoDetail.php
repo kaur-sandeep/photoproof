@@ -39,7 +39,8 @@ class PhotoDetail extends Model
         'display_self_photo_flag',
         'display_qrcode',
         'display_qrcode_flag',
-        'meta_data'
+        'meta_data',
+        'organization_id'
     ];
 
     protected $casts = [

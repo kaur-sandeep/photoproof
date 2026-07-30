@@ -12,6 +12,7 @@ class Notifications extends Model
         'email',
         'type',
         'data',
+        'organization_id',
         'is_read'
     ];
 }

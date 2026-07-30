@@ -1,9 +1,7 @@
 <?php
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\PlanController;
-
-Route::prefix('v1')->group(base_path('routes/api_v1.php'));
-Route::prefix('v2')->group(base_path('routes/api_v2.php'));
+use App\Http\Controllers\Api\V2\AuthController;
+use App\Http\Controllers\Api\V2\PlanController;
+use App\Http\Controllers\Api\V2\InstallController;
 // Route::post('/register', [AuthController::class, 'register']);
 // Route::post('/login', [AuthController::class, 'login']);
 // Route::middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -11,13 +9,19 @@ Route::prefix('v2')->group(base_path('routes/api_v2.php'));
 
     Route::post('/upload_photo', [AuthController::class, 'uploadPhoto']);
     Route::get('/photos', [AuthController::class, 'getPhotos']);
-    // Route::get('/search_photo/{random_id}', [AuthController::class, 'search_photo']);
-    Route::post('/search_photo', [AuthController::class, 'search_photo']);
-    Route::post('/report_photo', [AuthController::class, 'report_submit']);
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::get('/plans', [PlanController::class, 'plans'])->name('plans');
-    
+    Route::get('/test_version', [AuthController::class, 'testVersion']);
+    Route::post('/track-install', [InstallController::class, 'trackInstall']);
+    Route::post('/request_otp', [AuthController::class, 'requestOtp']);
+    Route::post('/verify_otp', [AuthController::class, 'verifyOtp']);
 
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/employee/upload-photo', [AuthController::class, 'employeeUploadPhoto']);
+         Route::post('/logout', [AuthController::class, 'logout']);
+    });
+    
 // });
 // Route::post('forgot-password', [AuthController::class, 'forgotPassword']);
 // Route::get('/email/verify/{id}/{hash}', [AuthController::class, 'verifyEmail'])
