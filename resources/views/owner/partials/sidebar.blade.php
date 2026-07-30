@@ -1,0 +1,37 @@
+<aside class="app-sidebar bg-dark text-white shadow">
+
+    <div class="sidebar-brand p-3 text-center">
+        <img src="/user/images/logo-white.png" width="200" height="" alt="header-logo">
+    </div>
+
+    <div class="sidebar-wrapper px-2">
+
+        <nav>
+            <ul class="nav flex-column">
+
+                <li class="nav-item">
+                    <a href="{{ route('admin.dashboard') }}"
+                       class="nav-link text-white">
+                        <i class="bi bi-speedometer2 me-2"></i>
+                        Dashboard
+                    </a>
+                </li>
+
+            </ul>
+  
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="{{ route('admin.users.data') }}"
+                       class="nav-link text-white">
+                        <i class="bi bi-people me-2"></i>
+                        Employees
+                    </a>
+                </li>
+
+            </ul>
+
+        </nav>
+
+    </div>
+
+</aside>

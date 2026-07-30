@@ -28,14 +28,23 @@ class OrganizationController extends Controller
 
      public function list(Request $request){
 
-    $organizations = Organization::where('state', '!=', -1)->orderBy('created_at', 'desc')->get();
+    // $organizations = Organization::where('state', '!=', -1)->orderBy('created_at', 'desc')->get();
+
+     $organizations = Organization::where('state', '!=', -1)
+        ->with('users:id,organization_id,email','subscription.plan') // eager load, sirf zaruri columns
+        ->orderBy('created_at', 'desc')
+        ->get();
+        // dd($organizations);
+
+
+
     return DataTables::of($organizations)
         ->addIndexColumn()
         ->addColumn('organization_name', function ($organizations) {
             return $organizations->organization_name ?? '--';
         })
         ->addColumn('organization_email', function ($organizations) {
-            return $organizations->organization_email ?? '--'; // if device is null, show --
+            return $organizations->users->pluck('email')->implode(', ') ?? '--'; // if device is null, show --
         })
 
          ->addColumn('organization_code', function ($organizations) {
@@ -43,12 +52,12 @@ class OrganizationController extends Controller
         })
 
          ->addColumn('plan', function ($organizations) {
-            return $organizations->subscription_plan ?? '--'; // if device is null, show --
+            return $organizations->subscription->plan->name ?? '--'; // if device is null, show --
         })
        
 
          ->addColumn('limit', function ($organizations) {
-            return $organizations->mobile_number ?? '--'; // if device is null, show --
+            return $organizations->subscription->monthly_photo_limit ?? '--'; // if device is null, show --
         })
         ->addColumn('status', function ($organizations) {
                 if ($organizations->state == 1) {

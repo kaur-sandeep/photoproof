@@ -12,6 +12,7 @@ use App\Models\PhotoDetail;
 use App\Models\photo_upload_tracks;
 use App\Models\EmployeeOtp;
 use Spatie\Permission\Traits\HasRoles;
+use App\Model\Organization;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -85,4 +86,10 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(EmployeeOtp::class);
     }
+
+    public function organization()
+    {
+        return $this->belongsTo(Organization::class, 'organization_id', 'id');
+    }
+
 }

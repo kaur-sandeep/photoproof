@@ -64,6 +64,79 @@ class LoginController extends Controller
         return redirect()->route('admin.dashboard');
     }
 
+//     public function login(Request $request)
+// {
+//     $request->validate([
+//         'email' => 'required|email',
+//         'password' => 'required|min:6',
+//     ]);
+
+//     // Check Admin
+//     $admin = Admin::where('email', $request->email)->first();
+
+//     if ($admin) {
+
+//         if (!Auth::guard('admin')->attempt([
+//             'email' => $request->email,
+//             'password' => $request->password,
+//         ])) {
+//             return back()->withInput()->with('error', 'Invalid Credentials');
+//         }
+
+//         $admin = Auth::guard('admin')->user();
+//         $admin->last_login_at = now();
+//         $admin->save();
+
+//         ActivityLogger::log(
+//             'Login',
+//             'Admin Users',
+//             'Logged By: '.$admin->email
+//         );
+
+//         return redirect()->route('admin.dashboard');
+//     }
+
+//     // Check User
+//     $user = User::where('email', $request->email)->first();
+
+//     if ($user) {
+
+//         if (!Auth::guard('web')->attempt([
+//             'email' => $request->email,
+//             'password' => $request->password,
+//         ])) {
+//             return back()->withInput()->with('error', 'Invalid Credentials');
+//         }
+
+//         $request->session()->regenerate();
+
+//         $user = Auth::guard('web')->user();
+//         // $user->last_login_at = now();
+//         $user->save();
+
+//         ActivityLogger::log(
+//             'Login',
+//             'Users',
+//             'Logged By: '.$user->email
+//         );
+        
+//         // dd(Auth::guard('web')->user());
+//         if ($user->hasRole('owner')) {
+//             return redirect()->route('owner.dashboard');
+//         }
+
+//         if ($user->hasRole('employee')) {
+//             return redirect()->route('employee.dashboard');
+//         }
+
+//         Auth::guard('web')->logout();
+
+//         return back()->with('error', 'No role assigned to this user.');
+//     }
+
+//     return back()->withInput()->with('error', 'The email address does not exist.');
+// }
+
 
     public function dashboard()
     {

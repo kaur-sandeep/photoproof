@@ -1,6 +1,8 @@
 <?php
 
 namespace App\Models;
+use App\Models\User;
+use App\Models\OrganizationSubscriptions;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -20,4 +22,15 @@ class Organization extends Model
         'created_by'
         
     ];
+
+
+    public function users()
+    {
+        return $this->hasMany(User::class, 'organization_id', 'id');
+    }
+
+    public function subscription()
+    {
+        return $this->hasOne(OrganizationSubscriptions::class, 'organization_id', 'id');
+    }
 }

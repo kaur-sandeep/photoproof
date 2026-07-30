@@ -40,7 +40,7 @@
                   </div>
                   <div class="form-group col-md-4">
                     <label for="owner_name">Owner Name <span class="text-danger"></span></label>
-                    <input type="text" name ="owner_name" class="form-control" id="owner_name" placeholder="Enter Owner Name" value="{{ $user_data->name}}">  
+                    <input type="text" name ="owner_name" class="form-control" id="owner_name" placeholder="Enter Owner Name" value="{{ $user_data->name ?? '' }}">  
                   </div>
                   <div class="form-group col-md-4">
                     <label for="organization_email"> Email Address <span class="text-danger">*</span></label>

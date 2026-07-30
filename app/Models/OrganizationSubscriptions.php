@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Subscriptionplans;
 
 class OrganizationSubscriptions extends Model
 {
@@ -17,4 +18,9 @@ class OrganizationSubscriptions extends Model
         'max_employees',
         'status',
     ];
+
+    public function plan()
+    {
+    return $this->belongsTo(Subscriptionplans::class, 'subscription_plan_id', 'id');
+    }
 }

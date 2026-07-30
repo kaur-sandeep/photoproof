@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\PhotoController;
+// use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\Admin\PhotosController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\PhotoNotificationController;
@@ -140,4 +141,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/phpinfo', function() {
     phpinfo();
 });
+
+// Route::middleware(['auth:web', 'role:owner'])->prefix('owner')->name('owner.')->group(function () {
+//     Route::get('/dashboard', [OwnerController::class, 'index'])->name('dashboard');
+// });
 
