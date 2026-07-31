@@ -191,6 +191,19 @@ class AuthController extends Controller
 
        // $user = $request->user(); // Assuming auth:sanctum
        $user = null;
+
+       $blockedUser = User::where('device_id', $request->device_id)
+            ->where('state', -1)
+            ->first();
+
+        if ($blockedUser) {
+            return response()->json([
+                'status' => false,
+                'message' => 'This device has been restricted. Please contact your administrator.'
+            ], 403);
+        }
+
+
         if ($request->user()) {
             $user = $request->user();
         } else {
@@ -1099,11 +1112,13 @@ public function forgotPassword(Request $request)
 
         // send email to user
         // Send email only if email is enabled
-        $settings = \App\Models\Setting::first();
+        $organization = Organization::find($user->organization_id);
+        $owner = User::where('organization_id', $user->organization_id)
+        ->role('owner')
+        ->where('state', 1)
+        ->first();
 
-        if ($settings && $settings->email_enabled) {
-            $photoUrl = $photo->photo_url; // from accessor
-
+        if ($organization && $organization->enable_photo_email) {
           $photoUrl = $photo->photo_url; // from accessor
               $photopageurl = 'https://photoproof.cogniter.com/photo/'.$request->id;  
 
@@ -1113,10 +1128,11 @@ public function forgotPassword(Request $request)
                 <tr>
                 <td style="font-family:Arial,sans-serif;">
 
-                <p>Hello '.$user->name.',</p>
+                <p>Hello '.$owner->name.',</p>
 
-                <p>Your photo has been uploaded successfully. Please find the details below:</p>
-
+                <p>Your employee has uploaded a new photo. Please find the details below:</p>
+                  <strong>Employee Name:</strong> '.$user->name.'<br>
+                <strong>Employee Email:</strong> '.$user->email.'<br>
                 <p><strong>Photo ID:</strong> '.$photo->random_id.'<br>
                 <strong>Location:</strong> '.$photo->location.'<br>
                 <strong>Date Time:</strong> '.$photo->word_api_date_time.'</p>
@@ -1145,8 +1161,8 @@ public function forgotPassword(Request $request)
                 ';
 
             // Send email to user
-            $user->notify(new CommonMailNotification(
-                'Photo Uploaded Successfully',
+            $owner->notify(new CommonMailNotification(
+                'Employee Photo Uploaded',
                 $slot
             ));
         }
