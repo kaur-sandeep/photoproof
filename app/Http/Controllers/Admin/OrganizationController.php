@@ -174,7 +174,7 @@ class OrganizationController extends Controller
         $request->validate([
             'organization_name'   => 'required|string|max:255',
             'organization_email'  => 'required|email|unique:users,email',
-            'mobile_number' => 'numeric|digits_between:10,14',
+            // 'mobile_number' => 'numeric|digits_between:10,14',
             'password' => 'required|min:6',
         ]);
 
@@ -213,7 +213,6 @@ class OrganizationController extends Controller
                 'expires_at'   => $expiresDate,
                 'monthly_photo_limit' => $getPlanDataById->monthly_photo_limit,
                 'monthly_photo_used' => 30,
-                'max_employees' => $getPlanDataById->max_employees,
             ]);
             
             DB::commit();
@@ -258,9 +257,7 @@ class OrganizationController extends Controller
             <li>Assign roles and permissions to your employees.</li>
         </ul>
 
-        <p>If you have any questions, please contact our support team.</p>
-
-        <p>Thank you,<br>Your Team</p>';
+        <p>If you have any questions, please contact our support team.</p>';
         
         $admin_email = env('ADMIN_EMAIL');
         // Notification::route('mail', [$user->email, $admin_email])
@@ -334,35 +331,169 @@ class OrganizationController extends Controller
     //     return redirect()->back()->with('success', 'Organization updated successfully!');
     // }
 
+// public function updateOrganization(Request $request, $id)
+// {
+
+//     $organization = Organization::find($id);
+
+//     if (!$organization) {
+//         return redirect()->back()->with('error', 'Organization not found.');
+//     }
+//     $request->validate([
+//         'organization_name'  => 'required|string|max:255',
+//         'mobile_number'      => 'nullable|numeric|digits_between:10,14',
+//         'password'           => 'nullable|min:6',
+//     ]);
+
+//     DB::beginTransaction();
+// // dd((int)$request->subscription_plan);
+//     try {
+
+//         // Update Organization
+//         $organization->update([
+//             'business_type'     => $request->business_type,
+//             'subscription_plan' =>  (int)$request->subscription_plan,
+//             'message'           => $request->message,
+//         ]);
+
+//         // Update Owner User
+//         $user = User::where('organization_id', $organization->id)->first();
+
+//         if ($user) {
+
+//             $userData = [
+//                 'name'          => $request->owner_name,
+//                 'email'         => $request->organization_email,
+//                 'phone_number'  => $request->mobile_number,
+//             ];
+
+
+//             if ($request->filled('password')) {
+//                 $userData['password'] = Hash::make($request->password);
+//             }
+
+
+//             $user->update($userData);
+         
+//         }
+
+
+//         // Subscription Plan
+//         $plan = Subscriptionplans::find($request->subscription_plan);
+
+//         if ($plan) {
+
+//             $startDate = Carbon::now();
+
+//             $expiresDate = $startDate->copy()
+//                 ->addDays($plan->duration_days);
+//             $organizationSubscription = OrganizationSubscriptions::where(
+//                 'organization_id',
+//                 $organization->id
+//             )->first();
+
+
+//             if ($organizationSubscription) {
+
+//                 $organizationSubscription->update([
+//                     'subscription_plan_id' => $plan->id,
+//                     'starts_at'            => $startDate,
+//                     'expires_at'           => $expiresDate,
+//                     'monthly_photo_limit'  => $plan->monthly_photo_limit,
+//                     'monthly_photo_used'   => 0,
+//                     'max_employees'        => $plan->max_employees,
+//                 ]);
+
+//             } else {
+
+//                 $newSubscription = OrganizationSubscriptions::create([
+//                     'organization_id'       => $organization->id,
+//                     'subscription_plan_id'  => $plan->id,
+//                     'starts_at'             => $startDate,
+//                     'expires_at'            => $expiresDate,
+//                     'monthly_photo_limit'  => $plan->monthly_photo_limit,
+//                     'monthly_photo_used'   => 0,
+//                     'max_employees'        => $plan->max_employees,
+//                 ]);
+//             }
+//         }
+
+//         DB::commit();
+
+//     } catch (\Exception $e) {
+
+//         DB::rollBack();
+//     }
+
+//       ActivityLogger::log(
+//             'Update',
+//             'Organizations',
+//             'Updated organization: ' . $request->organization_name
+//         );
+
+//         return redirect()->back()->with('success', 'Organization updated successfully!');
+
+
+    
+// }
+
 public function updateOrganization(Request $request, $id)
 {
+    $traceId = uniqid('org_update_');
+
+    \Log::info("[$traceId] === updateOrganization START ===", [
+        'organization_id' => $id,
+        'all_request_data' => $request->all(),
+    ]);
 
     $organization = Organization::find($id);
 
-    if (!$organization) {
-        return redirect()->back()->with('error', 'Organization not found.');
-    }
+    // if (!$organization) {
+    //     \Log::error("[$traceId] Organization not found for id: $id");
+    //     return redirect()->back()->with('error', 'Organization not found.');
+    // }
+
+    // \Log::info("[$traceId] Organization found before update", [
+    //     'current_subscription_plan' => $organization->subscription_plan,
+    // ]);
+
     $request->validate([
         'organization_name'  => 'required|string|max:255',
         'mobile_number'      => 'nullable|numeric|digits_between:10,14',
         'password'           => 'nullable|min:6',
     ]);
 
+    // \Log::info("[$traceId] Validation passed", [
+    //     'subscription_plan_raw' => $request->subscription_plan,
+    //     'subscription_plan_cast_int' => (int) $request->subscription_plan,
+    // ]);
+
     DB::beginTransaction();
 
     try {
 
-        // Update Organization
-        $organization->update([
+        $updateData = [
+            'organization_name' => $request->organization_name,
             'business_type'     => $request->business_type,
-            'subscription_plan' => $request->subscription_plan,
+            'subscription_plan' => (int) $request->subscription_plan,
             'message'           => $request->message,
-        ]);
+        ];
+
+        // \Log::info("[$traceId] About to update Organization with data:", $updateData);
+
+        $updateResult = $organization->update($updateData);
+
+        // \Log::info("[$traceId] Organization update() returned:", [
+        //     'result' => $updateResult,
+        //     'subscription_plan_after_update_in_memory' => $organization->subscription_plan,
+        // ]);
 
         // Update Owner User
         $user = User::where('organization_id', $organization->id)->first();
 
         if ($user) {
+
+            // \Log::info("[$traceId] Owner user found", ['user_id' => $user->id]);
 
             $userData = [
                 'name'          => $request->owner_name,
@@ -370,74 +501,112 @@ public function updateOrganization(Request $request, $id)
                 'phone_number'  => $request->mobile_number,
             ];
 
-
             if ($request->filled('password')) {
                 $userData['password'] = Hash::make($request->password);
+                \Log::info("[$traceId] Password will be updated for user_id: {$user->id}");
             }
 
-
             $user->update($userData);
-         
-        }
 
+            // \Log::info("[$traceId] User updated", $userData);
+
+        } else {
+            \Log::warning("[$traceId] No owner user found for organization_id: {$organization->id}");
+        }
 
         // Subscription Plan
         $plan = Subscriptionplans::find($request->subscription_plan);
 
+        // \Log::info("[$traceId] Subscriptionplans::find result", [
+        //     'subscription_plan_id_searched' => $request->subscription_plan,
+        //     'plan_found' => $plan ? $plan->toArray() : null,
+        // ]);
+
         if ($plan) {
 
             $startDate = Carbon::now();
+            $expiresDate = $startDate->copy()->addDays($plan->duration_days);
 
-            $expiresDate = $startDate->copy()
-                ->addDays($plan->duration_days);
+            // \Log::info("[$traceId] Subscription dates calculated", [
+            //     'starts_at' => $startDate->toDateTimeString(),
+            //     'expires_at' => $expiresDate->toDateTimeString(),
+            //     'duration_days' => $plan->duration_days,
+            // ]);
+
             $organizationSubscription = OrganizationSubscriptions::where(
                 'organization_id',
                 $organization->id
             )->first();
 
+            $subscriptionData = [
+                'subscription_plan_id' => $plan->id,
+                'starts_at'            => $startDate,
+                'expires_at'           => $expiresDate,
+                'monthly_photo_limit'  => $plan->monthly_photo_limit,
+                'monthly_photo_used'   => 0,
+            ];
 
             if ($organizationSubscription) {
+                // \Log::info("[$traceId] Existing OrganizationSubscriptions found, updating", [
+                //     'subscription_row_id' => $organizationSubscription->id,
+                //     'data' => $subscriptionData,
+                // ]);
 
-                $organizationSubscription->update([
-                    'subscription_plan_id' => $plan->id,
-                    'starts_at'            => $startDate,
-                    'expires_at'           => $expiresDate,
-                    'monthly_photo_limit'  => $plan->monthly_photo_limit,
-                    'monthly_photo_used'   => 0,
-                    'max_employees'        => $plan->max_employees,
-                ]);
+                $subResult = $organizationSubscription->update($subscriptionData);
+
+                // \Log::info("[$traceId] OrganizationSubscriptions update() returned:", ['result' => $subResult]);
 
             } else {
+                // \Log::info("[$traceId] No existing OrganizationSubscriptions, creating new", [
+                //     'data' => array_merge(['organization_id' => $organization->id], $subscriptionData),
+                // ]);
 
-                $newSubscription = OrganizationSubscriptions::create([
-                    'organization_id'       => $organization->id,
-                    'subscription_plan_id'  => $plan->id,
-                    'starts_at'             => $startDate,
-                    'expires_at'            => $expiresDate,
-                    'monthly_photo_limit'  => $plan->monthly_photo_limit,
-                    'monthly_photo_used'   => 0,
-                    'max_employees'        => $plan->max_employees,
-                ]);
+                $newSubscription = OrganizationSubscriptions::create(array_merge(
+                    ['organization_id' => $organization->id],
+                    $subscriptionData
+                ));
+
+                // \Log::info("[$traceId] New OrganizationSubscriptions created", [
+                //     'new_id' => $newSubscription->id ?? null,
+                // ]);
             }
+        } else {
+            // \Log::warning("[$traceId] No Subscriptionplans row found for id: {$request->subscription_plan} — subscription table not touched");
         }
 
         DB::commit();
 
-    } catch (\Exception $e) {
+        // \Log::info("[$traceId] DB::commit() successful");
 
-        DB::rollBack();
-    }
+        // Verify from fresh DB read, not just in-memory
+        $fresh = $organization->fresh();
+        // \Log::info("[$traceId] Post-commit fresh() read from DB", [
+        //     'subscription_plan_in_db' => $fresh->subscription_plan,
+        // ]);
 
-      ActivityLogger::log(
+        ActivityLogger::log(
             'Update',
             'Organizations',
             'Updated organization: ' . $request->organization_name
         );
 
+        // \Log::info("[$traceId] === updateOrganization END (success) ===");
+
         return redirect()->back()->with('success', 'Organization updated successfully!');
 
+    } catch (\Exception $e) {
 
-    
+        DB::rollBack();
+
+        // \Log::error("[$traceId] EXCEPTION during update — rolled back", [
+        //     'message' => $e->getMessage(),
+        //     'file'    => $e->getFile(),
+        //     'line'    => $e->getLine(),
+        //     'trace'   => $e->getTraceAsString(),
+        // ]);
+
+        return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
+    }
 }
 
     public function updateStatus(Request $request)

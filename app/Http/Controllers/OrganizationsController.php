@@ -32,7 +32,7 @@ class OrganizationsController extends Controller
                 'organization_name' => $request->organization_name,
                 'business_type'     => $request->business_type,
                 'organization_code' => '',
-                'subscription_plan' => '1',
+                'subscription_plan' => '',
                 'message'           => $request->message,
                 'created_by'        => null,
             ]);
@@ -93,9 +93,7 @@ class OrganizationsController extends Controller
             <li>Assign roles and permissions to your employees.</li>
         </ul>
 
-        <p>If you have any questions, please contact our support team.</p>
-
-        <p>Thank you,<br>Your Team</p>';
+        <p>If you have any questions, please contact our support team.</p>';
         
         $admin_email = env('ADMIN_EMAIL');
         // Notification::route('mail', [$user->email, $admin_email])
