@@ -10,7 +10,7 @@
             <ul class="nav flex-column">
 
                 <li class="nav-item">
-                    <a href="{{ route('admin.dashboard') }}"
+                    <a href="{{ route('owner.dashboard') }}"
                        class="nav-link text-white">
                         <i class="bi bi-speedometer2 me-2"></i>
                         Dashboard
@@ -21,7 +21,7 @@
   
             <ul class="nav flex-column">
                 <li class="nav-item">
-                    <a href="{{ route('admin.users.data') }}"
+                    <a href="{{ route('owner.employee') }}"
                        class="nav-link text-white">
                         <i class="bi bi-people me-2"></i>
                         Employees

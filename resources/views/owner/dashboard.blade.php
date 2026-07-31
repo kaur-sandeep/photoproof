@@ -16,7 +16,7 @@
                 <a href="{{ route('admin.users') }}" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Total Employees </h5>
-                    <h3>{{$totalUsers}}</h3>
+                    <p>100</p>
                 </div>
             </a>
             </div>
@@ -27,7 +27,7 @@
                  <a href="{{ route('admin.photos') }}" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Total Photos Uploaded </h5>
-                    <h3>{{$totalPhotos}}</h3>
+                  <p>120</p>
                 </div>
                 </a>
             </div>
@@ -38,7 +38,7 @@
                 <a href="#" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Monthly Photo Usage</h5>
-                    <h3>{{ $iosInstalls }}</h3>
+                  <p>140</p>
                 </div>
             </a>
             </div>

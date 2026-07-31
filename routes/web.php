@@ -6,7 +6,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\OrganizationController;
 use App\Http\Controllers\OrganizationsController;
 use App\Http\Controllers\PhotoController;
-// use App\Http\Controllers\OwnerController;
+use App\Http\Controllers\OwnerController;
 use App\Http\Controllers\Admin\PhotosController;
 use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\PhotoNotificationController;
@@ -142,7 +142,54 @@ Route::prefix('admin')->group(function () {
     phpinfo();
 });
 
-// Route::middleware(['auth:web', 'role:owner'])->prefix('owner')->name('owner.')->group(function () {
-//     Route::get('/dashboard', [OwnerController::class, 'index'])->name('dashboard');
-// });
+Route::middleware(['auth:web', 'role:owner'])->prefix('owner')->name('owner.')->group(function () {
+    Route::get('/dashboard', [OwnerController::class, 'index'])->name('dashboard');
+    Route::post('/logout', [OwnerController::class, 'ownerLogout'])->name('logout');
+    Route::get('/login', [LoginController::class, 'showLogin'])->name('admin.login');
+    Route::get('/profile', [OwnerController::class, 'profile'])->name('profile');
+    Route::post('/profile/update', [OwnerController::class, 'profileUpdate'])->name('profile.update');
+    Route::get('/change/password', [OwnerController::class, 'changePassword'])->name('change.password');
+    Route::post('/update/password', [OwnerController::class, 'updatePassword'])->name('update.password');
+    
+    // Route::get('/admins', [AdminController::class, 'index'])->name('admin.users.data');
+    Route::get('/employees', [OwnerController::class, 'employees'])->name('employee');
+    Route::get('/employees/create', [OwnerController::class, 'create'])->name('employee.create');
+    Route::post('/employees/store', [OwnerController::class, 'store'])->name('employee.store');
+    Route::get('/employee/list/', [OwnerController::class, 'list'])->name('employees.list');
+    Route::get('/edit/employee/{userId}', [OwnerController::class, 'editEmployee'])->name('employee.edit.data');
+    Route::post('/update/employee/{userId}', [OwnerController::class, 'updateEmployee'])->name('update.employee.data');
+     Route::get('/update/employee/status', [OwnerController::class, 'updateStatus'])->name('update.employee.status');
+
+    
+
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+});
 

@@ -1,0 +1,112 @@
+@extends('admin.layouts.master')
+@section('content')
+
+<div class="container-fluid">
+    <div class="admin-page-header">
+        <h3 class="card-title"><b>Profile Information </b></h3>
+    </div>
+
+    <div class="row">
+  @if(session('success'))
+    <div class="alert alert-success">
+        {{ session('success') }}
+    </div>
+@endif
+
+         @if ($errors->any())
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
+         <form id="editprofileForm" method="POST" action="{{route('owner.profile.update')}}"  enctype="multipart/form-data">
+             @csrf
+                    <!--begin::Body-->
+                    <div class="card-body row">
+                       <div class="mb-3 col-md-4">
+                        <label for="exampleInputEmail1" class="form-label">Name <span class="text-danger">*</span></label>
+                        <input
+                          type="text"
+                          name ="name"
+                          class="form-control"
+                          id="name"
+                          value="{{ $user->name ?? 'na' }}"
+                        />
+                      </div>
+                      <div class="mb-3 col-md-4">
+                        <label for="exampleInputEmail1" class="form-label">Email <span class="text-danger">*</span></label>
+                        <input
+                          type="email"
+                          name="email"
+                          class="form-control"
+                          id="email"
+                          value = "{{ $user->email }}"
+                         readOnly/>
+                      </div>
+                      <div class="mb-3 col-md-4">
+                        <label for="exampleInputEmail1" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                        <input
+                          type="text"
+                          name="number"
+                          class="form-control"
+                          id="number"
+                          value = "{{ $user->phone_number }}"
+                         />
+                      </div>
+
+                    <div class="mb-3 col-md-4">
+                      @if($user->profile_image)
+                          <div class="mb-2">
+                              <img src="{{ asset('storage/profile/'.$user->profile_image) }}"
+                                  alt="Profile Image"
+                                  width="120"
+                                  height="120"
+                                  style="object-fit: cover; border-radius: 50%; border: 2px solid #ddd;">
+                          </div>
+                      @else
+                          <div class="mb-2">
+                              <img src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+                                  alt="Default Image"
+                                  width="120"
+                                  height="120"
+                                  style="object-fit: cover; border-radius: 50%; border: 2px solid #ddd;">
+                          </div>
+                      @endif
+
+                  <div class="input-group col-md-4">
+                      <input type="file" name="image" class="form-control" id="inputGroupFile02">
+                      <label class="input-group-text" for="inputGroupFile02">Upload</label>
+                  </div>
+                </div>
+                </div>
+                  <!--end::Body-->
+                  <!--begin::Footer-->
+                  <!-- <div class="card-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                  </div> -->
+                  <!-- <div class="card-footer d-flex justify-content-center gap-3"> -->
+                    <div class="card-footer  gap-3">
+                    <button type="submit" class="btn btn-primary">
+                        Submit
+                    </button>
+
+                    <a href="{{ route('owner.change.password') }}" class="btn btn-warning">
+                        Change Password
+                    </a>
+
+                     <a href="{{ route('admin.users.data') }}" class="btn btn-secondary">
+                        Back
+                    </a>
+                </div>
+                  <!--end::Footer-->
+                </form>
+
+    </div>
+
+</div>
+
+@endsection

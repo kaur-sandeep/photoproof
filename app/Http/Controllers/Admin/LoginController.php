@@ -25,117 +25,117 @@ class LoginController extends Controller
         return view('admin.auth.login');
     }
 
+    // public function login(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email',
+    //         'password' => 'required|min:6',
+    //     ], [
+    //         'email.required' => 'Email is required.',
+    //         'password.required' => 'Password is required.',
+    //     ]);
+
+    //     // ✅ Step 1: Check if email exists
+    //     $admin = Admin::where('email', $request->email)->first();
+
+    //     if (!$admin) {
+    //         return back()->withInput()->with('error', 'The email address does not exist.');
+    //     }
+
+    //     // ✅ Step 2: Check password
+    //     if (!Auth::guard('admin')->attempt([
+    //         'email' => $request->email,
+    //         'password' => $request->password,
+    //     ])) {
+    //         return back()->withInput()->with('error', 'Invalid Credentials');
+    //     }
+    //         $admin = Auth::guard('admin')->user();
+
+    //         $admin->last_login_at = now();
+    //         $admin->save();
+    //     // ✅ Step 3: Login success
+      
+    //       ActivityLogger::log(
+    //             'Login',
+    //             'Admin Users',
+    //             'Logged By:' . $request->email,
+    //         );
+           
+    //     return redirect()->route('admin.dashboard');
+    // }
+
     public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|min:6',
-        ], [
-            'email.required' => 'Email is required.',
-            'password.required' => 'Password is required.',
         ]);
 
-        // ✅ Step 1: Check if email exists
+        // Check Admin
         $admin = Admin::where('email', $request->email)->first();
 
-        if (!$admin) {
-            return back()->withInput()->with('error', 'The email address does not exist.');
-        }
+        if ($admin) {
 
-        // ✅ Step 2: Check password
-        if (!Auth::guard('admin')->attempt([
-            'email' => $request->email,
-            'password' => $request->password,
-        ])) {
-            return back()->withInput()->with('error', 'Invalid Credentials');
-        }
+            if (!Auth::guard('admin')->attempt([
+                'email' => $request->email,
+                'password' => $request->password,
+            ])) {
+                return back()->withInput()->with('error', 'Invalid Credentials');
+            }
+
             $admin = Auth::guard('admin')->user();
-
             $admin->last_login_at = now();
             $admin->save();
-        // ✅ Step 3: Login success
-      
-          ActivityLogger::log(
+
+            ActivityLogger::log(
                 'Login',
                 'Admin Users',
-                'Logged By:' . $request->email,
+                'Logged By: '.$admin->email
             );
-           
-        return redirect()->route('admin.dashboard');
+
+            return redirect()->route('admin.dashboard');
+        }
+
+        // Check User
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+
+            if (!Auth::guard('web')->attempt([
+                'email' => $request->email,
+                'password' => $request->password,
+            ])) {
+                return back()->withInput()->with('error', 'Invalid Credentials');
+            }
+
+            $request->session()->regenerate();
+
+            $user = Auth::guard('web')->user();
+            // $user->last_login_at = now();
+            $user->save();
+
+            ActivityLogger::log(
+                'Login',
+                'Users',
+                'Logged By: '.$user->email
+            );
+            
+            // dd(Auth::guard('web')->user());
+            if ($user->hasRole('owner')) {
+                return redirect()->route('owner.dashboard');
+            }
+
+            if ($user->hasRole('employee')) {
+                return redirect()->route('employee.dashboard');
+            }
+
+            Auth::guard('web')->logout();
+
+            return back()->with('error', 'No role assigned to this user.');
+        }
+
+        return back()->withInput()->with('error', 'The email address does not exist.');
     }
-
-//     public function login(Request $request)
-// {
-//     $request->validate([
-//         'email' => 'required|email',
-//         'password' => 'required|min:6',
-//     ]);
-
-//     // Check Admin
-//     $admin = Admin::where('email', $request->email)->first();
-
-//     if ($admin) {
-
-//         if (!Auth::guard('admin')->attempt([
-//             'email' => $request->email,
-//             'password' => $request->password,
-//         ])) {
-//             return back()->withInput()->with('error', 'Invalid Credentials');
-//         }
-
-//         $admin = Auth::guard('admin')->user();
-//         $admin->last_login_at = now();
-//         $admin->save();
-
-//         ActivityLogger::log(
-//             'Login',
-//             'Admin Users',
-//             'Logged By: '.$admin->email
-//         );
-
-//         return redirect()->route('admin.dashboard');
-//     }
-
-//     // Check User
-//     $user = User::where('email', $request->email)->first();
-
-//     if ($user) {
-
-//         if (!Auth::guard('web')->attempt([
-//             'email' => $request->email,
-//             'password' => $request->password,
-//         ])) {
-//             return back()->withInput()->with('error', 'Invalid Credentials');
-//         }
-
-//         $request->session()->regenerate();
-
-//         $user = Auth::guard('web')->user();
-//         // $user->last_login_at = now();
-//         $user->save();
-
-//         ActivityLogger::log(
-//             'Login',
-//             'Users',
-//             'Logged By: '.$user->email
-//         );
-        
-//         // dd(Auth::guard('web')->user());
-//         if ($user->hasRole('owner')) {
-//             return redirect()->route('owner.dashboard');
-//         }
-
-//         if ($user->hasRole('employee')) {
-//             return redirect()->route('employee.dashboard');
-//         }
-
-//         Auth::guard('web')->logout();
-
-//         return back()->with('error', 'No role assigned to this user.');
-//     }
-
-//     return back()->withInput()->with('error', 'The email address does not exist.');
-// }
 
 
     public function dashboard()

@@ -1,12 +1,12 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Add organization User')
+@section('title', 'Add Organization Employee')
 
 @section('content')
 
 <div class="container-fluid">
     <div class="admin-page-header">
-        <h3 class="card-title"><b>Add organization User </b></h3>
+        <h3 class="card-title"><b>Add Organization Employee</b></h3>
     </div>
     <div class="row">
   @if(session('success'))
@@ -27,7 +27,7 @@
         <div class="card card-primary">
               <!-- /.card-header -->
               <!-- form start -->
-                 <form method="POST" action="{{ route('admin.store.users') }}" enctype="multipart/form-data">
+                 <form method="POST" action="{{ route('owner.employee.store') }}" enctype="multipart/form-data">
                     @csrf
                 <div class="card-body row">
                   <div class="form-group col-md-4">
@@ -38,28 +38,17 @@
                     <label for="email">Email <span class="text-danger">*</span></label>
                     <input type="email" name ="email" class="form-control" id="email" placeholder="Enter Email">
                   </div>
-                  <div class="form-group col-md-4">
-                    <label for="password">Password <span class="text-danger">*</span></label>
-                    <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
-                  </div>
+                  
                    <div class="form-group col-md-4">
                     <label for="number">Phone Number <span class="text-danger">*</span></label>
                     <input type="text" name ="phone_number" class="form-control" id="number" placeholder="Enter Phone Number">
-                  </div>
-                  <div class="form-group col-md-4">
-                    <label for="exampleInputFile">File input</label>
-                    <div class="input-group">
-                      <div class="custom-file">
-                        <input type="file" name ="profile_image"class="custom-file-input" id="exampleInputFile">
-                      </div>
-                    </div>
                   </div>
                 </div>
                 <!-- /.card-body -->
 
                 <div class="card-footer">
-                  <button type="submit" class="btn btn-primary">Submit</button>
-                    <a href="{{ route('admin.users.data') }}" class="btn btn-secondary">
+                  <button type="submit" class="btn btn-primary">Invite Employee</button>
+                    <a href="{{ route('owner.employee') }}" class="btn btn-secondary">
                         Back
                     </a>
                 </div>

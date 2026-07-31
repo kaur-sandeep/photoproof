@@ -752,6 +752,64 @@ $('#organizationList').on('click', '.toggle-status', function () {
 
 
 $(document).ready(function() {
+    let table = $('#employeesList').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: window.APP_URL + '/owner/employee/list/',  // Ensure this URL is correct
+
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'name', name: 'name' },
+            { data: 'email', name: 'email' },
+            { data: 'phone_number', name: 'phone_number' },
+            { data: 'status', name: 'status', orderable: false, searchable: false },
+            { data: 'actions', name: 'actions', orderable: false, searchable: false }
+        ]
+    });
+
+    // STATUS TOGGLE
+$('#employeesList').on('click', '.toggle-status', function () {
+    let id = $(this).data('id');
+    let status = $(this).data('status');
+    if (confirm("Are you sure you want to change the status?")) {
+       $.ajax({
+    url: window.APP_URL + '/owner/update/employee/status',
+    type: "get",
+    data: {
+        id: id,
+        status: status
+    },
+    success: function (response) {
+        console.log("SUCCESS:", response);
+        table.ajax.reload(null, false);
+    },
+    error: function (xhr) {
+        console.log("STATUS CODE:", xhr.status);
+        console.log("RESPONSE:", xhr.responseText);
+        alert("Failed. Check console.");
+    }
+});
+    }
+});
+    // DELETE USER
+    $('#employeesList').on('click', '.delete-user', function () {
+        let id = $(this).data('id');
+        if (confirm("Are you sure you want to delete this employee?")) {
+            $.get(window.APP_URL + '/owner/update/employee/status', {
+                id: id,
+                status: -1
+            }, function () {
+                table.ajax.reload(null, false);
+            });
+        }
+    });
+});
+
+
+
+
+
+$(document).ready(function() {
     let table = $('#reportImagesList').DataTable({
         processing: true,
         serverSide: true,
