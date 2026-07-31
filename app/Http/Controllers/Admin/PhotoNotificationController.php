@@ -98,23 +98,30 @@ class PhotoNotificationController extends Controller
 
 
     public function list(Request $request){
+
         
    $notifications = Notifications::query();
+   $notificationType = $request->notification_type;
 
-// Check if there's a custom search query
-$customSearch = request()->input('type'); // Assuming the custom search field is called 'custom_search'
-
-// If there's a custom search, add it to the query
-if ($customSearch) {
-    $notifications->where(function ($query) use ($customSearch) {
-        $query->where('name', 'like', '%' . $customSearch . '%')
-              ->orWhere('email', 'like', '%' . $customSearch . '%')
-              ->orWhere('type', 'like', '%' . $customSearch . '%');
-    });
+if ($request->filled('notification_type')) {
+    $notifications->where('type', $notificationType);
 }
+
+    // Check if there's a custom search query
+    $customSearch = request()->input('type'); // Assuming the custom search field is called 'custom_search'
+
+    // If there's a custom search, add it to the query
+    if ($customSearch) {
+        $notifications->where(function ($query) use ($customSearch) {
+            $query->where('name', 'like', '%' . $customSearch . '%')
+                ->orWhere('email', 'like', '%' . $customSearch . '%')
+                ->orWhere('type', 'like', '%' . $customSearch . '%');
+        });
+    }
 
 $notifications = $notifications
     ->where('state', '!=', -1)->get();
+    
 return DataTables::of($notifications)
     ->addIndexColumn()
     ->setRowClass(function ($notifications) {

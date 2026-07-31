@@ -6,11 +6,15 @@
 
 <div class="container-fluid">
     <div class="admin-page-header">
-        <h3 class="card-title"><b>Notifications List </b></h3>
+    @if(request('notification_type') == 'Contact us')
+      <h3 class="card-title"><b>Contact Us</b></h3>
+  @else
+      <h3 class="card-title"><b>Notifications List</b></h3>
+  @endif
     </div>
     <div class="card">
         <div class="card-body">
-            
+            @if(request('notification_type') !== 'Contact us')
             <div class="row mb-3 align-items-center">
                 <div class="col-md-4">
                 <label class="form-label fw-bold">Filter By Type</label>
@@ -22,11 +26,14 @@
                 </select>
                 </div>
             </div>
+            @endif
             <table id="notificationList" class="table table-bordered table-striped">
                 <thead>
                     <tr>
                         <th>#</th>
+                          
                         <th>Random Id</th>
+                          
                         <th>Name</th>
                         <th>Email</th>
                         <th>Message</th>
