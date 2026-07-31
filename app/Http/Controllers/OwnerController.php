@@ -13,8 +13,13 @@ class OwnerController extends Controller
 {
     public function index()
     {
+        $id = Auth::user()->id;
+        $org_id =  (int)User::find(Auth::id())->organization_id;
+        $users = User::where('state', '!=', -1)->where('organization_id',$org_id)->where('id', '!=', $id)->orderBy('created_at', 'desc')->get();
+        $total_employees = count($users);
+
         // dd(Auth::user()->getRoleNames());
-         return view('owner.dashboard');
+         return view('owner.dashboard',compact('total_employees'));
     }
 
     public function ownerLogout(Request $request)
@@ -30,6 +35,7 @@ class OwnerController extends Controller
     public function profile()
     {
         $user = auth()->user();
+        
         return view('owner.profile', compact('user'));
     }
 
@@ -40,8 +46,8 @@ class OwnerController extends Controller
 
         // Validation
         $request->validate([
-            'name'   => 'required|string|max:255',
-            'number' => 'required|string|min:10|max:15',
+            // 'name'   => 'required|string|max:255',
+            // 'number' => 'required|string|min:10|max:15',
             'image' => 'image|mimes:jpg,jpeg,png|max:2048',
         ]);
 

@@ -19,7 +19,8 @@ class Organization extends Model
         'subscription_plan',
         'message',
         'state',
-        'created_by'
+        'created_by',
+        'enable_photo_email'
         
     ];
 
@@ -33,4 +34,5 @@ class Organization extends Model
     {
         return $this->hasOne(OrganizationSubscriptions::class, 'organization_id', 'id');
     }
+    
 }

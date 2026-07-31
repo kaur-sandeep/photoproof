@@ -9,6 +9,7 @@ use App\Models\Notifications;
 use App\Helpers\DateTime;
 use Yajra\DataTables\DataTables;
 use Illuminate\Support\Str;
+use App\Models\PhotoDetail;
 class PhotoNotificationController extends Controller
 {
     // public function getUnreadNotifications()
@@ -127,6 +128,18 @@ return DataTables::of($notifications)
     ->setRowClass(function ($notifications) {
     return $notifications->is_read == 0 ? 'custom-unread-row' : 'custom-read-row';
 })
+  ->addColumn('image', function ($notifications) {
+        $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
+        $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+        $image = $photo
+            ? asset('storage/' . ($photo->thumbnail ?: $photo->photo))
+            : $default;
+        // return '<img src="' . ($image
+        //     ? asset('storage/' .$image)
+        //     : $default) . '" width="40" height="40" class="rounded-circle">';
+        // })
+        return '<img src="'.$image.'" width="40" height="40" class="rounded-circle">';
+        })
     ->addColumn('photo_random_id', function ($notifications) {
         return $notifications->photo_random_id ?? '--';
     })
@@ -187,7 +200,13 @@ return DataTables::of($notifications)
                     Create Organization
                 </a>';
         }
+            $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
 
+            $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+            $image = $photo
+                ? asset('storage/' . ($photo->thumbnail ?: $photo->photo))
+                : $default;
         return '
             <button
                 class="btn btn-primary btn-sm viewNotification"
@@ -195,6 +214,7 @@ return DataTables::of($notifications)
                 data-name="'.$notifications->name.'"
                 data-email="'.$notifications->email.'"
                 data-message="'.$message.'"
+                data-image="'.$image.'",
                 data-ip="'.$ip.'"
                 data-type="'.ucwords($notifications->type).'"
                 data-date="'.DateTime::dateFormat($notifications->created_at).'"
@@ -208,7 +228,7 @@ return DataTables::of($notifications)
             </button>
             '.$createOrganizationButton;
     })
-    ->rawColumns(['name','actions','message','email','type','ip_address','date'])
+    ->rawColumns(['image','name','actions','message','email','type','ip_address','date'])
     ->make(true);
 }
 

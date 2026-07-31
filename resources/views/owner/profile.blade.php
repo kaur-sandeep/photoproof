@@ -28,7 +28,7 @@
                     <!--begin::Body-->
                     <div class="card-body row">
                        <div class="mb-3 col-md-4">
-                        <label for="exampleInputEmail1" class="form-label">Name <span class="text-danger">*</span></label>
+                        <label for="exampleInputEmail1" class="form-label">Name <span class="text-danger"></span></label>
                         <input
                           type="text"
                           name ="name"
@@ -48,7 +48,7 @@
                          readOnly/>
                       </div>
                       <div class="mb-3 col-md-4">
-                        <label for="exampleInputEmail1" class="form-label">Phone Number <span class="text-danger">*</span></label>
+                        <label for="exampleInputEmail1" class="form-label">Phone Number <span class="text-danger"></span></label>
                         <input
                           type="text"
                           name="number"
@@ -98,7 +98,7 @@
                         Change Password
                     </a>
 
-                     <a href="{{ route('admin.users.data') }}" class="btn btn-secondary">
+                     <a href="{{ route('owner.employee') }}" class="btn btn-secondary">
                         Back
                     </a>
                 </div>

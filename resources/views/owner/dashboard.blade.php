@@ -16,7 +16,7 @@
                 <a href="{{ route('admin.users') }}" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Total Employees </h5>
-                    <p>100</p>
+                     <h3>{{$total_employees}}</h3>
                 </div>
             </a>
             </div>

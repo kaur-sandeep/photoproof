@@ -65,6 +65,22 @@
                           @endforeach
                         </select>
                   </div>
+
+                  <div class="form-group col-md-4">
+                    <div class="form-check mt-2">
+                        <input
+                            class="form-check-input"
+                            type="checkbox"
+                            name="email_enabled"
+                            id="email_enabled"
+                            value="1"
+                            {{ old('email_enabled', $organization->enable_photo_email) ? 'checked' : '' }}>
+
+                        <label class="form-check-label" for="email_enabled">
+                            Enable Email
+                        </label>
+                    </div>
+                </div>
                  
                 </div>
                 <!-- /.card-body -->

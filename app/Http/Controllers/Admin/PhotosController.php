@@ -494,13 +494,20 @@ public function update(Request $request, $photo_id)
         // </button>';
 
 
+        $photo = PhotoDetail::where('random_id', $reported_data->photo_random_id)->first();
 
+                    $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+                    $image = $photo
+                        ? asset('storage/' . ($photo->thumbnail ?: $photo->photo))
+                : $default;
          return '<button 
             class="btn btn-primary viewReported"
             data-name="'.$reported_data->name.'"
             data-email="'.$reported_data->email.'"
             data-message="'.$reported_data->message.'"
             data-browser="'.$browser.'"
+            data-image="'.$image.'",
             data-platform="'.$platform.'"
             data-devicetype="'.$deviceType.'"
             data-ip="'.$reported_data->ip_address.'"

@@ -44,8 +44,8 @@ class OrganizationController extends Controller
             return $organizations->organization_name ?? '--';
         })
         ->addColumn('organization_email', function ($organizations) {
-            return $organizations->users->pluck('email')->implode(', ') ?? '--'; // if device is null, show --
-        })
+                return optional($organizations->users->sortBy('created_at')->first())->email ?? '--';
+            })
 
          ->addColumn('organization_code', function ($organizations) {
             return $organizations->organization_code ?? '--'; // if device is null, show --
@@ -186,6 +186,7 @@ class OrganizationController extends Controller
                 'organization_code' => '',
                 'subscription_plan' => $request->subscription_plan,
                 'message'           => $request->message,
+                'enable_photo_email'=>$request->boolean('email_enabled'),
                 'created_by'        => Auth::user()->id,
             ]);
 
@@ -476,6 +477,7 @@ public function updateOrganization(Request $request, $id)
             'organization_name' => $request->organization_name,
             'business_type'     => $request->business_type,
             'subscription_plan' => (int) $request->subscription_plan,
+            'enable_photo_email' => $request->boolean('email_enabled'),
             'message'           => $request->message,
         ];
 

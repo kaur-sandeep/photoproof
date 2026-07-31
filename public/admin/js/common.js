@@ -872,6 +872,23 @@ toggleField($(this).data('devicetype'),'device','row_device');
 toggleField($(this).data('ip'),'ip','row_ip');
 toggleField($(this).data('date'),'date','row_date');
 toggleField($(this).data('location'),'location','row_location');
+var imageUrl = $(this).data('image');
+if (imageUrl) {
+    $('#reported_image').attr('src', imageUrl);
+    $('#row_image').show();
+} else {
+    $('#row_image').hide();
+}
+
+toggleImage($(this).data('image'), 'reported_image', 'row_image');
+function toggleImage(value, imgId, rowId) {
+    if (value) {
+        $('#' + imgId).attr('src', value);
+        $('#' + rowId).show();
+    } else {
+        $('#' + rowId).hide();
+    }
+}
 
 });
 $(document).ready(function() {
@@ -892,7 +909,9 @@ $(document).ready(function() {
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+             { data: 'image', name: 'image' },
             { data: 'photo_random_id', name: 'photo_random_id' },
+           
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'message', name: 'message' },
@@ -1029,44 +1048,143 @@ $(document).ready(function() {
 // });
 
 
-$(document).on('click', '.viewNotification', function(){
+// $(document).on('click', '.viewNotification', function(){
 
-let notificationId = $(this).data('id');
+// let notificationId = $(this).data('id');
 
-let button = $(this);
-var row = button.closest('tr');
-// Prevent double click
-button.prop('disabled', true);
+// let button = $(this);
+// var row = button.closest('tr');
+// // Prevent double click
+// button.prop('disabled', true);
 
-// Mark notification visually as read
-button.closest('.notification-item').removeClass('unread');
+// // Mark notification visually as read
+// button.closest('.notification-item').removeClass('unread');
 
-$.ajax({
-    url: "/admin/notifications/unread-count/" + notificationId,
-    type: "POST",
-    data: {
-        _token: $('meta[name="csrf-token"]').attr('content')
-    },
-    success: function(response) {
+// $.ajax({
+//     url: "/admin/notifications/unread-count/" + notificationId,
+//     type: "POST",
+//     data: {
+//         _token: $('meta[name="csrf-token"]').attr('content')
+//     },
+//     success: function(response) {
         
-                // Change row color to "read" (remove highlight)
-        row.removeClass('custom-unread-row').addClass('custom-read-row');
+//                 // Change row color to "read" (remove highlight)
+//         row.removeClass('custom-unread-row').addClass('custom-read-row');
         
-        let updatedCount = parseInt(response.newCount);
+//         let updatedCount = parseInt(response.newCount);
 
-        if (updatedCount <= 0) {
-            $('#notificationCount').text(0).hide();
-        } else {
-            $('#notificationCount').text(updatedCount).show();
+//         if (updatedCount <= 0) {
+//             $('#notificationCount').text(0).hide();
+//         } else {
+//             $('#notificationCount').text(updatedCount).show();
+//         }
+
+//     },
+//     complete: function(){
+//         button.prop('disabled', false);
+//     }
+// });
+
+// // Function to toggle modal fields
+// function toggleField(value, spanId, rowId) {
+
+//     if (value !== undefined && value !== null) {
+//         value = value.toString().replace(/"/g, '').trim();
+//     }
+
+//     if (!value) {
+//         $('#' + rowId).hide();
+//     } else {
+//         $('#' + spanId).text(value);
+//         $('#' + rowId).show();
+//     }
+// }
+
+
+
+// toggleField(button.data('name'), 'name', 'row_name');
+// toggleField(button.data('email'), 'email', 'row_email');
+// toggleField(button.data('message'), 'message', 'row_message');
+// toggleField(button.data('browser'), 'browser', 'row_browser');
+// toggleField(button.data('platform'), 'platform', 'row_platform');
+// toggleField(button.data('devicetype'), 'device', 'row_device');
+// toggleField(button.data('ip'), 'ip', 'row_ip');
+// toggleField(button.data('type'), 'type', 'row_type');
+// toggleField(button.data('date'), 'date', 'row_date');
+// toggleField(button.data('location'), 'location', 'row_location');
+// var imageUrl = $(this).data('image');
+// if (imageUrl) {
+//     $('#reported_image').attr('src', imageUrl);
+//     $('#row_image').show();
+// } else {
+//     $('#row_image').hide();
+// }
+
+// toggleImage(button.data('image'), 'reported_image', 'row_image');
+
+// function toggleImage(value, imgId, rowId) {
+//     if (value) {
+//         $('#' + imgId).attr('src', value);
+//         $('#' + rowId).show();
+//     } else {
+//         $('#' + rowId).hide();
+//     }
+// }
+
+
+// });
+
+
+
+$(document).on('click', '.viewNotification', function () {
+
+    let notificationId = $(this).data('id');
+    let button = $(this);
+    let row = button.closest('tr');
+
+    button.prop('disabled', true);
+
+    $.ajax({
+        url: "/admin/notifications/unread-count/" + notificationId,
+        type: "POST",
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+
+            row.removeClass('custom-unread-row').addClass('custom-read-row');
+
+            let updatedCount = parseInt(response.newCount);
+
+            if (updatedCount <= 0) {
+                $('#notificationCount').text(0).hide();
+            } else {
+                $('#notificationCount').text(updatedCount).show();
+            }
+        },
+        complete: function () {
+            button.prop('disabled', false);
         }
+    });
+console.log('imagesssssssssssssssssssss',button.data('image'));
+    // Toggle fields
+    toggleField(button.data('name'), 'name', 'row_name');
+    toggleField(button.data('email'), 'email', 'row_email');
+    toggleField(button.data('message'), 'message', 'row_message');
+    toggleField(button.data('browser'), 'browser', 'row_browser');
+    toggleField(button.data('platform'), 'platform', 'row_platform');
+    toggleField(button.data('devicetype'), 'device', 'row_device');
+    toggleField(button.data('ip'), 'ip', 'row_ip');
+    toggleField(button.data('type'), 'type', 'row_type');
+    toggleField(button.data('date'), 'date', 'row_date');
+    toggleField(button.data('location'), 'location', 'row_location');
 
-    },
-    complete: function(){
-        button.prop('disabled', false);
-    }
+    // Show Image
+    toggleImage(button.data('image'), 'reported_image', 'row_image');
+
+    $('#shwonotificationModal').modal('show');
 });
 
-// Function to toggle modal fields
 function toggleField(value, spanId, rowId) {
 
     if (value !== undefined && value !== null) {
@@ -1081,19 +1199,17 @@ function toggleField(value, spanId, rowId) {
     }
 }
 
-toggleField(button.data('name'), 'name', 'row_name');
-toggleField(button.data('email'), 'email', 'row_email');
-toggleField(button.data('message'), 'message', 'row_message');
-toggleField(button.data('browser'), 'browser', 'row_browser');
-toggleField(button.data('platform'), 'platform', 'row_platform');
-toggleField(button.data('devicetype'), 'device', 'row_device');
-toggleField(button.data('ip'), 'ip', 'row_ip');
-toggleField(button.data('type'), 'type', 'row_type');
-toggleField(button.data('date'), 'date', 'row_date');
-toggleField(button.data('location'), 'location', 'row_location');
+function toggleImage(value, imgId, rowId) {
 
+    if (value && value !== '') {
+        $('#' + imgId).attr('src', value);
+        $('#' + rowId).show();
+    } else {
+        $('#' + imgId).attr('src', '');
+        $('#' + rowId).hide();
+    }
+}
 
-});
 
 
 
