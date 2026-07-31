@@ -91,8 +91,10 @@ class PhotosController extends Controller
         //     : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
         // })
         ->addColumn('photo', function ($photo) {
-            $image = $photo->photo 
-                ? asset('storage/'.$photo->photo)
+            $thumb=$photo->thumbnail ? $photo->thumbnail: $photo->photo;
+
+            $image = $thumb  
+                ? asset('storage/'.$thumb )
                 : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
 
             return '<a href="'.route('admin.photos.show', $photo->id).'">
@@ -404,7 +406,9 @@ public function update(Request $request, $photo_id)
         ->addColumn('image', function ($reported_data) {
         $photo = PhotoDetail::where('random_id', $reported_data->photo_random_id)->first();
         $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-        $image = !empty($photo?->photo) ? asset('storage/'.$photo->photo) : $default;
+        $image = $photo
+            ? asset('storage/' . ($photo->thumbnail ?: $photo->photo))
+            : $default;
         // return '<img src="' . ($image
         //     ? asset('storage/' .$image)
         //     : $default) . '" width="40" height="40" class="rounded-circle">';
