@@ -98,23 +98,30 @@ class PhotoNotificationController extends Controller
 
 
     public function list(Request $request){
+
         
    $notifications = Notifications::query();
+   $notificationType = $request->notification_type;
 
-// Check if there's a custom search query
-$customSearch = request()->input('type'); // Assuming the custom search field is called 'custom_search'
-
-// If there's a custom search, add it to the query
-if ($customSearch) {
-    $notifications->where(function ($query) use ($customSearch) {
-        $query->where('name', 'like', '%' . $customSearch . '%')
-              ->orWhere('email', 'like', '%' . $customSearch . '%')
-              ->orWhere('type', 'like', '%' . $customSearch . '%');
-    });
+if ($request->filled('notification_type')) {
+    $notifications->where('type', $notificationType);
 }
+
+    // Check if there's a custom search query
+    $customSearch = request()->input('type'); // Assuming the custom search field is called 'custom_search'
+
+    // If there's a custom search, add it to the query
+    if ($customSearch) {
+        $notifications->where(function ($query) use ($customSearch) {
+            $query->where('name', 'like', '%' . $customSearch . '%')
+                ->orWhere('email', 'like', '%' . $customSearch . '%')
+                ->orWhere('type', 'like', '%' . $customSearch . '%');
+        });
+    }
 
 $notifications = $notifications
     ->where('state', '!=', -1)->get();
+    
 return DataTables::of($notifications)
     ->addIndexColumn()
     ->setRowClass(function ($notifications) {
@@ -171,23 +178,35 @@ return DataTables::of($notifications)
             }
 
         
-        return '<button 
-        class="btn btn-primary viewNotification"
-        data-id="'.$notifications->id.'"
-        data-name="'.$notifications->name.'"
-        data-email="'.$notifications->email.'"
-        data-message="'.$message.'"
-        data-ip="'.$ip.'"
-        data-type="'.ucwords($notifications->type).'"
-        data-date="'.DateTime::dateFormat($notifications->created_at).'"
-        data-browser="'.$browser.'"
-        data-platform="'.$platform.'"
-        data-devicetype="'.$deviceType.'"
-        data-location="'.$location.'"
-        data-bs-toggle="modal"
-        data-bs-target="#shwonotificationModal">
-        View
-    </button>';
+       $createOrganizationButton = '';
+      
+        if ($notifications->type == 'Contact us') {
+            $createOrganizationButton = '
+                <a href="'.url('/admin/organization/create').'?name='.urlencode($notifications->name).'&email='.urlencode($notifications->email).'"
+                class="btn btn-success btn-sm ms-1">
+                    Create Organization
+                </a>';
+        }
+
+        return '
+            <button
+                class="btn btn-primary btn-sm viewNotification"
+                data-id="'.$notifications->id.'"
+                data-name="'.$notifications->name.'"
+                data-email="'.$notifications->email.'"
+                data-message="'.$message.'"
+                data-ip="'.$ip.'"
+                data-type="'.ucwords($notifications->type).'"
+                data-date="'.DateTime::dateFormat($notifications->created_at).'"
+                data-browser="'.$browser.'"
+                data-platform="'.$platform.'"
+                data-devicetype="'.$deviceType.'"
+                data-location="'.$location.'"
+                data-bs-toggle="modal"
+                data-bs-target="#shwonotificationModal">
+                View
+            </button>
+            '.$createOrganizationButton;
     })
     ->rawColumns(['name','actions','message','email','type','ip_address','date'])
     ->make(true);

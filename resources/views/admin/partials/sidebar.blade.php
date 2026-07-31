@@ -116,7 +116,7 @@
 
             </ul> -->
 
-            <ul class="nav flex-column">
+            <!-- <ul class="nav flex-column">
 
                 <li class="nav-item">
                     <a href="{{ route('notifications.index') }}"
@@ -126,7 +126,26 @@
                     </a>
                 </li>
 
-            </ul>
+            </ul> -->
+
+
+            <ul class="nav flex-column">
+
+                    <li class="nav-item">
+                        <a class="nav-link text-white {{ request('notification_type') == '' ? 'active' : '' }}"
+                        href="{{ route('notifications.index') }}">
+                             <i class="bi bi-bell me-2"></i>  Notifications
+                        </a>
+                    </li>
+                 
+                    <li class="nav-item">
+                        <a class="nav-link text-white {{ request('notification_type') == 'Contact us' ? 'active' : '' }}"
+                        href="{{ route('notifications.index', ['notification_type' => 'Contact us']) }}">
+                           <i class="bi bi-headset me-2"></i> Contact Us
+                        </a>
+                    </li>
+
+                </ul>
 
         </nav>
 

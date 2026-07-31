@@ -875,6 +875,8 @@ toggleField($(this).data('location'),'location','row_location');
 
 });
 $(document).ready(function() {
+    const params = new URLSearchParams(window.location.search);
+    const notificationType = params.get('notification_type');
     let table = $('#notificationList').DataTable({
         processing: true,
         serverSide: true,   
@@ -884,12 +886,13 @@ $(document).ready(function() {
             data: function(d) {
                 // Get the selected type filter value and append it to the request data
                 d.type = $('#typeFilter').val();  // Add type filter to the request
+                d.notification_type = notificationType;
             }
         },
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-            { data: 'photo_random_id', name: 'photo_random_id'},
+            { data: 'photo_random_id', name: 'photo_random_id' },
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'message', name: 'message' },
@@ -897,7 +900,14 @@ $(document).ready(function() {
             { data: 'ip_address', name: 'ip_address'},
             { data: 'date', name: 'date'},
             { data:'actions',name: 'actions',orderable: false,}
+        ],
+         columnDefs: [
+            {
+                targets: 1,
+                visible: notificationType !== 'Contact us'
+            }
         ]
+
     });
 
     // Trigger DataTable reload when the filter changes

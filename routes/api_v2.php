@@ -8,7 +8,7 @@ use App\Http\Controllers\Api\V2\InstallController;
 //     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::post('/upload_photo', [AuthController::class, 'uploadPhoto']);
-    Route::get('/photos', [AuthController::class, 'getPhotos']);
+   
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
     Route::get('/plans', [PlanController::class, 'plans'])->name('plans');
     Route::get('/test_version', [AuthController::class, 'testVersion']);
@@ -19,6 +19,7 @@ use App\Http\Controllers\Api\V2\InstallController;
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/employee/upload-photo', [AuthController::class, 'employeeUploadPhoto']);
+         Route::get('/photos', [AuthController::class, 'getPhotos']);
          Route::post('/logout', [AuthController::class, 'logout']);
     });
     
