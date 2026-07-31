@@ -24,7 +24,7 @@ use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
-
+use App\Models\OrganizationSubscriptions;
 class AuthController extends Controller
 {
     // Register API
@@ -643,12 +643,13 @@ public function forgotPassword(Request $request)
                 'message' => 'Employee not found.'
             ],404);
         }
+     
         // 3. Check Employee Role
-        // if (!$user->hasAnyRole(['Employee','Owner'])) {
-        //     return response()->json([
-        //         'message'=>'Unauthorized.'
-        //     ],403);
-        // }
+        if (!$user->hasAnyRole(['employee','owner'])) {
+            return response()->json([
+                'message'=>'Unauthorized.'
+            ],403);
+        }
 
         // 4. Check User Active
         if ($user->state != 1) {
@@ -670,22 +671,22 @@ public function forgotPassword(Request $request)
 
         // 6. Check Active Subscription
 
-        // $subscription = OrganizationSubscription::where(
-        //         'organization_id',
-        //         $organization->id
-        //     )
-        //     ->where('status','active')
-        //     ->where('starts_at','<=',now())
-        //     ->where('expires_at','>=',now())
-        //     ->first();
+        $subscription = OrganizationSubscriptions::where(
+                'organization_id',
+                $organization->id
+            )
+            ->where('state',1)
+            ->where('starts_at','<=',now())
+            ->where('expires_at','>=',now())
+            ->first();
 
-        // if (!$subscription){
+        if (!$subscription){
 
-        //     return response()->json([
-        //         'message'=>'Organization subscription expired.'
-        //     ],403);
+            return response()->json([
+                'message'=>'Organization subscription expired.'
+            ],403);
 
-        // }
+        }
 
         // 7. Generate OTP
         $otp = random_int(100000, 999999);
@@ -766,6 +767,17 @@ public function forgotPassword(Request $request)
                 ], 404);
             }
 
+            $blockedUser = User::where('device_id', $request->device_id)
+            ->where('state', -1)
+            ->first();
+
+            if ($blockedUser) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'This device has been restricted. Please contact your administrator.'
+                ], 403);
+            }
+
             // Check user belongs to an organization
             if (!$user->organization_id) {
                 return response()->json([
@@ -821,20 +833,29 @@ public function forgotPassword(Request $request)
             }
 
             // Get active subscription
-            // $subscription = OrganizationSubscription::where('organization_id', $organization->id)
-            //     ->where('status', 'active')
-            //     ->whereDate('expires_at', '>=', now())
-            //     ->first();
+            $subscription = OrganizationSubscriptions::where(
+                'organization_id',
+                $organization->id
+                )
+                ->where('state',1)
+                ->where('starts_at','<=',now())
+                ->where('expires_at','>=',now())
+                ->first();
 
-            // if (!$subscription) {
-            //     return response()->json([
-            //         'status' => false,
-            //         'message' => 'Organization subscription has expired.'
-            //     ], 422);
-            // }
+            if (!$subscription){
+
+                return response()->json([
+                    'message'=>'Organization subscription expired.'
+                ],403);
+
+            }
 
             $EmployeeOtp->update([
                 'verified_at' => now(),
+            ]);
+            // Save device ID
+            $user->update([
+                'device_id' => $request->device_id,
             ]);
 
             // Remove old login tokens
@@ -897,13 +918,12 @@ public function forgotPassword(Request $request)
             ], 403);
         }
 
-        // if (!$user->hasAnyRole(['Employee', 'Owner'])) {
-        //     return response()->json([
-        //         'status' => false,
-        //         'message' => 'Unauthorized.'
-        //     ], 403);
-        // }
-       
+       if (!$user->hasAnyRole(['employee','owner'])) {
+            return response()->json([
+                'message'=>'Unauthorized.'
+            ],403);
+        }
+
         $organization = Organization::find($user->organization_id);
 
         if (!$organization || $organization->state != 1) {
@@ -913,28 +933,32 @@ public function forgotPassword(Request $request)
             ], 403);
         }
 
-    //    $subscription = OrganizationSubscription::where('organization_id', $organization->id)
-    //         ->where('status', 'active')
-    //         ->where('starts_at', '<=', now())
-    //         ->where('expires_at', '>=', now())
-    //         ->latest('expires_at')
-    //         ->first();
+        $subscription = OrganizationSubscriptions::where(
+                'organization_id',
+                $organization->id
+            )
+            ->where('state',1)
+            ->where('starts_at','<=',now())
+            ->where('expires_at','>=',now())
+            ->first();
 
-    //     if (!$subscription) {
-    //         return response()->json([
-    //             'status' => false,
-    //             'message' => 'Organization subscription has expired.'
-    //         ], 403);
-    //     }
+        if (!$subscription){
 
-//     if ($subscription->photo_used >= $subscription->photo_limit) {
+            return response()->json([
+                'message'=>'Organization subscription expired.'
+            ],403);
 
-//     return response()->json([
-//         'status' => false,
-//         'message' => 'Monthly organization photo limit reached.'
-//     ], 403);
+        }
 
-// }
+        if ($subscription->monthly_photo_used >= $subscription-> monthly_photo_limit ) {
+
+            return response()->json([
+                'status' => false,
+                'message' => 'Monthly organization photo limit reached.'
+            ], 403);
+
+        }
+
         // Upload photo
        
        //$path = $request->file('photo')->store('photos', 'public'); // storage/app/public/photos   //commant for thumbnil code
@@ -1005,6 +1029,7 @@ public function forgotPassword(Request $request)
             'meta_data'=>json_decode($request->meta_data)
             
         ]);
+        $subscription->increment('monthly_photo_used', 1);
         $ip = $request->ip();
         // $ip ='202.164.57.197';
         // $ip ='192.168.0.90';
