@@ -20,6 +20,11 @@ use App\Models\Setting;
 use App\Models\Notifications;
 use App\Models\EmployeeOtp;
 use App\Models\Organization;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
+
 class AuthController extends Controller
 {
     // Register API
@@ -214,7 +219,35 @@ class AuthController extends Controller
             ], 403);
         }
         // Upload photo
-        $path = $request->file('photo')->store('photos', 'public'); // storage/app/public/photos
+        //$path = $request->file('photo')->store('photos', 'public'); // storage/app/public/photos
+           // thumnil code start
+       // Upload original
+       // Upload original image
+        $path = $request->file('photo')->store('photos', 'public');
+
+        // Thumbnail path
+        $thumbnailPath = 'photos/thumbnails/' . basename($path);
+
+        // Full directory path
+        $thumbnailDir = Storage::disk('public')->path('photos/thumbnails');
+
+        // Create directory if it doesn't exist
+        if (!File::exists($thumbnailDir)) {
+            File::makeDirectory($thumbnailDir, 0755, true);
+        }
+
+        // Create thumbnail
+        $manager = new ImageManager(new Driver());
+
+        $image = $manager->read(Storage::disk('public')->path($path));
+
+        $image->scale(width: 300);
+
+        $image->save(Storage::disk('public')->path($thumbnailPath));
+       
+       
+       //end thumbnil
+       
 
         // Create record
         $photo = PhotoDetail::create([
@@ -223,6 +256,7 @@ class AuthController extends Controller
             'name' => $request->display_name,
             'location' => $request->location,
             'photo' => $path,
+             'thumbnail' => $thumbnailPath,
             'state' => 1,
             'word_api_date_time' => $request->word_api_date_time,
             'latitude' => $request->latitude,
@@ -690,7 +724,8 @@ public function forgotPassword(Request $request)
 
                 return response()->json([
                     'status' => true,
-                    'message' => 'OTP has been sent to your registered email address.'
+                    'message' => 'OTP has been sent to your registered email address.',
+                    'otp'=>$otp
                 ]);
 
             } catch (\Exception $e) {
@@ -901,7 +936,38 @@ public function forgotPassword(Request $request)
 
 // }
         // Upload photo
-        $path = $request->file('photo')->store('photos', 'public'); // storage/app/public/photos
+       
+       //$path = $request->file('photo')->store('photos', 'public'); // storage/app/public/photos   //commant for thumbnil code
+       // thumnil code start
+       // Upload original
+       // Upload original image
+        $path = $request->file('photo')->store('photos', 'public');
+
+        // Thumbnail path
+        $thumbnailPath = 'photos/thumbnails/' . basename($path);
+
+        // Full directory path
+        $thumbnailDir = Storage::disk('public')->path('photos/thumbnails');
+
+        // Create directory if it doesn't exist
+        if (!File::exists($thumbnailDir)) {
+            File::makeDirectory($thumbnailDir, 0755, true);
+        }
+
+        // Create thumbnail
+        $manager = new ImageManager(new Driver());
+
+        $image = $manager->read(Storage::disk('public')->path($path));
+
+        $image->scale(width: 300);
+
+        $image->save(Storage::disk('public')->path($thumbnailPath));
+       
+       
+       //end thumbnil
+       
+       
+       
         // Create record
         $photo = PhotoDetail::create([
             //'random_id' => Str::uuid(), // generate unique random id
@@ -911,6 +977,7 @@ public function forgotPassword(Request $request)
             'name' =>  $user->name,
             'location' => $request->location,
             'photo' => $path,
+            'thumbnail' => $thumbnailPath,
             'state' => 1,
             'word_api_date_time' => $request->word_api_date_time,
             'latitude' => $request->latitude,

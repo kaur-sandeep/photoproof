@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage;
 
 class PhotoDetail extends Model
 {
@@ -40,7 +41,8 @@ class PhotoDetail extends Model
         'display_qrcode',
         'display_qrcode_flag',
         'meta_data',
-        'organization_id'
+        'organization_id',
+        'thumbnail'
     ];
 
     protected $casts = [
@@ -52,7 +54,10 @@ class PhotoDetail extends Model
     // id =  random_id ,word_api_date_time,latitude,longitude,device_type,device_brand,device_model,device_name,device_manufacturer,android_version,android_sdk,ios_system_version,ios_identifier
 
     // 👇 Add this
-    protected $appends = ['photo_url'];
+       protected $appends = [
+            'photo_url',
+            'thumbnail_url',
+        ];
 
     // 👇 Create accessor
     public function getPhotoUrlAttribute()
@@ -63,6 +68,17 @@ class PhotoDetail extends Model
 
         return null;
     }
+      public function getThumbnailUrlAttribute()
+        {
+            if (
+                $this->thumbnail &&
+                Storage::disk('public')->exists($this->thumbnail)
+            ) {
+                return asset('storage/' . $this->thumbnail);
+            }
+
+            return $this->photo_url;
+        }
 
     public function user()
     {
