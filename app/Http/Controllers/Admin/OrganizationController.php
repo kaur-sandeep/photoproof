@@ -259,15 +259,17 @@ class OrganizationController extends Controller
         </ul>
 
         <p>If you have any questions, please contact our support team.</p>';
-        
-        $admin_email = env('ADMIN_EMAIL');
+        // $settings = Setting::first();
+        // $admin = $settings->admin_email ?? env('ADMIN_EMAIL');
+        // $emails = array_map('trim', explode(',', $admin));
+        //$admin_email = env('ADMIN_EMAIL');
         // Notification::route('mail', [$user->email, $admin_email])
         //     ->notify(new CommonMailNotification(
         //         'Welcome to Our Portal - Account Created Successfully',
         //         $slot
         //     ));
         try {
-        Notification::route('mail', [$user->email, $admin_email])
+        Notification::route('mail', $user->email)
                 ->notify(new CommonMailNotification(
                     'Welcome to Our Portal - Account Created Successfully',
                     $slot
