@@ -27,7 +27,7 @@
                  <a href="{{ route('admin.photos') }}" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Total Photos Uploaded </h5>
-                  <p>120</p>
+                  <p>0</p>
                 </div>
                 </a>
             </div>
@@ -38,7 +38,7 @@
                 <a href="#" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Monthly Photo Usage</h5>
-                  <p>140</p>
+                  <p>0</p>
                 </div>
             </a>
             </div>

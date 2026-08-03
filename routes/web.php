@@ -43,6 +43,7 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/organization/create', [OrganizationController::class, 'create'])->name('admin.organization.create');
         Route::post('/organization/add', [OrganizationController::class, 'addOrganization'])->name('admin.store.organization');
+         Route::get('/organization/employee/list/', [OrganizationController::class, 'list'])->name('organization.employees.list');
 
         Route::get('/update/users/status', [AdminController::class, 'updateStatus'])->name('admin.update.users.status');
         Route::get('/edit/users/{userId}', [AdminController::class, 'editUsers'])->name('admin.users.edit.data');

@@ -188,6 +188,7 @@ class OrganizationController extends Controller
                 'message'           => $request->message,
                 'enable_photo_email'=>$request->boolean('email_enabled'),
                 'created_by'        => Auth::user()->id,
+                'state'             => 1
             ]);
 
             $organization->organization_code = 'ORG_' . $organization->id;
@@ -245,7 +246,7 @@ class OrganizationController extends Controller
 
         <p><strong>Organization Code:</strong> '.$organization->organization_code.'</p>
 
-        <p><strong>Subscription Plan:</strong> '.$organization->subscription_plan.'</p>
+        <p><strong>Subscription Plan:</strong> '.$getPlanDataById->name.'</p>
 
         <hr>
 

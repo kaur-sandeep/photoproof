@@ -128,7 +128,7 @@ class OwnerController extends Controller
         'email'  => 'required|email|unique:users,email',
         'phone_number' => 'required|numeric|digits_between:10,14',
         ]);
-        User::create([
+       $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone_number' => $request->phone_number,
@@ -136,11 +136,13 @@ class OwnerController extends Controller
             'password' => bcrypt('user123'),
             'organization_id'=>$org_id
         ]);
+        $user->assignRole('employee');
         ActivityLogger::log(
             'Create',
             'Employee',
             'Created new employee: ' . $request->email
         );
+        $user->assignRole('employee');
         return redirect()->back()->with('success', 'User added successfully!');
 
     }
