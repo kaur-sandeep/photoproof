@@ -30,6 +30,18 @@
 
             </ul>
 
+              
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="{{ route('owner.photos') }}"
+                       class="nav-link text-white">
+                        <i class="bi bi-images me-2"></i>
+                        Photos
+                    </a>
+                </li>
+
+            </ul>
+
         </nav>
 
     </div>

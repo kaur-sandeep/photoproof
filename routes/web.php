@@ -159,7 +159,13 @@ Route::middleware(['auth:web', 'role:owner'])->prefix('owner')->name('owner.')->
     Route::get('/employee/list/', [OwnerController::class, 'list'])->name('employees.list');
     Route::get('/edit/employee/{userId}', [OwnerController::class, 'editEmployee'])->name('employee.edit.data');
     Route::post('/update/employee/{userId}', [OwnerController::class, 'updateEmployee'])->name('update.employee.data');
-     Route::get('/update/employee/status', [OwnerController::class, 'updateStatus'])->name('update.employee.status');
+    Route::get('/update/employee/status', [OwnerController::class, 'updateStatus'])->name('update.employee.status');
+    Route::get('/photos', [OwnerController::class, 'employeePhotos'])->name('photos');
+    Route::get('/employee/photos/list', [OwnerController::class, 'employeePhotosList'])->name('employee.photos.list');
+    Route::get('/photos/show/{id}', [OwnerController::class, 'show'])->name('photos.show');
+    Route::get('/photos/showdata/{id}', [OwnerController::class, 'showdata'])->name('photos.showdata');
+    Route::get('/photos/update/data', [OwnerController::class, 'updatephotoStatus'])->name('photos.update.status');
+
 
     
 

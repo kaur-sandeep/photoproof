@@ -866,6 +866,227 @@ $('#organizationemployeesList').on('click', '.toggle-status', function () {
 
 
 
+$(document).ready(function() {
+    let table = $('#employeePhotoTableList').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: window.APP_URL + '/owner/employee/photos/list',  // Ensure this URL is correct
+
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'photo', name: 'photo', searchable: false },
+            { data: 'random_id', name: 'random_id' },
+            { data: 'name', name: 'name' },
+            { data: 'location', name: 'location' },
+            { data: 'user_name', name: 'user_name' },
+            { data:'created_at', name:'created_at'},
+            { data: 'view_count', name: 'view_count',searchable: false },
+            { data:'status', name:'status',orderable: false},
+            //  { data:'upload_track_record', name:'upload_track_record'},
+              {
+            data: null,
+            name: 'action',
+            orderable: false,
+            searchable: false,
+            render: function(data, type, row) {
+                return `
+                    <button class="btn btn-info btn-sm viewTrackBtn">
+                        View
+                    </button>
+                `;
+            }
+        },
+            // { data: 'actions', name: 'actions', orderable: false, searchable: false }
+            
+        ]
+    });
+
+    $(document).on('click', '.viewTrackBtn', function () {
+
+    var tr = $(this).closest('tr');
+
+    if (tr.hasClass('child')) {
+        tr = tr.prev();
+    }
+
+    var rowData = table.row(tr).data();
+    if (!rowData) return;
+
+    console.log('rowData:', rowData);
+console.log('rowData.user:', rowData?.user);
+console.log('photo_upload_tracks:', rowData?.user?.photo_upload_tracks);
+
+
+const matchedTrack = (rowData.user?.photo_upload_tracks || [])
+    .find(t => t.photo_detail_id === rowData.id); 
+    // 👆 field name check kar lena — ho sakta hai t.random_id ho ya kuch aur
+
+const uploadIp = matchedTrack?.ip_address ?? '';
+const uploadIsp = matchedTrack?.isp ?? '';
+
+
+    const ispList = [...new Set((rowData.user?.photo_upload_tracks || [])
+                        .map(t => t.isp)
+                        .filter(Boolean)
+                    )].join(', ');
+
+    // var html = `
+    //      <b>Random Id:</b> ${rowData.random_id ?? ''}<br>
+    //             <b>Date & Time:</b> ${rowData.word_api_date_time ?? ''}<br>
+    //             <b>Location:</b> ${rowData.word_api_date_time ?? ''}<br>
+    //             <b>Country:</b> ${rowData.country ?? ''}<br>
+    //             <b>Region:</b> ${rowData.country ?? ''}<br>
+    //             <b>City:</b> ${rowData.city ?? ''}<br>
+    //             <b>Zip:</b> ${rowData.zip ?? ''}<br>
+    //             <b>Timezone:</b> ${rowData.zip ?? ''}<br>
+    //             <b>Latitude:</b> ${rowData.latitude ?? ''}<br>
+    //             <b>Longitude:</b> ${rowData.longitude ?? ''}<br>
+    //             <b>IP Address:</b> ${rowData.ip_address ?? ''}<br>
+    //             <b>Device Type:</b> ${rowData.device_type ?? ''}<br>
+    //             <b>Device Brand:</b> ${rowData.device_brand ?? ''}<br>
+    //             <b>Device Model:</b> ${rowData.device_model ?? ''}<br>
+    //             <b>Device Name:</b> ${rowData.device_name ?? ''}<br>
+    //             <b>Device Manufacturer:</b> ${rowData.device_manufacturer ?? ''}<br>
+    //             <b>Android Version:</b> ${rowData.android_version ?? ''}<br>
+    //             <b>Android Sdk:</b> ${rowData.android_sdk ?? ''}<br>
+    //             <b>IOS System Version:</b> ${rowData.ios_system_version ?? ''}<br>
+    //             <b>IOS Identifier:</b> ${rowData.ios_identifier ?? ''}<br>
+    //             <b>ISP:</b> ${rowData.isp ?? ''}<br>
+    //     <hr>
+     var html = `
+       ${rowData.random_id ? `<b>Random Id:</b> ${rowData.random_id}<br>` : ''}
+                ${rowData.word_api_date_time ? `<b>Date & Time:</b> ${rowData.word_api_date_time}<br>` : ''}
+                ${rowData.location ? `<b>Location:</b> ${rowData.location}<br>` : ''}
+                ${rowData.latitude ? `<b>Latitude:</b> ${rowData.latitude}<br>` : ''}
+                ${rowData.longitude ? `<b>Longitude:</b> ${rowData.longitude}<br>` : ''}
+                ${uploadIp ? `<b>IP Address:</b> ${uploadIp}<br>` : ''}
+                ${rowData.device_type ? `<b>Device Type:</b> ${rowData.device_type}<br>` : ''}
+                ${rowData.timezone ? `<b>Timezone:</b> ${rowData.timezone}<br>` : ''}  
+                ${rowData.device_brand ? `<b>Device Brand:</b> ${rowData.device_brand}<br>` : ''}
+                ${rowData.device_model ? `<b>Device Model:</b> ${rowData.device_model}<br>` : ''}
+                ${rowData.device_name ? `<b>Device Name:</b> ${rowData.device_name}<br>` : ''}  
+                ${rowData.device_manufacturer ? `<b>Device Manufacturer:</b> ${rowData.device_manufacturer}<br>` : ''} 
+                ${rowData.android_version ? `<b>Android Version:</b> ${rowData.android_version}<br>` : ''}
+                ${rowData.android_sdk ? `<b>Android Sdk:</b> ${rowData.android_sdk}<br>` : ''}
+                ${rowData.ios_system_version ? `<b>IOS System Version:</b> ${rowData.ios_system_version}<br>` : ''}
+                ${rowData.ios_identifier ? `<b>IOS Identifier:</b> ${rowData.ios_identifier}<br>` : ''}
+                ${rowData.isp ? `<b>ISP:</b> ${rowData.isp}<br>` : ''}
+               ${ispList ? `<b>ISP:</b> ${ispList}<br>` : ''}
+                 <hr>
+                 ${rowData.photo_url ? `<b>Image:</b><br>
+                    <img src="${rowData.photo_url}" style=" height:350px; border-radius:6px;">
+                    <br>` : ''}
+        <hr>
+        ${rowData.latitude && rowData.longitude ? `
+            <iframe 
+                width="100%" 
+                height="350" 
+                style="border:0;" 
+                loading="lazy"
+                src="https://maps.google.com/maps?q=${rowData.latitude},${rowData.longitude}&z=15&output=embed">
+            </iframe>
+        ` : '<p style="color:red;">Location not available</p>'}
+    `;
+
+    $('#commonheader').html('Track Details');
+    $('#commonModalBody').html(html);
+
+    var modal = new bootstrap.Modal(document.getElementById('commonModal'));
+    modal.show();
+});
+        // STATUS TOGGLE
+$('#employeePhotoTableList').on('click', '.toggle-state', function () {
+    let id = $(this).data('id');
+    let state = $(this).data('state');
+    if (confirm("Are you sure you want to change the status?")) {
+       $.ajax({
+    url: window.APP_URL + '/owner/photos/update/data',
+    type: "get",
+    data: {
+        id: id,
+        state: state
+    },
+    success: function (response) {
+        console.log("SUCCESS:", response);
+        table.ajax.reload(null, false);
+    },
+    error: function (xhr) {
+        console.log("STATUS CODE:", xhr.status);
+        console.log("RESPONSE:", xhr.responseText);
+        alert("Failed. Check console.");
+    }
+});
+    }
+});
+    // DELETE USER
+    $('#employeePhotoTableList').on('click', '.delete-user', function () {
+        let id = $(this).data('id');
+        if (confirm("Are you sure you want to delete this user?")) {
+            $.get(window.APP_URL + '/owner/photos/update/data', {
+                id: id,
+                state: -1
+            }, function () {
+                table.ajax.reload(null, false);
+            });
+        }
+    });
+
+});
+
+
+
+$(document).ready(function() {
+    let table = $('#empverifiedephotoTableList').DataTable({
+        processing: true,
+        serverSide: true,
+         scrollX: true,
+         ajax: window.APP_URL + '/owner/photos/showdata/' +  window.PHOTO_ID,
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'ip_address', name: 'ip_address'},
+            { data: 'browser', name: 'browser' },
+            { data: 'platform', name: 'platform' },
+            // { data: 'device', name: 'device' },
+            { data: 'device_type', name: 'device_type' },
+            // { data: 'referer', name: 'referer'},
+            { data: 'user_agent', name: 'user_agent'},
+            {
+                data: null,
+                name: 'location',
+                render: function (data, type, row) {
+
+                    let parts = [];
+
+                    if (row.city && row.city !== '-') {
+                        parts.push(row.city);
+                    }
+
+                    if (row.region_name && row.region_name !== '-') {
+                        parts.push(row.region_name);
+                    }
+
+                    if (row.country && row.country !== '-') {
+                        parts.push(row.country);
+                    }
+
+                    return parts.length ? parts.join(', ') : '-';
+                }
+            },
+            // { data: 'zip', name: 'zip'},
+            { data: 'latitude', name: 'latitude'},
+            { data: 'longitude', name: 'longitude'},
+            { data: 'timezone', name: 'timezone'},
+            // { data: 'isp', name: 'isp'},
+            { data: 'org', name: 'org'},
+            { data: 'as_name', name: 'as_name'},
+            { data: 'created_at', name: 'created_at'},
+        ]
+    });
+
+
+});
+
+
 
 
 

@@ -18,6 +18,7 @@ use App\Models\OrganizationSubscriptions;
 use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Carbon\Carbon;
+use App\Models\Setting;
 class OrganizationController extends Controller
 {
     public function index(){
@@ -214,6 +215,7 @@ class OrganizationController extends Controller
         $request->validate([
             'organization_name'   => 'required|string|max:255',
             'organization_email'  => 'required|email|unique:users,email',
+            'subscription_plan'  => 'required|exists:subscription_plans,id',
             // 'mobile_number' => 'numeric|digits_between:10,14',
             'password' => 'required|min:6',
         ]);
@@ -265,59 +267,89 @@ class OrganizationController extends Controller
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
 
-        $slot = '
-        <p>Dear <strong>'.$user->name.'</strong>,</p>
+                $slot = '
+            <p>Dear <strong>'.$user->name.'</strong>,</p>
 
-        <p>Welcome! Your organization has been created successfully.</p>
+            <p>Welcome! Your organization has been created successfully.</p>
 
-        <hr>
+            <hr>
 
-        <h3>Login Details</h3>
+            <h3>Login Details</h3>
 
-        <p><strong>Login URL:</strong>
-            <a href="'.url('/login').'">'.url('/login').'</a>
-        </p>
+            <p><strong>Login URL:</strong>
+                <a href="'.url('/login').'">'.url('/login').'</a>
+            </p>
 
-        <p><strong>Username / Email:</strong> '.$user->email.'</p>
+            <p><strong>Username / Email:</strong> '.$user->email.'</p>
 
-        <p><strong>Temporary Password:</strong> '.$request->password.'</p>
+            <p><strong>Temporary Password:</strong> '.$request->password.'</p>
 
-        <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
+            <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
 
-        <p><strong>Organization Code:</strong> '.$organization->organization_code.'</p>
+            <p><strong>Organization Code:</strong> '.$organization->organization_code.'</p>
 
-        <p><strong>Subscription Plan:</strong> '.$getPlanDataById->name.'</p>
+            <p><strong>Subscription Plan:</strong> '.$getPlanDataById->name.'</p>
 
-        <hr>
+            <hr>
 
-        <h3>Next Steps</h3>
+            <h3>Next Steps</h3>
 
-        <ul>
-            <li>Log in using the credentials above.</li>
-            <li>Change your password after your first login.</li>
-            <li>Invite your employees from the dashboard.</li>
-            <li>Assign roles and permissions to your employees.</li>
-        </ul>
+            <ul>
+                <li>Log in using the credentials above.</li>
+                <li>Change your password after your first login.</li>
+                <li>Invite your employees from the dashboard.</li>
+                <li>Assign roles and permissions to your employees.</li>
+            </ul>
 
-        <p>If you have any questions, please contact our support team.</p>';
-        // $settings = Setting::first();
-        // $admin = $settings->admin_email ?? env('ADMIN_EMAIL');
-        // $emails = array_map('trim', explode(',', $admin));
-        //$admin_email = env('ADMIN_EMAIL');
-        // Notification::route('mail', [$user->email, $admin_email])
-        //     ->notify(new CommonMailNotification(
-        //         'Welcome to Our Portal - Account Created Successfully',
-        //         $slot
-        //     ));
-        try {
-        Notification::route('mail', $user->email)
-                ->notify(new CommonMailNotification(
-                    'Welcome to Our Portal - Account Created Successfully',
-                    $slot
-                ));
-        } catch (\Exception $e) {
-            dd('Mail Error: ' . $e->getMessage());
-        }
+            <p>If you have any questions, please contact our support team.</p>';
+
+            // ✅ Admin ke liye alag content
+            $adminSlot = '
+            <p>Dear Admin,</p>
+
+            <p>A new organization has been registered on the platform.</p>
+
+            <hr>
+
+            <h3>Organization Details</h3>
+
+            <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
+            <p><strong>Organization Code:</strong> '.$organization->organization_code.'</p>
+            <p><strong>Owner Name:</strong> '.$user->name.'</p>
+            <p><strong>Owner Email:</strong> '.$user->email.'</p>
+             <p><strong>Temporary Password:</strong> '.$request->password.'</p>
+            <p><strong>Subscription Plan:</strong> '.$getPlanDataById->name.'</p>
+            <p><strong>Created At:</strong> '.now()->format('d M Y, h:i A').'</p>
+
+            <hr>
+
+            <p>No action needed — this is an informational notification.</p>';
+
+            // ✅ User ko uska content
+            try {
+                Notification::route('mail', $user->email)
+                    ->notify(new CommonMailNotification(
+                        'Welcome to Our Portal - Account Created Successfully',
+                        $slot
+                    ));
+            } catch (\Exception $e) {
+                dd('User Mail Error: ' . $e->getMessage());
+            }
+
+            // ✅ Admin ko uska content
+            try {
+                $settings = Setting::first();
+                $adminEmails = $settings->admin_email ?? env('ADMIN_EMAIL');
+                $emails = array_map('trim', explode(',', $adminEmails));
+
+                Notification::route('mail', $emails)
+                    ->notify(new CommonMailNotification(
+                        'New Organization Registered - ' . $organization->organization_name,
+                        $adminSlot
+                    ));
+            } catch (\Exception $e) {
+                dd('Admin Mail Error: ' . $e->getMessage());
+            }
 
         ActivityLogger::log(
             'Create',
