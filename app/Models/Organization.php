@@ -3,8 +3,9 @@
 namespace App\Models;
 use App\Models\User;
 use App\Models\OrganizationSubscriptions;
-
+use Illuminate\Database\Eloquent\Relations\HasManyThrough;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\PhotoDetail;
 
 class Organization extends Model
 {
@@ -34,5 +35,16 @@ class Organization extends Model
     {
         return $this->hasOne(OrganizationSubscriptions::class, 'organization_id', 'id');
     }
+public function photoDetails(): HasManyThrough
+{
+    return $this->hasManyThrough(
+        PhotoDetail::class,
+        User::class,
+        'organization_id', // Foreign key on users table
+        'user_id',         // Foreign key on photo_details table -- confirm this column name
+        'id',              // Local key on organizations table
+        'id'               // Local key on users table
+    );
+}
     
 }

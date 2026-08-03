@@ -27,17 +27,13 @@ class OrganizationController extends Controller
         return view('admin.organization.index');
     }
 
-     public function list(Request $request){
-
-    // $organizations = Organization::where('state', '!=', -1)->orderBy('created_at', 'desc')->get();
-
-     $organizations = Organization::where('state', '!=', -1)
-        ->with('users:id,organization_id,email','subscription.plan') // eager load, sirf zaruri columns
-        ->orderBy('created_at', 'desc')
-        ->get();
-        // dd($organizations);
-
-
+public function list(Request $request){
+    $organizationId = $request->organization_id;
+    $organizations = Organization::where('state', '!=', -1)
+    ->with('users:id,organization_id,email', 'subscription.plan')
+    ->withCount(['users as employee_count', 'photoDetails as photo_count'])
+    ->orderBy('created_at', 'desc')
+    ->get();
 
     return DataTables::of($organizations)
         ->addIndexColumn()
@@ -45,52 +41,63 @@ class OrganizationController extends Controller
             return $organizations->organization_name ?? '--';
         })
         ->addColumn('organization_email', function ($organizations) {
-                return optional($organizations->users->sortBy('created_at')->first())->email ?? '--';
+            return optional($organizations->users->sortBy('created_at')->first())->email ?? '--';
+        })
+        ->addColumn('organization_code', function ($organizations) {
+            return $organizations->organization_name ?? '--';
+        })
+        ->addColumn('plan', function ($organizations) {
+            return $organizations->subscription->plan->name ?? '--';
+        })
+        ->addColumn('limit', function ($organizations) {
+            return $organizations->subscription->monthly_photo_limit ?? '--';
+        })
+        ->addColumn('employee_count', function ($organizations) {
+            $count = $organizations->employee_count ?? 0;
+            $url = route('admin.organizations.employees', [
+                'organization_id' => $organizations->id,
+                'organization_name' => $organizations->organization_name,
+            ]);
+            return '<span class="badge bg-info" style="font-size: 1.2rem; padding: 0.6em 1em; border-radius: 0.5rem; display: inline-block;">
+                <a href="'.$url.'" style="color:#fff;">'.$count.'</a>
+            </span>';
+        })
+        ->addColumn('photo_count', function ($organizations) {
+                $count = $organizations->photo_count ?? 0;
+                $url = route('admin.organizations.photos', [
+                    'organization_id' => $organizations->id,
+                    'organization_name' => $organizations->organization_name,
+                ]);
+                return '<span class="badge bg-info" style="
+                    font-size: 1.2rem; 
+                    padding: 0.6em 1em; 
+                    text-decoration: none; 
+                    border-radius: 0.5rem;
+                    display: inline-block;
+                "><a href="'.$url.'" style="color:#fff;">
+                    '.$count.'
+                </a></span>';
             })
-
-         ->addColumn('organization_code', function ($organizations) {
-            return $organizations->organization_code ?? '--'; // if device is null, show --
-        })
-
-         ->addColumn('plan', function ($organizations) {
-            return $organizations->subscription->plan->name ?? '--'; // if device is null, show --
-        })
-       
-
-         ->addColumn('limit', function ($organizations) {
-            return $organizations->subscription->monthly_photo_limit ?? '--'; // if device is null, show --
-        })
         ->addColumn('status', function ($organizations) {
-                if ($organizations->state == 1) {
-                    return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$organizations->id.'" data-status="0">Active</button>';
-                }
-                if ($organizations->state == 0) {
-                    return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$organizations->id.'" data-status="1">Inactive</button>';
-                    
-                }
-                return '<span class="badge bg-danger">Deleted</span>';
+            if ($organizations->state == 1) {
+                return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$organizations->id.'" data-status="0">Active</button>';
+            }
+            if ($organizations->state == 0) {
+                return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$organizations->id.'" data-status="1">Inactive</button>';
+            }
+            return '<span class="badge bg-danger">Deleted</span>';
         })
-         ->addColumn('organization_created', function ($organizations) {
-            return DateTime::dateFormat($organizations->created_at) ?? '--'; // if device is null, show --
+        ->addColumn('organization_created', function ($organizations) {
+            return DateTime::dateFormat($organizations->created_at) ?? '--';
         })
         ->addColumn('actions', function ($organizations) {
-            // return '<a href="'.route('admin.users.show.data', $organizations->id).'" class="btn btn-sm btn-primary">View</a>
-            //         <a href="'.route('admin.users.edit.data', $organizations->id).'" class="btn btn-sm btn-warning">Edit</a>
-            //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$organizations->id.'">Delete</button>';
-            //  return '
-            //  <a href="'.route('admin.organization.show.data', $organizations->id).'" class="btn btn-sm btn-primary">View</a>
-            //  <a href="'.route('admin.organization.edit.data', $organizations->id).'" class="btn btn-sm btn-warning">Edit</a>
-            //  <button class="btn btn-sm btn-danger delete-user" data-id="'.$organizations->id.'">Delete</button>';
-
-              return '
+            return '
              <a href="'.route('admin.organization.edit.data', $organizations->id).'" class="btn btn-sm btn-warning">Edit</a>
              <button class="btn btn-sm btn-danger delete-user" data-id="'.$organizations->id.'">Delete</button>';
-            
         })
-        ->rawColumns(['status', 'actions'])
+        ->rawColumns(['status', 'actions', 'employee_count', 'photo_count'])
         ->make(true);
-        
-    }
+}
 
     // public function employeeList(Request $request, $organizationId){
     //     // dd($organizationId);

@@ -20,7 +20,10 @@
                         <th>#</th>
                         <th>Organization Name</th>
                         <th>Email Address</th>
-                        <th>Organization Code</th>
+                        <!-- <th>Organization Code</th> -->
+                        <th>Organization Name</th>
+                        <th>Total Employee</th>
+                        <th>Total Photos</th>
                         <th>Current Subscription Plan</th>
                         <th>Monthly Photo Limit</th>
                         <th>Organization Status</th>

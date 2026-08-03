@@ -12,6 +12,10 @@ use App\Helpers\ActivityLogger;
 use Yajra\DataTables\DataTables;
 use App\Models\PhotoDetail;
 use App\Models\PhotoView;
+use App\Models\Organization;
+use App\Notifications\CommonMailNotification;
+use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\URL;
 class OwnerController extends Controller
 {
     public function index()
@@ -122,39 +126,201 @@ class OwnerController extends Controller
         return view('owner.add');
     }
 
-    public function store(Request $request){
-       $id = Auth::user()->id;
-       $org_id =  (int)User::find(Auth::id())->organization_id;
+    // public function store(Request $request){
+    //    $id = Auth::user()->id;
+    //    $org_id =  (int)User::find(Auth::id())->organization_id;
      
+    //     $request->validate([
+    //     'name'   => 'required|string|max:255',
+    //     'email'  => 'required|email|unique:users,email',
+    //     'phone_number' => 'required|numeric|digits_between:10,14',
+    //     ]);
+    //    $user = User::create([
+    //         'name' => $request->name,
+    //         'email' => $request->email,
+    //         'phone_number' => $request->phone_number,
+    //         'state'=> 0,
+    //         'password' => bcrypt('user123'),
+    //         'organization_id'=>$org_id
+    //     ]);
+    //     $user->assignRole('employee');
+    //        $slot = '
+    //         <p>Dear <strong>'.$user->name.'</strong>,</p>
+
+    //         <p>Welcome! Your organization has been created successfully.</p>
+
+    //         <hr>
+
+    //         <h3>Login Details</h3>
+
+    //         <p><strong>Login URL:</strong>
+    //             <a href="'.url('/login').'">'.url('/login').'</a>
+    //         </p>
+
+    //         <p><strong>Username / Email:</strong> '.$user->email.'</p>
+
+    //         <p><strong>Temporary Password:</strong> '.$request->password.'</p>
+
+    //         <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
+
+    //         <p><strong>Organization Code:</strong> '.$organization->organization_code.'</p>
+
+    //         <p><strong>Subscription Plan:</strong> '.$getPlanDataById->name.'</p>
+
+    //         <hr>
+
+    //         <h3>Next Steps</h3>
+
+    //         <ul>
+    //             <li>Log in using the credentials above.</li>
+    //             <li>Change your password after your first login.</li>
+    //             <li>Invite your employees from the dashboard.</li>
+    //             <li>Assign roles and permissions to your employees.</li>
+    //         </ul>
+
+    //         <p>If you have any questions, please contact our support team.</p>';
+    //          try {
+    //             Notification::route('mail', $user->email)
+    //                 ->notify(new CommonMailNotification(
+    //                     'Welcome to Our Portal - Account Created Successfully',
+    //                     $slot
+    //                 ));
+    //         } catch (\Exception $e) {
+    //             dd('User Mail Error: ' . $e->getMessage());
+    //         }
+    //     ActivityLogger::log(
+    //         'Create',
+    //         'Employee',
+    //         'Created new employee: ' . $request->email
+    //     );
+    //     $user->assignRole('employee');
+       
+
+    //     return redirect()->back()->with('success', 'User added successfully!');
+
+    // }
+
+    public function store(Request $request){
+        $org_id =  (int)User::find(Auth::id())->organization_id;
+        $organization = Organization::find($org_id); // ✅ ab organization define hai
+
         $request->validate([
-        'name'   => 'required|string|max:255',
-        'email'  => 'required|email|unique:users,email',
-        'phone_number' => 'required|numeric|digits_between:10,14',
+            'name'   => 'required|string|max:255',
+            'email'  => 'required|email|unique:users,email',
+            'phone_number' => 'required|numeric|digits_between:10,14',
         ]);
-       $user = User::create([
+
+        $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'phone_number' => $request->phone_number,
-            'state'=> 0,
-            'password' => bcrypt('user123'),
-            'organization_id'=>$org_id
+            'state' => 0, // Pending
+            'password' => bcrypt('user123'), // temporary, activation ke baad khud change kar sakta hai
+            'organization_id' => $org_id
         ]);
+
         $user->assignRole('employee');
+
+        // ✅ Signed activation URL banao — 7 din tak valid, tamper-proof
+        $activationUrl = URL::temporarySignedRoute(
+            'owner.employee.activate',
+            now()->addDays(7),
+            ['id' => $user->id]
+        );
+
+        $slot = '
+            <p>Dear <strong>'.$user->name.'</strong>,</p>
+
+            <p>You have been invited to join <strong>'.$organization->organization_name.'</strong> on Photo Proof.</p>
+
+            <hr>
+
+            <h3>Account Details</h3>
+
+            <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
+            <p><strong>Employee Email:</strong> '.$user->email.'</p>
+
+            <hr>
+
+            <h3>Activate Your Account</h3>
+
+            <p>Please click the button below to activate your account:</p>
+
+            <p>
+                <a href="'.$activationUrl.'" style="background:#2563eb;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;">
+                    Activate My Account
+                </a>
+            </p>
+
+            <p>Or copy this link into your browser:<br>'.$activationUrl.'</p>
+
+            <hr>
+
+            <h3>Download the Mobile App</h3>
+
+            <p>If you haven\'t already, download the Photo Proof mobile app:</p>
+            <p><a href="'.config('app.android_app_url', '#').'">Download for Android</a> | <a href="'.config('app.ios_app_url', '#').'">Download for iOS</a></p>
+
+            <hr>
+
+            <p>If you have any questions, please contact your organization admin.</p>';
+
+        try {
+            Notification::route('mail', $user->email)
+                ->notify(new CommonMailNotification(
+                    'You are Invited - Activate Your Account',
+                    $slot
+                ));
+        } catch (\Exception $e) {
+            \Log::error('Employee Invitation Mail Error: ' . $e->getMessage());
+        }
+
         ActivityLogger::log(
             'Create',
             'Employee',
             'Created new employee: ' . $request->email
         );
-        $user->assignRole('employee');
-        return redirect()->back()->with('success', 'User added successfully!');
 
+        return redirect()->back()->with('success', 'Employee invited successfully!');
+    }
+
+    public function activateEmployee(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return view('employee.activation-failed', [
+                'message' => 'Invalid activation link.'
+            ]);
+        }
+
+        if ($user->state == 1) {
+            return view('employee.activation-email', [
+                'message' => 'Your account is already active.',
+                'success' => true
+            ]);
+        }
+
+        $user->state = 1; // ✅ Pending → Active
+        $user->save();
+
+        ActivityLogger::log(
+            'Update',
+            'Employee',
+            'Employee activated account: ' . $user->email
+        );
+
+        return view('employee.activation-email', [
+            'message' => 'Your account has been activated successfully!',
+            'success' => true
+        ]);
     }
 
     public function list(Request $request)
     {
         $id = Auth::user()->id;
         $org_id =  (int)User::find(Auth::id())->organization_id;
-        $users = User::where('state', '!=', -1)->where('organization_id',$org_id)->where('id', '!=', $id)->orderBy('created_at', 'desc')->get();
+        $users = User::where('state', '!=', -1)->withCount('photos')->where('organization_id',$org_id)->where('id', '!=', $id)->orderBy('created_at', 'desc')->get();
         return DataTables::of($users)
         ->addIndexColumn()
         ->addColumn('name', function ($users) {
@@ -165,6 +331,17 @@ class OwnerController extends Controller
         })
         ->addColumn('phone_number', function ($users) {
             return $users->phone_number ?? '--'; // if device is null, show --
+        })
+        ->addColumn('photo_count', function ($user) {
+            return '<span class="badge bg-info" style="
+                  font-size: 1.2rem; 
+                  padding: 0.6em 1em; 
+                  text-decoration: none; 
+                  border-radius: 0.5rem;
+                  display: inline-block;
+              " ><a href="'.route('owner.employee.show.imagedata', $user->id).'" class="badge bg-info">
+             '.$user->photos_count.'
+            </a></span>';
         })
         ->addColumn('status', function ($users) {
                 if ($users->state == 1) {
@@ -184,7 +361,7 @@ class OwnerController extends Controller
                     <button class="btn btn-sm btn-danger delete-user" data-id="'.$users->id.'">Delete</button>';
             
         })
-        ->rawColumns(['status', 'actions'])
+        ->rawColumns(['status','photo_count', 'actions'])
         ->make(true);
         
     }
@@ -480,6 +657,112 @@ class OwnerController extends Controller
         ->rawColumns(['photoViews'])
         ->make(true);
     }  
+
+        public function showImagedatawithid(Request $request,$id){
+            $user = User::findOrFail($request->id);
+            return view('owner.employee.showphotos',compact('user'));
+    }
+
+        public function getUsersWithImageswithId(Request $request, $id)
+    {
+        $users = User::with('photos.uploadTrack')
+            ->when($request->name, function ($query) use ($request) {
+                return $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->when($id, function ($query) use ($id) {
+                return $query->where('id', $id);
+            })
+            ->get();
+        $data = [];
+        $serialNumber = 1;
+
+        foreach ($users as $user) {
+            foreach ($user->photos as $photo) {
+
+                $track = $photo->uploadTrack;
+
+                $data[] = [
+                    'name'=>$user->name,
+                    'created_at'=>DateTime::dateFormat($photo->created_at),
+                    'email'=>$user->email,
+                    'random_id' => $photo->random_id,
+                    'serial_number' => $serialNumber++,
+                    'photo_id' => $photo->id,
+                    'user_email' => $user->email,
+                    'view_count' => $photo->view_count ?? 0,
+                    'image' => $photo->photo ? asset('storage/' . $photo->photo) : '',
+                    'date_time' => DateTime::dateFormat($photo->word_api_date_time) ?? '',
+                    'location' => $photo->location ?? '',
+                    // 'country' => isset($photo->country) ? $photo->country : (isset($track->country) ? $track->country : ''),
+                    // 'region' => isset($photo->region_name) ? $photo->region_name : (isset($track->region_name) ? $track->region_name : ''),
+                    // 'city' => isset($photo->city) ? $photo->city : (isset($track->city) ? $track->city : ''),
+                    // 'zip' => isset($photo->zip) ? $photo->zip : (isset($track->zip) ? $track->zip : ''),
+                    'timezone' => isset($photo->timezone) ? $photo->timezone : (isset($track->timezone) ? $track->timezone : ''),
+                    'latitude' => isset($photo->latitude) 
+                        ? number_format($photo->latitude, 8, '.', '') 
+                        : (isset($track->latitude) ? number_format($track->latitude, 8, '.', '') : null),
+
+                    'longitude' => isset($photo->longitude) 
+                        ? number_format($photo->longitude, 8, '.', '') 
+                        : (isset($track->longitude) ? number_format($track->longitude, 8, '.', '') : null),
+                    'ip_address' => $track->ip_address ?? '',
+                    'device_type' => $photo->device_type ?? '',
+                    'device_brand' => $photo->device_brand ?? '',
+                    'device_model' => $photo->device_model ?? '',
+                    'device_name' => $photo->device_name ?? '',
+                    'device_manufacturer' => $photo->device_manufacturer ?? '',
+                    'android_version' => $photo->android_version ?? '',
+                    'android_sdk' => $photo->android_sdk ?? '',
+                    'ios_system_version' => $photo->ios_system_version ?? '',
+                    'ios_identifier' => $photo->ios_identifier ?? '',
+                    'isp' => $track->isp ?? '',
+                    'state' => $photo->state ?? '',
+                    
+                ];
+            }
+        }
+
+       return DataTables::of($data)
+            ->addColumn('images', function ($row) {
+                 $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                // return $row['image']
+                //     ? '<img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">'
+                //     :  $default;
+                  return '<a href="'.route('owner.photos.show', $row['photo_id']).'">
+                        <img src="'.$row['image'].'" width="80" height="80" style="border-radius:5px;">
+                    </a>';
+    //             return $row['image']
+    // ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
+    //         <img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">
+    //    </button>'
+    // : 'No Image';
+            })
+            ->addColumn('view_count', function ($row) {
+                return '<span class="badge bg-info" style="
+                        font-size: 1.2rem; 
+                        padding: 0.6em 1em; 
+                        text-decoration: none; 
+                        border-radius: 0.5rem;
+                        display: inline-block;
+                    "><a href="'.route('owner.photos.show',  $row['photo_id']).'" class="badge bg-info">
+                    '.$row['view_count'].'
+                    </a></span>';
+            })
+            ->addColumn('action', function ($row) {
+                return '<button class="btn btn-sm btn-primary viewTrackBtn">View Track</button>';
+            })
+            ->addColumn('status', function ($row) {
+            if ($row['state'] == 1) {
+                    return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$row['photo_id'].'" data-state="0">Active</button>';
+            }
+            if ($row['state'] == 0) {
+                    return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$row['photo_id'].'" data-state="1">Inactive</button>';
+                    
+            }
+            })
+            ->rawColumns(['images', 'action', 'view_count','status']) // 👈 FIX HERE
+            ->make(true);
+        }
 
 
 

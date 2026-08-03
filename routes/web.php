@@ -12,6 +12,8 @@ use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\PhotoNotificationController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\PlanController;
+use Illuminate\Support\Facades\URL;
+
 Route::get('/', function () {
     return redirect()->route('photo.search.form');
 });
@@ -102,7 +104,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/notificationList/list', [PhotoNotificationController::class, 'list']);
         Route::post('/notifications/unread-count/{id}', [PhotoNotificationController::class,'unreadCount']);
         
+       Route::view('admin/organization/employees', 'admin.organization.employees')
+    ->name('admin.organizations.employees');
 
+    Route::view('admin/organization/photos', 'admin.organization.photos')
+    ->name('admin.organizations.photos');
         
         
         
@@ -165,6 +171,10 @@ Route::middleware(['auth:web', 'role:owner'])->prefix('owner')->name('owner.')->
     Route::get('/photos/show/{id}', [OwnerController::class, 'show'])->name('photos.show');
     Route::get('/photos/showdata/{id}', [OwnerController::class, 'showdata'])->name('photos.showdata');
     Route::get('/photos/update/data', [OwnerController::class, 'updatephotoStatus'])->name('photos.update.status');
+    Route::get('/employee/activate/{id}', [OwnerController::class, 'activateEmployee'])->name('employee.activate')->middleware('signed');
+    Route::get('/employee/show/imagedata/{id}', [OwnerController::class, 'showImagedatawithid'])->name('employee.show.imagedata');
+    Route::get('/fetch/employee/images/{userId}', [OwnerController::class, 'getUsersWithImageswithId'])->name('employee.images.by.id');
+   
 
 
     
