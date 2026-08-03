@@ -922,8 +922,8 @@ $(document).ready(function() {
         ],
          columnDefs: [
             {
-                targets: 1,
-                visible: notificationType !== 'Contact us'
+                targets: 2,
+                visible: notificationType != 'Contact us'
             }
         ]
 
