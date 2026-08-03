@@ -32,7 +32,7 @@
                  <div class="card-body row">
                   <div class="form-group col-md-4">
                     <label for="organization_name">Organization Name <span class="text-danger">*</span></label>
-                    <input type="text" name="organization_name" class="form-control" id="organization_name" placeholder="Enter Organization Name" value="{{ old('organization_name') }}">
+                    <input type="text" name="organization_name" class="form-control" id="organization_name" placeholder="Enter Organization Name" value="{{ old('organization_name', request('name')) }}">
                   </div>
                   <div class="form-group col-md-4">
                     <label for="business_type">Business Type <span class="text-danger"></span></label>
@@ -44,7 +44,7 @@
                   </div>
                   <div class="form-group col-md-4">
                     <label for="organization_email"> Email Address <span class="text-danger">*</span></label>
-                    <input type="email" name="organization_email" class="form-control" id="organization_email" placeholder="Enter Email" value="{{ old('organization_email') }}">
+                    <input type="email" name="organization_email" class="form-control" id="organization_email" placeholder="Enter Email" value="{{ old('organization_email',request('email')) }}">
                   </div>
 
                    <div class="form-group col-md-4">

@@ -76,8 +76,12 @@ class OrganizationController extends Controller
             // return '<a href="'.route('admin.users.show.data', $organizations->id).'" class="btn btn-sm btn-primary">View</a>
             //         <a href="'.route('admin.users.edit.data', $organizations->id).'" class="btn btn-sm btn-warning">Edit</a>
             //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$organizations->id.'">Delete</button>';
-             return '
-             <a href="'.route('admin.organization.show.data', $organizations->id).'" class="btn btn-sm btn-primary">View</a>
+            //  return '
+            //  <a href="'.route('admin.organization.show.data', $organizations->id).'" class="btn btn-sm btn-primary">View</a>
+            //  <a href="'.route('admin.organization.edit.data', $organizations->id).'" class="btn btn-sm btn-warning">Edit</a>
+            //  <button class="btn btn-sm btn-danger delete-user" data-id="'.$organizations->id.'">Delete</button>';
+
+              return '
              <a href="'.route('admin.organization.edit.data', $organizations->id).'" class="btn btn-sm btn-warning">Edit</a>
              <button class="btn btn-sm btn-danger delete-user" data-id="'.$organizations->id.'">Delete</button>';
             
@@ -86,6 +90,42 @@ class OrganizationController extends Controller
         ->make(true);
         
     }
+
+    // public function employeeList(Request $request, $organizationId){
+    //     // dd($organizationId);
+    //     $users = User::where('state', '!=', -1)->where('organization_id',$organizationId)->orderBy('created_at', 'desc')->get();
+    //     return DataTables::of($users)
+    //     ->addIndexColumn()
+    //     ->addColumn('name', function ($users) {
+    //         return $users->name ?? '--'; // if device is null, show --
+    //     })
+    //     ->addColumn('email', function ($users) {
+    //         return $users->email ?? '--'; // if device is null, show --
+    //     })
+    //     ->addColumn('phone_number', function ($users) {
+    //         return $users->phone_number ?? '--'; // if device is null, show --
+    //     })
+    //     ->addColumn('status', function ($users) {
+    //             if ($users->state == 1) {
+    //                 return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$users->id.'" data-status="0">Active</button>';
+    //             }
+    //             if ($users->state == 0) {
+    //                 return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$users->id.'" data-status="1">Pending</button>';
+                    
+    //             }
+    //             return '<span class="badge bg-danger">Deleted</span>';
+    //     })
+    //     ->addColumn('actions', function ($users) {
+    //         // return '<a href="'.route('admin.users.show.data', $admins->id).'" class="btn btn-sm btn-primary">View</a>
+    //         //         <a href="'.route('admin.users.edit.data', $admins->id).'" class="btn btn-sm btn-warning">Edit</a>
+    //         //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$admins->id.'">Delete</button>';
+    //          return '<a href="'.route('owner.employee.edit.data', $users->id).'" class="btn btn-sm btn-warning">Edit</a>
+    //                 <button class="btn btn-sm btn-danger delete-user" data-id="'.$users->id.'">Delete</button>';
+            
+    //     })
+    //     ->rawColumns(['status', 'actions'])
+    //     ->make(true);
+    // }
 
     public function create(){
         $allPlans = Subscriptionplans::all();

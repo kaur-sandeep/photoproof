@@ -99,7 +99,13 @@ class UserController extends Controller
 
 
     public function list(Request $request){
-    $users = User::with('photos.uploadTrack')->withCount('photos')->where('state','!=',-1)->orderBy('created_at', 'desc')->get();
+    // $users = User::with('photos.uploadTrack')->withCount('photos')->where('state','!=',-1)->orderBy('created_at', 'desc')->get();
+
+     $users = User::with('organization:id,organization_name')
+        ->withCount('photos')
+        ->where('state', '!=', -1)
+        ->orderBy('created_at', 'desc')
+        ->get();
   
 
 return DataTables::of($users)
@@ -129,6 +135,9 @@ return DataTables::of($users)
         return $user->device_type == 'android' ? 'Android' :
             ($user->device_type == 'ios' ? 'IOS' : '--');
     })
+     ->addColumn('Org_name', function ($user) {
+            return $user->organization ? $user->organization->organization_name : '--';
+        })
     // ->addColumn('timezone', function ($user) {
     //         return $user->timezone ?? '--';
        
@@ -153,7 +162,8 @@ return DataTables::of($users)
                     return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$user->id.'" data-status="1">Inactive</button>';
                     
                 }
-                return '<span class="badge bg-danger">Deleted</span>';
+                
+                return '<button class="btn btn-sm btn-warning">Pending</button>';
         })
         ->addColumn('actions', function ($user) {
             // return '<a href="'.route('admin.users.show.data', $admins->id).'" class="btn btn-sm btn-primary">View</a>

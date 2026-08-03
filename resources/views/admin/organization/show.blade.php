@@ -30,4 +30,9 @@
     </div>
 
 </div>
+
+<script>
+     window.ORGANIZATION_ID = {{ $organization->id }};
+</script>
+       
 @endsection

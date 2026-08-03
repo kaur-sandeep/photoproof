@@ -28,6 +28,7 @@
                         <th>Zip</th>
                         <!-- <th>Phone</th> -->
                         <th>Device</th>
+                        <th>Organization</th>
                         <!-- <th>Time Zone</th> -->
                         <th>Registered On</th>
                         <th>Photos</th>

@@ -45,6 +45,7 @@ $(document).ready(function() {
             { data: 'zip', name: 'zip' },
             // { data: 'phone_number', name: 'phone_number' },
             { data: 'device', name: 'device'},
+            { data: 'Org_name', name: 'Org_name'},
             // { data: 'timezone', name: 'timezone'},
             { data: 'created_at', name: 'created_at'},
             { data: 'photo_count', name: 'photo_count', orderable: false, searchable: false },
@@ -811,7 +812,7 @@ $(document).ready(function() {
     let table = $('#organizationemployeesList').DataTable({
         processing: true,
         serverSide: true,
-        ajax: window.APP_URL + '/organization/employee/list/',  // Ensure this URL is correct
+        ajax: window.APP_URL + '/admin/organization/employee/list/' +  window.ORGANIZATION_ID,  // Ensure this URL is correct
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
