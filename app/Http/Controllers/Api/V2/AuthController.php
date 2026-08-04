@@ -1124,7 +1124,7 @@ public function forgotPassword(Request $request)
         Notifications::create([
             'photo_random_id' => $user->id,
             'organization_id' => $user->organization_id,
-            'name' => $user->name,
+            'name' => $user->name ?? 'User',
             'email' => $user->email,
             'type'=>'upload photo',
             'data' => $data, 
@@ -1246,6 +1246,51 @@ public function forgotPassword(Request $request)
             return response()->json([
                 'status' => true,
                 'message' => 'Account deleted successfully.'
+            ]);
+        }
+
+        public function getUserProfile(Request $request)
+        {
+            $user = $request->user();
+
+            $organization = Organization::find($user->organization_id);
+
+            $subscription = null;
+
+            if ($organization) {
+                $subscription = OrganizationSubscriptions::with('plan')
+                    ->where('organization_id', $organization->id)
+                    ->where('state', 1)
+                    ->where('starts_at', '<=', now())
+                    ->where('expires_at', '>=', now())
+                    ->first();
+            }
+
+            return response()->json([
+                'status' => true,
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'mobile' => $user->mobile,
+                    'user_types' => $user->getRoleNames(),
+                    'profile_image' => $user->profile_image
+                        ? asset('storage/' . $user->profile_image)
+                        : null,
+                ],
+
+                'organization' => $organization ? [
+                    'id' => $organization->id,
+                    'organization_name' => $organization->organization_name,
+                    'organization_code' => $organization->organization_code,
+                ] : null,
+
+                'subscription' => $subscription ? [
+                    'plan_name' => optional($subscription->plan)->name,
+                    'photo_limit' => $subscription->monthly_photo_limit,
+                    'photo_used' => $subscription->monthly_photo_used,
+                    'expires_at' => $subscription->expires_at,
+                ] : null,
             ]);
         }
 
