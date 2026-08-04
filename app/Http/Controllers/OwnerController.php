@@ -426,7 +426,7 @@ class OwnerController extends Controller
             );
         }
 
-        return redirect()->back()->with('success', 'Admin User Updated Successfully!');
+        return redirect()->back()->with('success', 'User Updated Successfully!');
     }
 
     public function updateStatus(Request $request)
