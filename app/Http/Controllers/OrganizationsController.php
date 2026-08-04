@@ -165,7 +165,7 @@ class OrganizationsController extends Controller
         }
 
        $slot = '
-            <p>Dear <strong>'.$user->name.'</strong>,</p>
+            <p>Dear <strong>' . ($user->name ?? 'User') . '</strong>,</p>
 
             <p>Welcome! Your organization has been created successfully.</p>
 
@@ -215,9 +215,7 @@ class OrganizationsController extends Controller
             <p><strong>Temporary Password:</strong> '.$request->password.'</p>
             <p><strong>Created At:</strong> '.now()->format('d M Y, h:i A').'</p>
 
-            <hr>
-
-            <p>No action needed — this is an informational notification.</p>';
+            <hr>';
 
             // ✅ User ko uska content
             try {
@@ -251,7 +249,7 @@ class OrganizationsController extends Controller
             'Created new organization: ' . $request->organization_name
         );
 
-        return redirect()->back()->with('success', 'Organization added successfully!');
+        return redirect()->back()->with('success', 'Your organization registration request has been submitted successfully. It is currently pending approval. Our administrator will contact you shortly.');
     }
 
 }

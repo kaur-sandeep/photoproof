@@ -275,7 +275,7 @@ public function list(Request $request){
         }
 
                 $slot = '
-            <p>Dear <strong>'.$user->name.'</strong>,</p>
+            <p>Dear <strong>' . ($user->name ?? 'User') . '</strong>,</p>
 
             <p>Welcome! Your organization has been created successfully.</p>
 
@@ -328,9 +328,7 @@ public function list(Request $request){
             <p><strong>Subscription Plan:</strong> '.$getPlanDataById->name.'</p>
             <p><strong>Created At:</strong> '.now()->format('d M Y, h:i A').'</p>
 
-            <hr>
-
-            <p>No action needed — this is an informational notification.</p>';
+            <hr>';
 
             // ✅ User ko uska content
             try {

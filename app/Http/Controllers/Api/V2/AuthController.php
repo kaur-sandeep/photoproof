@@ -489,6 +489,9 @@ class AuthController extends Controller
     if ($request->filled('location')) {
         $query->where('location', 'LIKE', "%" . $request->location . "%");
     }
+    if ($request->filled('date')) {
+        $query->whereDate('created_at', $request->date);
+    }
 
     /*
     |--------------------------------------------------------------------------
