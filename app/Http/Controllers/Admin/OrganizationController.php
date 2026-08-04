@@ -44,7 +44,7 @@ public function list(Request $request){
             return optional($organizations->users->sortBy('created_at')->first())->email ?? '--';
         })
         ->addColumn('organization_code', function ($organizations) {
-            return $organizations->organization_name ?? '--';
+            return 'org_'.$organizations->id ?? '--';
         })
         ->addColumn('plan', function ($organizations) {
             return $organizations->subscription->plan->name ?? '--';

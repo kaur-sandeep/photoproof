@@ -21,6 +21,8 @@ use App\Http\Controllers\Api\V2\InstallController;
         Route::post('/employee/upload-photo', [AuthController::class, 'employeeUploadPhoto']);
          Route::get('/photos', [AuthController::class, 'getPhotos']);
          Route::post('/logout', [AuthController::class, 'logout']);
+         Route::get('/cities', [AuthController::class, 'getCities']);
+         Route::post('/delete-account', [AuthController::class, 'deleteAccount']);
     });
     
 // });

@@ -453,9 +453,16 @@ class AuthController extends Controller
     | 2️⃣ Logged-in user data with LIKE search + filters
     |--------------------------------------------------------------------------
     */
+       
+        $query = PhotoDetail::where('state', 1);
 
-    $query = PhotoDetail::where('state', 1)
-                ->where('user_id', $user->id);
+        if ($user->hasRole('owner')) {
+            $query->where('organization_id', $user->organization_id);
+        } else {
+            $query->where('user_id', $user->id);
+        }
+   
+               
 
     /*
     |--------------------------------------------------------------------------
@@ -656,7 +663,7 @@ public function forgotPassword(Request $request)
                 'message' => 'Employee not found.'
             ],404);
         }
-     
+
         // 3. Check Employee Role
         if (!$user->hasAnyRole(['employee','owner'])) {
             return response()->json([
@@ -846,15 +853,22 @@ public function forgotPassword(Request $request)
             }
 
             // Get active subscription
-            $subscription = OrganizationSubscriptions::where(
-                'organization_id',
-                $organization->id
-                )
-                ->where('state',1)
-                ->where('starts_at','<=',now())
-                ->where('expires_at','>=',now())
-                ->first();
+            // $subscription = OrganizationSubscriptions::where(
+            //     'organization_id',
+            //     $organization->id
+            //     )
+            //     ->where('state',1)
+            //     ->where('starts_at','<=',now())
+            //     ->where('expires_at','>=',now())
+            //     ->first();
 
+            $subscription = OrganizationSubscriptions::with('plan')
+            ->where('organization_id', $organization->id)
+            ->where('state', 1)
+            ->where('starts_at', '<=', now())
+            ->where('expires_at', '>=', now())
+            ->first();
+         
             if (!$subscription){
 
                 return response()->json([
@@ -862,7 +876,7 @@ public function forgotPassword(Request $request)
                 ],403);
 
             }
-
+            
             $EmployeeOtp->update([
                 'verified_at' => now(),
             ]);
@@ -880,7 +894,7 @@ public function forgotPassword(Request $request)
 
             // Create new Sanctum token
             $token = $user->createToken('organization-app')->plainTextToken;
-
+            
             return response()->json([
                 'status' => true,
                 'message' => 'OTP verified successfully.',
@@ -891,6 +905,10 @@ public function forgotPassword(Request $request)
                     'name' => $user->name,
                     'email' => $user->email,
                     'mobile' => $user->mobile,
+                    'user_types' => $user->getRoleNames(),
+                     'profile_image' => $user->profile_image
+                                    ? asset('storage/' . $user->profile_image)
+                                    : null,
                 ],
 
                 'organization' => [
@@ -899,12 +917,12 @@ public function forgotPassword(Request $request)
                     'organization_code' => $organization->organization_code,
                 ],
 
-                // 'subscription' => [
-                //     'plan_id' => $subscription->subscription_plan_id,
-                //     'photo_limit' => $subscription->photo_limit,
-                //     'photo_used' => $subscription->photo_used,
-                //     'expires_at' => $subscription->expires_at,
-                // ]
+                'subscription' => [
+                    'plan_name' => optional($subscription->plan)->name,
+                    'photo_limit' => $subscription->monthly_photo_limit,
+                    'photo_used' => $subscription->monthly_photo_used,
+                    'expires_at' => $subscription->expires_at,
+                ]
             ]);
         }
 
@@ -930,7 +948,7 @@ public function forgotPassword(Request $request)
                 'message' => 'Employee account is inactive.'
             ], 403);
         }
-
+     
        if (!$user->hasAnyRole(['employee','owner'])) {
             return response()->json([
                 'message'=>'Unauthorized.'
@@ -1167,13 +1185,65 @@ public function forgotPassword(Request $request)
             ));
         }
         //end
-
+           $subscription = OrganizationSubscriptions::with('plan')
+            ->where('organization_id', $organization->id)
+            ->where('state', 1)
+            ->where('starts_at', '<=', now())
+            ->where('expires_at', '>=', now())
+            ->first();
         return response()->json([
             'status' => true,
             'message' => 'Photo uploaded successfully',
-            'photo' => $photo
+            'photo' => $photo,
+           'subscription' => [
+                    'plan_name' => optional($subscription->plan)->name,
+                    'photo_limit' => $subscription->monthly_photo_limit,
+                    'photo_used' => $subscription->monthly_photo_used,
+                    'expires_at' => $subscription->expires_at,
+                ]
         ]);
     }
 
+    public function getCities(Request $request)
+    {
+        $user = $request->user();
+
+        $query = PhotoDetail::query();
+
+        if ($user->hasRole('owner')) {
+            $query->where('organization_id', $user->organization_id);
+        } else {
+            $query->where('user_id', $user->id);
+        }
+
+        $cities = $query->whereNotNull('city')
+            ->where('city', '!=', '')
+            ->select('city')
+            ->distinct()
+            ->orderBy('city')
+            ->pluck('city');
+
+        return response()->json([
+            'status' => true,
+            'cities' => $cities,
+        ]);
+    }
+
+       public function deleteAccount(Request $request)
+        {
+            $user = $request->user();
+            $user->update([
+                'state' => -1,
+                'device_id' => null,
+            ]);
+
+            // Revoke all login tokens
+            $user->tokens()->delete();
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Account deleted successfully.'
+            ]);
+        }
 
 }

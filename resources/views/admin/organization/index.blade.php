@@ -17,17 +17,17 @@
             <table id="organizationList" class="table table-bordered table-striped">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <!-- <th>#</th> -->
+                         <th>#</th>
                         <th>Organization Name</th>
                         <th>Email Address</th>
+                        <th>Current Plan Name</th>
+                         <th>Monthly Photo Limit</th>
                         <!-- <th>Organization Code</th> -->
-                        <th>Organization Name</th>
                         <th>Total Employee</th>
                         <th>Total Photos</th>
-                        <th>Current Subscription Plan</th>
-                        <th>Monthly Photo Limit</th>
-                        <th>Organization Status</th>
-                        <th>Creation Date</th>
+                        <th>Created at</th>
+                         <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

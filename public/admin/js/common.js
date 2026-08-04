@@ -806,17 +806,17 @@ $(document).ready(function() {
         ajax: window.APP_URL + '/admin/organizations/list/',  // Ensure this URL is correct
 
         columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            // { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            { data: 'organization_code', name: 'organization_code' },
             { data: 'organization_name', name: 'organization_name' },
             { data: 'organization_email', name: 'organization_email' },
             // { data: 'organization_code', name: 'organization_code' },
-            { data: 'organization_name', name: 'organization_name' },
+             { data: 'plan', name: 'plan' },
+              { data: 'limit', name: 'limit'},
             { data: 'employee_count', name: 'employee_count' },
             { data: 'photo_count', name: 'photo_count' },
-            { data: 'plan', name: 'plan' },
-            { data: 'limit', name: 'limit'},
-            { data: 'status', name: 'status', orderable: false, searchable: false },
             { data: 'organization_created', name: 'organization_created', orderable: false, searchable: false },
+             { data: 'status', name: 'status', orderable: false, searchable: false },
             { data: 'actions', name: 'actions', orderable: false, searchable: false }
         ]
     });
