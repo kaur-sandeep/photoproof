@@ -691,41 +691,88 @@ public function updateOrganization(Request $request, $id)
     }
 }
 
+    // public function updateStatus(Request $request)
+    // {
+    //     $request->validate([
+    //         'id' => 'required',
+    //         'status' => 'required|in:-1,0,1'
+    //     ]);
+
+    //     $organization = Organization::findOrFail($request->id);
+    //     if ($request->status == 1 && !$organization->plan) {
+    //     return response()->json([
+    //         'success' => false,
+    //         'message' => 'Please assign a plan to this organization before activating it.'
+    //     ]);
+    //     }
+
+    //     // ✅ Get old status before update
+    //     $oldStatus = $organization->state;
+
+    //     // ✅ Update status
+    //     $organization->state = $request->status;
+    //     $organization->save();
+
+    //     // ✅ Convert status to readable text
+    //     $statusText = [
+    //         -1 => 'Deleted',
+    //         0  => 'Inactive',
+    //         1  => 'Active',
+    //     ];
+
+    //     // ✅ Activity Log
+    //     ActivityLogger::log(
+    //         'Update',
+    //         'Organizations',
+    //         'Changed status of ' . $organization->organization_name .
+    //         ' from ' . ($statusText[$oldStatus] ?? $oldStatus) .
+    //         ' to ' . ($statusText[$request->status] ?? $request->status)
+    //     );
+
+    //     return response()->json([
+    //         'success' => true,
+    //         'message' => 'Organization status updated successfully'
+    //     ]);
+    // }
+
     public function updateStatus(Request $request)
-    {
-        $request->validate([
-            'id' => 'required',
-            'status' => 'required|in:-1,0,1'
-        ]);
+{
+    $request->validate([
+        'id' => 'required',
+        'status' => 'required|in:-1,0,1'
+    ]);
 
-        $organization = Organization::findOrFail($request->id);
+    $organization = Organization::findOrFail($request->id);
 
-        // ✅ Get old status before update
-        $oldStatus = $organization->state;
-
-        // ✅ Update status
-        $organization->state = $request->status;
-        $organization->save();
-
-        // ✅ Convert status to readable text
-        $statusText = [
-            -1 => 'Deleted',
-            0  => 'Inactive',
-            1  => 'Active',
-        ];
-
-        // ✅ Activity Log
-        ActivityLogger::log(
-            'Update',
-            'Organizations',
-            'Changed status of ' . $organization->organization_name .
-            ' from ' . ($statusText[$oldStatus] ?? $oldStatus) .
-            ' to ' . ($statusText[$request->status] ?? $request->status)
-        );
-
+    // ✅ Fixed: 'plan' relation exist nahi karti, 'subscription' hai
+    if ($request->status == 1 && !$organization->subscription) {
         return response()->json([
-            'success' => true,
-            'message' => 'Organization status updated successfully'
+            'success' => false,
+            'message' => 'Please assign a plan to this organization before activating it.'
         ]);
     }
+
+    $oldStatus = $organization->state;
+    $organization->state = $request->status;
+    $organization->save();
+
+    $statusText = [
+        -1 => 'Deleted',
+        0  => 'Inactive',
+        1  => 'Active',
+    ];
+
+    ActivityLogger::log(
+        'Update',
+        'Organizations',
+        'Changed status of ' . $organization->organization_name .
+        ' from ' . ($statusText[$oldStatus] ?? $oldStatus) .
+        ' to ' . ($statusText[$request->status] ?? $request->status)
+    );
+
+    return response()->json([
+        'success' => true,
+        'message' => 'Organization status updated successfully'
+    ]);
+}
 }

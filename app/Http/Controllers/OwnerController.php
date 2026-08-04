@@ -16,6 +16,7 @@ use App\Models\Organization;
 use App\Notifications\CommonMailNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
+use Carbon\Carbon;
 class OwnerController extends Controller
 {
     public function index()
@@ -24,9 +25,25 @@ class OwnerController extends Controller
         $org_id =  (int)User::find(Auth::id())->organization_id;
         $users = User::where('state', '!=', -1)->where('organization_id',$org_id)->where('id', '!=', $id)->orderBy('created_at', 'desc')->get();
         $total_employees = count($users);
+        $totalPhotos = PhotoDetail::whereHas('user', function ($query) use ($org_id) {
+            $query->where('organization_id', $org_id)
+                ->where('state', '!=', -1);
+        })->count();
+
+        $monthlyPhotos = PhotoDetail::whereHas('user', function ($query) use ($org_id) {
+         $query->where('organization_id', $org_id)
+          ->where('state', '!=', -1);
+        })
+        ->whereMonth('created_at', Carbon::now()->month)
+        ->whereYear('created_at', Carbon::now()->year)
+        ->count();
+        
+        $org = Organization::with('subscription')->find($org_id);
+        $monthlyPhotoLimit = $org->subscription->monthly_photo_limit;
+        $remainingPhotos = max(0, $monthlyPhotoLimit - $monthlyPhotos);
 
         // dd(Auth::user()->getRoleNames());
-         return view('owner.dashboard',compact('total_employees'));
+         return view('owner.dashboard',compact('total_employees','totalPhotos','monthlyPhotoLimit','remainingPhotos','monthlyPhotos'));
     }
 
     public function ownerLogout(Request $request)
@@ -295,7 +312,7 @@ class OwnerController extends Controller
         }
 
         if ($user->state == 1) {
-            return view('employee.activation-email', [
+            return view('owner.employee.activation-email', [
                 'message' => 'Your account is already active.',
                 'success' => true
             ]);
@@ -310,7 +327,7 @@ class OwnerController extends Controller
             'Employee activated account: ' . $user->email
         );
 
-        return view('employee.activation-email', [
+        return view('owner.employee.activation-email', [
             'message' => 'Your account has been activated successfully!',
             'success' => true
         ]);

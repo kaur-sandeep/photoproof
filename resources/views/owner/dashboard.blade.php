@@ -26,8 +26,8 @@
             <div class="card text-bg-success">
                  <a href="{{ route('admin.photos') }}" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
-                    <h5>Total Photos Uploaded </h5>
-                  <p>0</p>
+                    <h5> Total Photos Uploaded </h5>
+                     <h3>{{$totalPhotos}}</h3>
                 </div>
                 </a>
             </div>
@@ -38,7 +38,7 @@
                 <a href="#" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Monthly Photo Usage</h5>
-                  <p>0</p>
+                   <h3>{{ $monthlyPhotos }} / {{ $monthlyPhotoLimit }}</h3>
                 </div>
             </a>
             </div>

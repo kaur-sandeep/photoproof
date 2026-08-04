@@ -22,7 +22,7 @@
                         <th>Employee Email</th>
                         <th>Employee Phone</th>
                         <th>Photos</th>
->                        <th>Status</th>
+                        <th>Status</th>
                         <th>Actions</th>
                     </tr>
                 </thead>

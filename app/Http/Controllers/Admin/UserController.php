@@ -560,7 +560,10 @@ class UserController extends Controller
 
 public function list(Request $request){
 
-    $users = User::with('organization:id,organization_name')
+    $users = $users = User::with([
+    'organization:id,organization_name',
+    'roles:id,name',
+])
         ->withCount('photos')
         ->where('state', '!=', -1)
         ->when($request->filled('organization_id'), function ($query) use ($request) {
@@ -589,6 +592,9 @@ public function list(Request $request){
         })
         ->addColumn('Org_name', function ($user) {
             return $user->organization ? $user->organization->organization_name : '--';
+        })
+          ->addColumn('role', function ($user) {
+            return $user->getRoleNames()->first() ?: '--';
         })
         ->addColumn('created_at', fn($user) => DateTime::dateFormat($user->created_at) ?? '--')
         ->addColumn('photo_count', function ($user) {
