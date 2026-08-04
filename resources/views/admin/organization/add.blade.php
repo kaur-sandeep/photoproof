@@ -9,11 +9,11 @@
         <h3 class="card-title"><b>Add Organization User </b></h3>
     </div>
     <div class="row">
-  @if(session('success'))
-    <div class="alert alert-success">
-        {{ session('success') }}
-    </div>
-@endif
+          @if(session('success'))
+            <div class="alert alert-success">
+                {{ session('success') }}
+            </div>
+        @endif
 
          @if ($errors->any())
             <div class="alert alert-danger">

@@ -46,7 +46,7 @@
             <li class="nav-item">
                 <a href="{{ route('owner.notifications', ['notification_type' => 'upload photo']) }}"
                 class="nav-link text-white">
-                    <i class="bi bi-images me-2"></i>
+                    <i class="bi bi-bell me-2"></i>
                     Notifications
                 </a>
             </li>
