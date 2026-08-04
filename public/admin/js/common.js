@@ -922,73 +922,6 @@ $(document).on('click', '.notificationRow', function () {
 setInterval(fetchNotifications, 15000);
 });
 
-
-$(document).ready(function() {
-
-// Fetch notifications and update modal
-function fetchownerNotifications() {
-    $.ajax({
-        url: window.APP_URL + '/admin/notifications/unread',
-        type: 'GET',
-        success: function(data) {
-            // Update badge count
-            let count = data.length;
-            if(count > 0) {
-                $('#ownernotificationCount').text(count).show();
-            } else {
-                $('#notificationCount').hide();
-            }
-
-            // Build modal content
-            if(data.length === 0) {
-                $('#ownernotificationModalBody').html('<p>No new notifications.</p>');
-            } else {
-                let html = '<ul class="list-group">';
-                data.forEach(function(item) {
-                    html += `
-                        <li class="list-group-item notificationRow d-flex justify-content-between align-items-start bg-light" 
-                            data-id="${item.id}" style="cursor: pointer;">
-                            <div class="notification-text">
-                                <b>${item.name}</b><br>
-                                <small>${toTitleCase(item.type)}</small><br>
-                                <small class="text-muted">${item.created_at_formatted}</small>
-                            </div>
-                        </li>
-                    `;
-                });
-                html += '</ul>';
-                $('#ownernotificationModalBody').html(html);
-            }
-        },
-        error: function() {
-            $('#notificationModalBody').html('<p class="text-danger">Failed to load notifications.</p>');
-        }
-    });
-}
-
-
-// Call once on page load to show count
-fetchownerNotifications();
-
-// When bell icon is clicked, fetch notifications and show modal
-$('#ownernotificationBell').on('click', function() {
-    fetchNotifications();
-
-    // Show Bootstrap modal
-    var notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
-    notificationModal.show();
-});
-
-// Mark notification as read when clicking on row
-$(document).on('click', '.notificationRow', function () {
-    window.location.href = window.APP_URL + '/admin/notifications';
-});
-
-// Optional: auto-refresh badge count every 15 seconds
-setInterval(fetchownerNotifications, 15000);
-});
-
-
 $(document).ready(function() {
 
     $(document).on('click', '.notification-item', function() {
@@ -1029,6 +962,214 @@ $(document).ready(function() {
     });
 
 });
+
+// $(document).ready(function() {
+
+// // Fetch notifications and update modal
+// function fetchownerNotifications() {
+//     $.ajax({
+//         url: window.APP_URL + '/admin/notifications/unread',
+//         type: 'GET',
+//         success: function(data) {
+//             // Update badge count
+//             let count = data.length;
+//             if(count > 0) {
+//                 $('#ownernotificationCount').text(count).show();
+//             } else {
+//                 $('#notificationCount').hide();
+//             }
+
+//             // Build modal content
+//             if(data.length === 0) {
+//                 $('#ownernotificationModalBody').html('<p>No new notifications.</p>');
+//             } else {
+//                 let html = '<ul class="list-group">';
+//                 data.forEach(function(item) {
+//                     html += `
+//                         <li class="list-group-item notificationRow d-flex justify-content-between align-items-start bg-light" 
+//                             data-id="${item.id}" style="cursor: pointer;">
+//                             <div class="notification-text">
+//                                 <b>${item.name}</b><br>
+//                                 <small>${toTitleCase(item.type)}</small><br>
+//                                 <small class="text-muted">${item.created_at_formatted}</small>
+//                             </div>
+//                         </li>
+//                     `;
+//                 });
+//                 html += '</ul>';
+//                 $('#ownernotificationModalBody').html(html);
+//             }
+//         },
+//         error: function() {
+//             $('#notificationModalBody').html('<p class="text-danger">Failed to load notifications.</p>');
+//         }
+//     });
+// }
+
+
+// // Call once on page load to show count
+// fetchownerNotifications();
+
+// // When bell icon is clicked, fetch notifications and show modal
+// $('#ownernotificationBell').on('click', function() {
+//     fetchownerNotifications();
+
+//     // Show Bootstrap modal
+//     var notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+//     notificationModal.show();
+// });
+
+// // Mark notification as read when clicking on row
+// $(document).on('click', '.notificationRow', function () {
+//     window.location.href = window.APP_URL + '/admin/notifications';
+// });
+
+// // Optional: auto-refresh badge count every 15 seconds
+// setInterval(fetchownerNotifications, 15000);
+// });
+
+// $(document).ready(function() {
+
+//     $(document).on('click', '.notification-item', function() {
+//         let row = $(this);
+//         let id = row.data('id');
+//         let isRead = row.data('is-read');
+
+//         // If already read, just navigate
+//         if (isRead) {
+//             window.location.href = `/admin/notifications/${id}`;
+//             return;
+//         }
+
+//         // AJAX call to mark as read
+//         $.ajax({
+//             url: `/admin/notifications/read/${id}`,
+//             type: 'POST',
+//             data: {
+//                 _token: $('meta[name="csrf-token"]').attr('content')
+//             },
+//             success: function() {
+//                 // Update row to show as read
+//                 row.removeClass('bg-light border-start border-4 border-primary').addClass('bg-white');
+//                 row.data('is-read', 1);
+
+//                 // Decrease badge count
+//                 let badge = $('#notificationBadge'); // your badge ID
+//                 let count = parseInt(badge.text()) || 0;
+//                 if (count > 0) badge.text(count - 1);
+
+//                 // Redirect to the notification details page
+//                 window.location.href = `/admin/notifications/${id}`;
+//             },
+//             error: function() {
+//                 alert('Failed to mark notification as read.');
+//             }
+//         });
+//     });
+
+// });
+
+
+
+
+$(document).ready(function() {
+
+    // Fetch notifications and update modal
+    function fetchOwnerNotifications() {
+        $.ajax({
+            url: window.APP_URL + '/owner/notifications/unread', // ✅ owner route pe fix kar (apna actual route daal)
+            type: 'GET',
+            success: function(data) {
+                // ✅ Update badge count
+                let count = data.length;
+                if (count > 0) {
+                    $('#ownernotificationCount').text(count).show();
+                } else {
+                    $('#ownernotificationCount').hide();
+                }
+
+                // Build modal content
+                if (data.length === 0) {
+                    $('#ownernotificationModalBody').html('<p>No new notifications.</p>');
+                } else {
+                    let html = '<ul class="list-group">';
+                    data.forEach(function(item) {
+                        html += `
+                            <li class="list-group-item notificationRow d-flex justify-content-between align-items-start bg-light"
+                                data-id="${item.id}" data-is-read="${item.is_read}" style="cursor: pointer;">
+                                <div class="notification-text">
+                                    <b>${item.name}</b><br>
+                                    <small>${toTitleCase(item.type)}</small><br>
+                                    <small class="text-muted">${item.created_at_formatted}</small>
+                                </div>
+                            </li>
+                        `;
+                    });
+                    html += '</ul>';
+                    $('#ownernotificationModalBody').html(html);
+                }
+            },
+            error: function() {
+                $('#ownernotificationModalBody').html('<p class="text-danger">Failed to load notifications.</p>');
+            }
+        });
+    }
+
+    // Call once on page load to show count
+    fetchOwnerNotifications();
+
+    // ✅ Bell icon click → fetch + show correct modal
+    $('#ownernotificationBell').on('click', function() {
+        fetchOwnerNotifications();
+
+        var notificationModal = new bootstrap.Modal(document.getElementById('ownernotificationModal')); // ✅ fixed
+        notificationModal.show();
+    });
+
+    // ✅ Row click → mark as read + redirect (merged both blocks into one working handler)
+    $(document).on('click', '.notificationRow', function () {
+        let row = $(this);
+        let id = row.data('id');
+        let isRead = row.data('is-read');
+
+        // Already read → sirf navigate karo
+        if (isRead == 1) {
+            window.location.href = window.APP_URL + '/owner/notifications'; // ✅ apna actual owner notifications route
+            return;
+        }
+
+        // Mark as read via AJAX
+        $.ajax({
+            url: window.APP_URL + '/owner/notifications/read/' + id, // ✅ apna actual mark-as-read route
+            type: 'POST',
+            data: {
+                _token: $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function() {
+                row.data('is-read', 1);
+
+                // ✅ Badge count decrease
+                let badge = $('#ownernotificationCount');
+                let count = parseInt(badge.text()) || 0;
+                if (count > 0) {
+                    badge.text(count - 1);
+                    if (count - 1 === 0) badge.hide();
+                }
+
+                window.location.href = window.APP_URL + '/owner/notifications';
+            },
+            error: function() {
+                alert('Failed to mark notification as read.');
+            }
+        });
+    });
+
+    // Auto-refresh badge count every 15 seconds
+    setInterval(fetchOwnerNotifications, 15000);
+
+});
+
+
 
 
 // $(document).ready(function() {
@@ -2037,6 +2178,55 @@ $(document).on('click', '.viewNotification', function () {
 
     $.ajax({
         url: "/admin/notifications/unread-count/" + notificationId,
+        type: "POST",
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function (response) {
+
+            row.removeClass('custom-unread-row').addClass('custom-read-row');
+
+            let updatedCount = parseInt(response.newCount);
+
+            if (updatedCount <= 0) {
+                $('#notificationCount').text(0).hide();
+            } else {
+                $('#notificationCount').text(updatedCount).show();
+            }
+        },
+        complete: function () {
+            button.prop('disabled', false);
+        }
+    });
+    // Toggle fields
+    toggleField(button.data('name'), 'name', 'row_name');
+    toggleField(button.data('email'), 'email', 'row_email');
+    toggleField(button.data('message'), 'message', 'row_message');
+    toggleField(button.data('browser'), 'browser', 'row_browser');
+    toggleField(button.data('platform'), 'platform', 'row_platform');
+    toggleField(button.data('devicetype'), 'device', 'row_device');
+    toggleField(button.data('ip'), 'ip', 'row_ip');
+    toggleField(button.data('type'), 'type', 'row_type');
+    toggleField(button.data('date'), 'date', 'row_date');
+    toggleField(button.data('location'), 'location', 'row_location');
+
+    // Show Image
+    toggleImage(button.data('image'), 'reported_image', 'row_image');
+
+    $('#shwonotificationModal').modal('show');
+});
+
+
+$(document).on('click', '.ownerviewNotification', function () {
+
+    let notificationId = $(this).data('id');
+    let button = $(this);
+    let row = button.closest('tr');
+
+    button.prop('disabled', true);
+
+    $.ajax({
+        url: "/owner/notifications/unread-count/" + notificationId,
         type: "POST",
         data: {
             _token: $('meta[name="csrf-token"]').attr('content')

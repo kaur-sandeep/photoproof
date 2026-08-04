@@ -675,12 +675,12 @@ class OwnerController extends Controller
         ->make(true);
     }  
 
-        public function showImagedatawithid(Request $request,$id){
+    public function showImagedatawithid(Request $request,$id){
             $user = User::findOrFail($request->id);
             return view('owner.employee.showphotos',compact('user'));
     }
 
-        public function getUsersWithImageswithId(Request $request, $id)
+    public function getUsersWithImageswithId(Request $request, $id)
     {
         $users = User::with('photos.uploadTrack')
             ->when($request->name, function ($query) use ($request) {
@@ -786,47 +786,200 @@ class OwnerController extends Controller
         }
 
 
-    public function notificationsList(Request $request){
+    //     public function notificationsList(Request $request){
 
-        
-            $notifications = Notifications::query();
-            $notificationType = $request->notification_type;
+            
+    //     $notifications = Notifications::query();
+    //             $notificationType = $request->notification_type;
 
-        if ($request->filled('notification_type')) {
-            $notifications->where('type', $notificationType);
-        }
+    //         if ($request->filled('notification_type')) {
+    //             $notifications->where('type', $notificationType);
+    //         }
 
-        // Check if there's a custom search query
-        $customSearch = request()->input('type'); // Assuming the custom search field is called 'custom_search'
+    //         // Check if there's a custom search query
+    //         $customSearch = request()->input('type'); // Assuming the custom search field is called 'custom_search'
 
-        // If there's a custom search, add it to the query
-        if ($customSearch) {
-            $notifications->where(function ($query) use ($customSearch) {
-                $query->where('name', 'like', '%' . $customSearch . '%')
-                    ->orWhere('email', 'like', '%' . $customSearch . '%')
-                    ->orWhere('type', 'like', '%' . $customSearch . '%');
-            });
-        }
+    //         // If there's a custom search, add it to the query
+    //         if ($customSearch) {
+    //             $notifications->where(function ($query) use ($customSearch) {
+    //                 $query->where('name', 'like', '%' . $customSearch . '%')
+    //                     ->orWhere('email', 'like', '%' . $customSearch . '%')
+    //                     ->orWhere('type', 'like', '%' . $customSearch . '%');
+    //             });
+    //         }
+
+    //     $notifications = $notifications
+    //         ->where('state', '!=', -1)->orderBy('created_at', 'desc')->get();
+    //     return DataTables::of($notifications)
+    //         ->addIndexColumn()
+    //         ->setRowClass(function ($notifications) {
+    //         return $notifications->is_read == 0 ? 'custom-unread-row' : 'custom-read-row';
+    //     })
+    //     ->addColumn('image', function ($notifications) {
+    //             $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
+    //             $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+    //             $image = $photo
+    //                 ? asset('storage/' . ($photo->thumbnail ?: $photo->photo))
+    //                 : $default;
+    //             // return '<img src="' . ($image
+    //             //     ? asset('storage/' .$image)
+    //             //     : $default) . '" width="40" height="40" class="rounded-circle">';
+    //             // })
+    //             return '<img src="'.$image.'" width="40" height="40" class="rounded-circle">';
+    //             })
+    //         ->addColumn('photo_random_id', function ($notifications) {
+    //             return $notifications->photo_random_id ?? '--';
+    //         })
+    //         ->addColumn('name', function ($notifications) {
+    //             return $notifications->name ?? '-';
+    //         })
+    //         ->addColumn('email', function ($notifications) {
+    //             return $notifications->email ?? '-';
+    //         })
+    //         ->addColumn('message', function ($notifications) {
+    //         $data = json_decode($notifications->data, true);
+    //         $message = $data['message'] ?? null;
+    //         return $message 
+    //             ? Str::limit($message, 100, '...') 
+    //             : '--';
+    //         })
+    //         ->addColumn('type', function ($notifications) {
+    //             return ucwords($notifications->type) ?? '--';
+    //         })
+    //         ->addColumn('ip_address', function ($notifications) {
+    //             $data = json_decode($notifications->data, true);
+    //             return $data['ip'] ?? '-';
+    //         })
+    //         ->addColumn('date', function ($notifications) {
+    //             $date = DateTime::dateFormat($notifications->created_at);
+    //             return $date;
+    //         })
+    //         ->addColumn('actions', function ($notifications) {
+    //             $data = json_decode($notifications->data, true);
+    //             $ip = $data['ip']?? '';
+    //             $message_data = $data['message'] ?? null;
+    //             $message = $message_data ? Str::limit($message_data, 100, '...') : '--';
+    //             $browser = $data['browser']?? '';
+    //             $platform = $data['platform']?? '';
+    //             $deviceType = $data['deviceType']?? '';
+    //                 if (!empty( $data['country']) && 
+    //                     !empty( $data['region']) && 
+    //                     !empty( $data['city']) && 
+    //                     !empty( $data['zip'])) {
+    //                     $location = implode(',', [
+    //                         $data['country'],
+    //                         $data['region'],
+    //                         $data['city'],
+    //                         $data['zip']
+    //                     ]);
+
+    //                 } else {
+    //                     $location = '';
+    //                 }
+
+                
+    //         $createOrganizationButton = '';
+            
+    //             if ($notifications->type == 'Contact us') {
+    //                 $createOrganizationButton = '
+    //                     <a href="'.url('/admin/organization/create').'?name='.urlencode($notifications->name).'&email='.urlencode($notifications->email).'"
+    //                     class="btn btn-success btn-sm ms-1">
+    //                         Create Organization
+    //                     </a>';
+    //             }
+    //                 $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
+
+    //                 $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+    //                 $image = $photo
+    //                     ? asset('storage/' . ($photo->thumbnail ?: $photo->photo))
+    //                     : $default;
+    //             return '
+    //                 <button
+    //                     class="btn btn-primary btn-sm viewNotification"
+    //                     data-id="'.$notifications->id.'"
+    //                     data-name="'.$notifications->name.'"
+    //                     data-email="'.$notifications->email.'"
+    //                     data-message="'.$message.'"
+    //                     data-image="'.$image.'",
+    //                     data-ip="'.$ip.'"
+    //                     data-type="'.ucwords($notifications->type).'"
+    //                     data-date="'.DateTime::dateFormat($notifications->created_at).'"
+    //                     data-browser="'.$browser.'"
+    //                     data-platform="'.$platform.'"
+    //                     data-devicetype="'.$deviceType.'"
+    //                     data-location="'.$location.'"
+    //                     data-bs-toggle="modal"
+    //                     data-bs-target="#ownerNotificationModal">
+    //                     View
+    //                 </button>
+    //                 '.$createOrganizationButton;
+    //         })
+    //         ->rawColumns(['image','name','actions','message','email','type','ip_address','date'])
+    //         ->make(true);
+    // }
+
+    // public function getUnreadNotifications()
+    // {
+    //     // $notifications = PhotoReport::where('is_read', 0)
+    //         $notifications = Notifications::where('state', '!=', -1)
+    //         ->where('is_read', 0)
+    //         ->orderBy('created_at', 'desc')
+    //         // ->take(5)
+    //         ->get()
+    //         ->map(function ($item) {
+
+    //             $item->created_at_formatted = $item->created_at
+    //                 ? DateTime::dateFormat($item->created_at)
+    //                 : '--';
+
+    //             return $item;
+    //         });
+
+    //     return response()->json($notifications);
+    // }
+
+
+    // public function markAsRead($id)
+    // {
+    //     // $notification = PhotoReport::findOrFail($id);
+    //     $notification = Notifications::findOrFail($id);
+    //     $notification->is_read = 1;
+    //     $notification->save();
+
+    //     return response()->json(['status' => 'success']);
+    // }
+
+
+    public function notificationsList(Request $request)
+{
+    $org_id = (int) User::find(Auth::id())->organization_id;
+
+    $notifications = Notifications::query()
+        ->where('organization_id', $org_id); // ✅ direct filter, no join needed
+
+    if ($request->filled('notification_type')) {
+        $notifications->where('type', $request->notification_type);
+    }
 
     $notifications = $notifications
-        ->where('state', '!=', -1)->orderBy('created_at', 'desc')->get();
+        ->where('state', '!=', -1)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
     return DataTables::of($notifications)
         ->addIndexColumn()
         ->setRowClass(function ($notifications) {
-        return $notifications->is_read == 0 ? 'custom-unread-row' : 'custom-read-row';
-    })
-    ->addColumn('image', function ($notifications) {
+            return $notifications->is_read == 0 ? 'custom-unread-row' : 'custom-read-row';
+        })
+        ->addColumn('image', function ($notifications) {
             $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
             $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
             $image = $photo
                 ? asset('storage/' . ($photo->thumbnail ?: $photo->photo))
                 : $default;
-            // return '<img src="' . ($image
-            //     ? asset('storage/' .$image)
-            //     : $default) . '" width="40" height="40" class="rounded-circle">';
-            // })
             return '<img src="'.$image.'" width="40" height="40" class="rounded-circle">';
-            })
+        })
         ->addColumn('photo_random_id', function ($notifications) {
             return $notifications->photo_random_id ?? '--';
         })
@@ -837,11 +990,9 @@ class OwnerController extends Controller
             return $notifications->email ?? '-';
         })
         ->addColumn('message', function ($notifications) {
-        $data = json_decode($notifications->data, true);
-        $message = $data['message'] ?? null;
-        return $message 
-            ? Str::limit($message, 100, '...') 
-            : '--';
+            $data = json_decode($notifications->data, true);
+            $message = $data['message'] ?? null;
+            return $message ? Str::limit($message, 100, '...') : '--';
         })
         ->addColumn('type', function ($notifications) {
             return ucwords($notifications->type) ?? '--';
@@ -851,52 +1002,39 @@ class OwnerController extends Controller
             return $data['ip'] ?? '-';
         })
         ->addColumn('date', function ($notifications) {
-            $date = DateTime::dateFormat($notifications->created_at);
-            return $date;
+            return DateTime::dateFormat($notifications->created_at);
         })
         ->addColumn('actions', function ($notifications) {
             $data = json_decode($notifications->data, true);
-            $ip = $data['ip']?? '';
+            $ip = $data['ip'] ?? '';
             $message_data = $data['message'] ?? null;
             $message = $message_data ? Str::limit($message_data, 100, '...') : '--';
-            $browser = $data['browser']?? '';
-            $platform = $data['platform']?? '';
-            $deviceType = $data['deviceType']?? '';
-                if (!empty( $data['country']) && 
-                    !empty( $data['region']) && 
-                    !empty( $data['city']) && 
-                    !empty( $data['zip'])) {
-                    $location = implode(',', [
-                        $data['country'],
-                        $data['region'],
-                        $data['city'],
-                        $data['zip']
-                    ]);
+            $browser = $data['browser'] ?? '';
+            $platform = $data['platform'] ?? '';
+            $deviceType = $data['deviceType'] ?? '';
 
-                } else {
-                    $location = '';
-                }
-
-            
-        $createOrganizationButton = '';
-        
-            if ($notifications->type == 'Contact us') {
-                $createOrganizationButton = '
-                    <a href="'.url('/admin/organization/create').'?name='.urlencode($notifications->name).'&email='.urlencode($notifications->email).'"
-                    class="btn btn-success btn-sm ms-1">
-                        Create Organization
-                    </a>';
+            if (!empty($data['country']) && !empty($data['region']) && !empty($data['city']) && !empty($data['zip'])) {
+                $location = implode(',', [$data['country'], $data['region'], $data['city'], $data['zip']]);
+            } else {
+                $location = '';
             }
-                $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
 
-                $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            // $createOrganizationButton = '';
+            // if ($notifications->type == 'Contact us') {
+            //     $createOrganizationButton = '
+            //         <a href="'.url('/admin/organization/create').'?name='.urlencode($notifications->name).'&email='.urlencode($notifications->email).'"
+            //         class="btn btn-success btn-sm ms-1">
+            //             Create Organization
+            //         </a>';
+            // }
 
-                $image = $photo
-                    ? asset('storage/' . ($photo->thumbnail ?: $photo->photo))
-                    : $default;
+            $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
+            $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            $image = $photo ? asset('storage/' . ($photo->thumbnail ?: $photo->photo)) : $default;
+
             return '
                 <button
-                    class="btn btn-primary btn-sm viewNotification"
+                    class="btn btn-primary btn-sm ownerviewNotification"
                     data-id="'.$notifications->id.'"
                     data-name="'.$notifications->name.'"
                     data-email="'.$notifications->email.'"
@@ -913,14 +1051,58 @@ class OwnerController extends Controller
                     data-bs-target="#ownerNotificationModal">
                     View
                 </button>
-                '.$createOrganizationButton;
+                ';
         })
         ->rawColumns(['image','name','actions','message','email','type','ip_address','date'])
         ->make(true);
 }
 
 
+public function getUnreadNotifications()
+{
+    $org_id = (int) User::find(Auth::id())->organization_id;
 
+    $notifications = Notifications::where('state', '!=', -1)
+        ->where('is_read', 0)
+        ->where('organization_id', $org_id) // ✅ direct
+        ->orderBy('created_at', 'desc')
+        ->get()
+        ->map(function ($item) {
+            $item->created_at_formatted = $item->created_at
+                ? DateTime::dateFormat($item->created_at)
+                : '--';
+            return $item;
+        });
+
+    return response()->json($notifications);
+}
+
+public function markAsRead($id)
+{
+    $org_id = (int) User::find(Auth::id())->organization_id;
+
+    $notification = Notifications::where('organization_id', $org_id) // ✅ direct
+        ->findOrFail($id);
+
+    $notification->is_read = 1;
+    $notification->save();
+
+    return response()->json(['status' => 'success']);
+}
+
+
+public function unreadCount(Request $request,$id){
+   
+ $notification = Notifications::findOrFail($id);
+  
+    $notification->is_read = 1;
+    $notification->save();
+    $newCount = Notifications::where('is_read', false)
+                            ->orderBy('created_at', 'desc')
+                            // ->take(5)
+                            ->count();  // Count unread notifications
+    return response()->json(['newCount' => $newCount]);
+}
 
 
 

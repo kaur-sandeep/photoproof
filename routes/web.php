@@ -176,6 +176,9 @@ Route::middleware(['auth:web', 'role:owner'])->prefix('owner')->name('owner.')->
     Route::get('/fetch/employee/images/{userId}', [OwnerController::class, 'getUsersWithImageswithId'])->name('employee.images.by.id');
     Route::get('/notifications', [OwnerController::class, 'notifications'])->name('notifications');
     Route::get('/notificationList/list', [OwnerController::class, 'notificationsList']);
+    Route::get('/notifications/unread', [OwnerController::class, 'getUnreadNotifications']);
+    Route::post('/notifications/read/{id}', [OwnerController::class, 'markAsRead']);
+    Route::post('/notifications/unread-count/{id}', [OwnerController::class,'unreadCount']);
 
 
     

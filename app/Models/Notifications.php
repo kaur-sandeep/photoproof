@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Models\PhotoDetail;
 
 use Illuminate\Database\Eloquent\Model;
 
@@ -15,4 +16,10 @@ class Notifications extends Model
         'organization_id',
         'is_read'
     ];
+
+
+    public function photoDetail()
+{
+    return $this->belongsTo(PhotoDetail::class, 'photo_random_id', 'random_id');
+}
 }

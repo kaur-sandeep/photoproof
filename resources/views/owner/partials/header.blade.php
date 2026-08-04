@@ -84,7 +84,7 @@
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
          <!-- <a href="{{ route('notifications.index') }}" class="btn btn-primary"> -->
-          <a href="{{ route('notifications.index') }}" class="btn btn-primary">
+          <a href="{{ route('owner.notifications') }}" class="btn btn-primary">
          
         Show All Notifications
     </a>
