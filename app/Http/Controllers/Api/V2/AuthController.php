@@ -1063,7 +1063,17 @@ public function forgotPassword(Request $request)
             'meta_data'=>json_decode($request->meta_data)
             
         ]);
+        \Log::info('Photo upload increment', [
+            'user_id' => $user->id,
+            'subscription_id' => $subscription->id,
+            'before' => $subscription->monthly_photo_used,
+        ]);
         $subscription->increment('monthly_photo_used', 1);
+        $subscription->refresh();
+
+        \Log::info('Photo upload incremented', [
+            'after' => $subscription->monthly_photo_used,
+        ]);
         $ip = $request->ip();
         // $ip ='202.164.57.197';
         // $ip ='192.168.0.90';
@@ -1122,7 +1132,7 @@ public function forgotPassword(Request $request)
         // save data into notifications table //
 
         Notifications::create([
-            'photo_random_id' => $user->id,
+            'photo_random_id' => $request->id,
             'organization_id' => $user->organization_id,
             'name' => $user->name ?? 'User',
             'email' => $user->email,

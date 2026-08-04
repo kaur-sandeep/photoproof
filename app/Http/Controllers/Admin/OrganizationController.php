@@ -272,7 +272,7 @@ public function list(Request $request){
                 'starts_at'        => $startDate,
                 'expires_at'   => $expiresDate,
                 'monthly_photo_limit' => $getPlanDataById->monthly_photo_limit,
-                'monthly_photo_used' => 30,
+                'monthly_photo_used' => 0,
             ]);
             
             DB::commit();
