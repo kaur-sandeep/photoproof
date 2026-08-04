@@ -593,9 +593,18 @@ public function list(Request $request){
         ->addColumn('Org_name', function ($user) {
             return $user->organization ? $user->organization->organization_name : '--';
         })
-          ->addColumn('role', function ($user) {
-            return $user->getRoleNames()->first() ?: '--';
-        })
+->addColumn('role', function ($user) {
+    $roles = $user->getRoleNames();
+
+    if ($roles->isEmpty()) {
+        return '--';
+    }
+
+    return $roles->map(function ($role) {
+        return '<span class="badge bg-info me-1">' . e($role) . '</span>';
+    })->implode(' ');
+})
+->rawColumns(['role'])
         ->addColumn('created_at', fn($user) => DateTime::dateFormat($user->created_at) ?? '--')
         ->addColumn('photo_count', function ($user) {
             return '<span class="badge bg-info" style="
@@ -620,7 +629,7 @@ public function list(Request $request){
         ->addColumn('actions', function ($user) {
             return '<button class="btn btn-sm btn-danger delete-user" data-id="'.$user->id.'">Delete</button>';
         })
-        ->rawColumns(['profile_image', 'photo_count', 'status', 'actions'])
+        ->rawColumns(['profile_image', 'photo_count', 'status', 'role','actions'])
         ->make(true);
 }
 }
