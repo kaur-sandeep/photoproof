@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Setting;
+use Illuminate\Validation\Rule;
 class OrganizationController extends Controller
 {
     public function index(){
@@ -219,13 +220,21 @@ public function list(Request $request){
 
     public function addOrganization(Request $request)
     {
+        // $request->validate([
+        //     'organization_name'   => 'required|string|max:255',
+        //     'organization_email'  => 'required|email|unique:users,email',
+        //     'subscription_plan'  => 'required|exists:subscription_plans,id',
+        //     // 'mobile_number' => 'numeric|digits_between:10,14',
+        //     'password' => 'required|min:6',
+        // ]);
         $request->validate([
-            'organization_name'   => 'required|string|max:255',
-            'organization_email'  => 'required|email|unique:users,email',
-            'subscription_plan'  => 'required|exists:subscription_plans,id',
-            // 'mobile_number' => 'numeric|digits_between:10,14',
-            'password' => 'required|min:6',
-        ]);
+                'organization_name'   => 'required|string|max:255',
+                'organization_email'  => ['required', 'email', Rule::unique('users', 'email')],
+                'subscription_plan'   => 'required|exists:subscription_plans,id',
+                'password'            => 'required|min:6',
+            ], [
+                'organization_email.unique' => 'This email is already registered. Please use a different email address.',
+            ]);
 
         DB::beginTransaction();
         try {
@@ -284,7 +293,7 @@ public function list(Request $request){
             <h3>Login Details</h3>
 
             <p><strong>Login URL:</strong>
-                <a href="'.url('/login').'">'.url('/login').'</a>
+                <a href="'.url('/admin/login').'">'.url('/admin/login').'</a>
             </p>
 
             <p><strong>Username / Email:</strong> '.$user->email.'</p>
@@ -306,9 +315,7 @@ public function list(Request $request){
                 <li>Change your password after your first login.</li>
                 <li>Invite your employees from the dashboard.</li>
                 <li>Assign roles and permissions to your employees.</li>
-            </ul>
-
-            <p>If you have any questions, please contact our support team.</p>';
+            </ul>';
 
             // ✅ Admin ke liye alag content
             $adminSlot = '

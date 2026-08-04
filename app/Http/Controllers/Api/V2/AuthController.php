@@ -1151,7 +1151,7 @@ public function forgotPassword(Request $request)
 
                 <p>Hello '.$owner->name.',</p>
 
-                <p>Your employee has uploaded a new photo. Please find the details below:</p>
+                <p>'.$user->name.' has uploaded a new photo. Please find the details below:</p>
                   <strong>Employee Name:</strong> '.$user->name.'<br>
                 <strong>Employee Email:</strong> '.$user->email.'<br>
                 <p><strong>Photo ID:</strong> '.$photo->random_id.'<br>

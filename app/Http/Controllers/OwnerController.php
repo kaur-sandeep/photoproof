@@ -17,6 +17,7 @@ use App\Notifications\CommonMailNotification;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
+use App\Models\Notifications;
 class OwnerController extends Controller
 {
     public function index()
@@ -278,9 +279,7 @@ class OwnerController extends Controller
             <p>If you haven\'t already, download the Photo Proof mobile app:</p>
             <p><a href="'.config('app.android_app_url', '#').'">Download for Android</a> | <a href="'.config('app.ios_app_url', '#').'">Download for iOS</a></p>
 
-            <hr>
-
-            <p>If you have any questions, please contact your organization admin.</p>';
+            <hr>';
 
         try {
             Notification::route('mail', $user->email)
@@ -426,7 +425,7 @@ class OwnerController extends Controller
             );
         }
 
-        return redirect()->back()->with('success', 'Admin User Updated Successfully!');
+        return redirect()->back()->with('success', 'Employee Updated Successfully!');
     }
 
     public function updateStatus(Request $request)
@@ -519,6 +518,7 @@ class OwnerController extends Controller
             $query->where('organization_id', $org_id);
         })
         ->orderBy('created_at', 'desc')
+        ->where('state', '!=', -1)
         ->get();
 
     return DataTables::of($photos)
@@ -780,6 +780,145 @@ class OwnerController extends Controller
             ->rawColumns(['images', 'action', 'view_count','status']) // 👈 FIX HERE
             ->make(true);
         }
+
+        public function notifications(){
+             return view('owner.notifications.index');
+        }
+
+
+    public function notificationsList(Request $request){
+
+        
+            $notifications = Notifications::query();
+            $notificationType = $request->notification_type;
+
+        if ($request->filled('notification_type')) {
+            $notifications->where('type', $notificationType);
+        }
+
+        // Check if there's a custom search query
+        $customSearch = request()->input('type'); // Assuming the custom search field is called 'custom_search'
+
+        // If there's a custom search, add it to the query
+        if ($customSearch) {
+            $notifications->where(function ($query) use ($customSearch) {
+                $query->where('name', 'like', '%' . $customSearch . '%')
+                    ->orWhere('email', 'like', '%' . $customSearch . '%')
+                    ->orWhere('type', 'like', '%' . $customSearch . '%');
+            });
+        }
+
+    $notifications = $notifications
+        ->where('state', '!=', -1)->orderBy('created_at', 'desc')->get();
+    return DataTables::of($notifications)
+        ->addIndexColumn()
+        ->setRowClass(function ($notifications) {
+        return $notifications->is_read == 0 ? 'custom-unread-row' : 'custom-read-row';
+    })
+    ->addColumn('image', function ($notifications) {
+            $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
+            $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+            $image = $photo
+                ? asset('storage/' . ($photo->thumbnail ?: $photo->photo))
+                : $default;
+            // return '<img src="' . ($image
+            //     ? asset('storage/' .$image)
+            //     : $default) . '" width="40" height="40" class="rounded-circle">';
+            // })
+            return '<img src="'.$image.'" width="40" height="40" class="rounded-circle">';
+            })
+        ->addColumn('photo_random_id', function ($notifications) {
+            return $notifications->photo_random_id ?? '--';
+        })
+        ->addColumn('name', function ($notifications) {
+            return $notifications->name ?? '-';
+        })
+        ->addColumn('email', function ($notifications) {
+            return $notifications->email ?? '-';
+        })
+        ->addColumn('message', function ($notifications) {
+        $data = json_decode($notifications->data, true);
+        $message = $data['message'] ?? null;
+        return $message 
+            ? Str::limit($message, 100, '...') 
+            : '--';
+        })
+        ->addColumn('type', function ($notifications) {
+            return ucwords($notifications->type) ?? '--';
+        })
+        ->addColumn('ip_address', function ($notifications) {
+            $data = json_decode($notifications->data, true);
+            return $data['ip'] ?? '-';
+        })
+        ->addColumn('date', function ($notifications) {
+            $date = DateTime::dateFormat($notifications->created_at);
+            return $date;
+        })
+        ->addColumn('actions', function ($notifications) {
+            $data = json_decode($notifications->data, true);
+            $ip = $data['ip']?? '';
+            $message_data = $data['message'] ?? null;
+            $message = $message_data ? Str::limit($message_data, 100, '...') : '--';
+            $browser = $data['browser']?? '';
+            $platform = $data['platform']?? '';
+            $deviceType = $data['deviceType']?? '';
+                if (!empty( $data['country']) && 
+                    !empty( $data['region']) && 
+                    !empty( $data['city']) && 
+                    !empty( $data['zip'])) {
+                    $location = implode(',', [
+                        $data['country'],
+                        $data['region'],
+                        $data['city'],
+                        $data['zip']
+                    ]);
+
+                } else {
+                    $location = '';
+                }
+
+            
+        $createOrganizationButton = '';
+        
+            if ($notifications->type == 'Contact us') {
+                $createOrganizationButton = '
+                    <a href="'.url('/admin/organization/create').'?name='.urlencode($notifications->name).'&email='.urlencode($notifications->email).'"
+                    class="btn btn-success btn-sm ms-1">
+                        Create Organization
+                    </a>';
+            }
+                $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
+
+                $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+                $image = $photo
+                    ? asset('storage/' . ($photo->thumbnail ?: $photo->photo))
+                    : $default;
+            return '
+                <button
+                    class="btn btn-primary btn-sm viewNotification"
+                    data-id="'.$notifications->id.'"
+                    data-name="'.$notifications->name.'"
+                    data-email="'.$notifications->email.'"
+                    data-message="'.$message.'"
+                    data-image="'.$image.'",
+                    data-ip="'.$ip.'"
+                    data-type="'.ucwords($notifications->type).'"
+                    data-date="'.DateTime::dateFormat($notifications->created_at).'"
+                    data-browser="'.$browser.'"
+                    data-platform="'.$platform.'"
+                    data-devicetype="'.$deviceType.'"
+                    data-location="'.$location.'"
+                    data-bs-toggle="modal"
+                    data-bs-target="#ownerNotificationModal">
+                    View
+                </button>
+                '.$createOrganizationButton;
+        })
+        ->rawColumns(['image','name','actions','message','email','type','ip_address','date'])
+        ->make(true);
+}
+
 
 
 

@@ -10,13 +10,13 @@
     @include('admin.partials.header')
     
     @if(auth()->check() && auth()->user()->getRoleNames()->contains('super-admin'))
-    
+     @include('admin.partials.header')
     @include('admin.partials.sidebar')
     
     @endif
 
     @if(auth()->check() && auth()->user()->getRoleNames()->contains('owner'))
-    
+    @include('owner.partials.header')
     @include('owner.partials.sidebar')
     
     @endif

@@ -104,9 +104,9 @@ class PhotoNotificationController extends Controller
    $notifications = Notifications::query();
    $notificationType = $request->notification_type;
 
-if ($request->filled('notification_type')) {
-    $notifications->where('type', $notificationType);
-}
+    if ($request->filled('notification_type')) {
+        $notifications->where('type', $notificationType);
+    }
 
     // Check if there's a custom search query
     $customSearch = request()->input('type'); // Assuming the custom search field is called 'custom_search'
@@ -121,7 +121,7 @@ if ($request->filled('notification_type')) {
     }
 
 $notifications = $notifications
-    ->where('state', '!=', -1)->get();
+    ->where('state', '!=', -1)->orderBy('created_at', 'desc')->get();
     
 return DataTables::of($notifications)
     ->addIndexColumn()

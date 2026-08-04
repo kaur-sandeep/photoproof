@@ -1,4 +1,5 @@
 @extends('admin.layouts.master')
+@section('title', 'Owner Profile')
 @section('content')
 
 <div class="container-fluid">

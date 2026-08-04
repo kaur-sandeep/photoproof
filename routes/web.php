@@ -174,7 +174,8 @@ Route::middleware(['auth:web', 'role:owner'])->prefix('owner')->name('owner.')->
     Route::get('/employee/activate/{id}', [OwnerController::class, 'activateEmployee'])->name('employee.activate')->middleware('signed');
     Route::get('/employee/show/imagedata/{id}', [OwnerController::class, 'showImagedatawithid'])->name('employee.show.imagedata');
     Route::get('/fetch/employee/images/{userId}', [OwnerController::class, 'getUsersWithImageswithId'])->name('employee.images.by.id');
-   
+    Route::get('/notifications', [OwnerController::class, 'notifications'])->name('notifications');
+    Route::get('/notificationList/list', [OwnerController::class, 'notificationsList']);
 
 
     

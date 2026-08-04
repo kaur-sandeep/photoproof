@@ -925,6 +925,72 @@ setInterval(fetchNotifications, 15000);
 
 $(document).ready(function() {
 
+// Fetch notifications and update modal
+function fetchownerNotifications() {
+    $.ajax({
+        url: window.APP_URL + '/admin/notifications/unread',
+        type: 'GET',
+        success: function(data) {
+            // Update badge count
+            let count = data.length;
+            if(count > 0) {
+                $('#ownernotificationCount').text(count).show();
+            } else {
+                $('#notificationCount').hide();
+            }
+
+            // Build modal content
+            if(data.length === 0) {
+                $('#ownernotificationModalBody').html('<p>No new notifications.</p>');
+            } else {
+                let html = '<ul class="list-group">';
+                data.forEach(function(item) {
+                    html += `
+                        <li class="list-group-item notificationRow d-flex justify-content-between align-items-start bg-light" 
+                            data-id="${item.id}" style="cursor: pointer;">
+                            <div class="notification-text">
+                                <b>${item.name}</b><br>
+                                <small>${toTitleCase(item.type)}</small><br>
+                                <small class="text-muted">${item.created_at_formatted}</small>
+                            </div>
+                        </li>
+                    `;
+                });
+                html += '</ul>';
+                $('#ownernotificationModalBody').html(html);
+            }
+        },
+        error: function() {
+            $('#notificationModalBody').html('<p class="text-danger">Failed to load notifications.</p>');
+        }
+    });
+}
+
+
+// Call once on page load to show count
+fetchownerNotifications();
+
+// When bell icon is clicked, fetch notifications and show modal
+$('#ownernotificationBell').on('click', function() {
+    fetchNotifications();
+
+    // Show Bootstrap modal
+    var notificationModal = new bootstrap.Modal(document.getElementById('notificationModal'));
+    notificationModal.show();
+});
+
+// Mark notification as read when clicking on row
+$(document).on('click', '.notificationRow', function () {
+    window.location.href = window.APP_URL + '/admin/notifications';
+});
+
+// Optional: auto-refresh badge count every 15 seconds
+setInterval(fetchownerNotifications, 15000);
+});
+
+
+$(document).ready(function() {
+
     $(document).on('click', '.notification-item', function() {
         let row = $(this);
         let id = row.data('id');
@@ -1715,6 +1781,52 @@ $(document).ready(function() {
 });
 
 
+
+$(document).ready(function() {
+    const params = new URLSearchParams(window.location.search);
+    const notificationType = params.get('notification_type');
+    let table = $('#ownernotificationList').DataTable({
+        processing: true,
+        serverSide: true,   
+        ajax: {
+            url: window.APP_URL + '/owner/notificationList/list/', // Ensure this URL is correct
+            type: 'GET', // Use GET method to pass query parameters
+            data: function(d) {
+                // Get the selected type filter value and append it to the request data
+                d.type = $('#typeFilter').val();  // Add type filter to the request
+                d.notification_type = notificationType;
+            }
+        },
+
+        columns: [
+            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+             { data: 'image', name: 'image' },
+            { data: 'photo_random_id', name: 'photo_random_id' },
+           
+            { data: 'name', name: 'name' },
+            { data: 'email', name: 'email' },
+            { data: 'message', name: 'message' },
+            { data: 'type', name: 'type' },
+            { data: 'ip_address', name: 'ip_address'},
+            { data: 'date', name: 'date'},
+            { data:'actions',name: 'actions',orderable: false,}
+        ],
+         columnDefs: [
+            {
+                targets: 2,
+                visible: notificationType != 'Contact us'
+            }
+        ]
+
+    });
+
+    // Trigger DataTable reload when the filter changes
+    $('#typeFilter').change(function () {
+        table.ajax.reload();  // Reload the table with the new filter value
+    });
+});
+
+
 // $(document).on('click', '.viewNotification', function(){
 //     let notificationId = $(this).data('id');
 //     // mark notification visually as read (optional)
@@ -1945,7 +2057,6 @@ $(document).on('click', '.viewNotification', function () {
             button.prop('disabled', false);
         }
     });
-console.log('imagesssssssssssssssssssss',button.data('image'));
     // Toggle fields
     toggleField(button.data('name'), 'name', 'row_name');
     toggleField(button.data('email'), 'email', 'row_email');

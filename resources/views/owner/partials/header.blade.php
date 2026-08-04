@@ -16,9 +16,9 @@
 
           <ul class="navbar-nav ms-auto" role="navigation" aria-label="Navigation 2">
 
-<div style="position: relative; display: inline-block; cursor: pointer;" id="notificationBell">
+<div style="position: relative; display: inline-block; cursor: pointer;" id="ownernotificationBell">
   <i class="bi bi-bell" style="font-size: 24px;"></i> <!-- Bootstrap Icons bell -->
-  <span id="notificationCount" style="position: absolute; top: -6px; right: -6px; background: red; color: white; font-size: 12px; border-radius: 50%; padding: 2px 6px; display: none;">0</span>
+  <span id="ownernotificationCount" style="position: absolute; top: -6px; right: -6px; background: red; color: white; font-size: 12px; border-radius: 50%; padding: 2px 6px; display: none;">0</span>
 </div>
 
             <li class="nav-item dropdown user-menu">
@@ -40,7 +40,7 @@
                 <ul class="dropdown-menu dropdown-menu-end">
                     <li>
                       
-                         <a href="{{ route('admin.profile')}}" class="dropdown-item">
+                         <a href="{{route('owner.profile') }}" class="dropdown-item">
                             Profile
                         </a>
                     </li>
@@ -53,7 +53,7 @@
                             </button>
                         </form> -->
 
-                        <form method="POST" action="{{ route('admin.logout') }}">
+                        <form method="POST" action="{{route('owner.logout') }}">
                           @csrf
                           <button type="submit" class="dropdown-item">
                               Logout
@@ -70,14 +70,14 @@
       </nav>
 
 
-      <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+      <div class="modal fade" id="ownernotificationModal" tabindex="-1" aria-labelledby="ownernotificationModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+        <h5 class="modal-title" id="ownernotificationModalLabel">Notifications</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body" id="notificationModalBody">
+      <div class="modal-body" id="ownernotificationModalBody">
         <!-- Notification items will load here -->
         <p>Loading notifications...</p>
       </div>
