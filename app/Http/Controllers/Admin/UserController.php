@@ -380,110 +380,110 @@ class UserController extends Controller
 //     }
 
 
-//     public function showImagedatawithid(Request $request,$id){
-//             $user = User::findOrFail($request->id);
-//             return view('admin.users.showphotos',compact('user'));
-//     }
-//     public function getUsersWithImageswithId(Request $request, $id)
-//     {
-//         $users = User::with('photos.uploadTrack')
-//             ->when($request->name, function ($query) use ($request) {
-//                 return $query->where('name', 'like', '%' . $request->name . '%');
-//             })
-//             ->when($id, function ($query) use ($id) {
-//                 return $query->where('id', $id);
-//             })
-//             ->get();
-//         $data = [];
-//         $serialNumber = 1;
+    public function showImagedatawithid(Request $request,$id){
+            $user = User::findOrFail($request->id);
+            return view('admin.users.showphotos',compact('user'));
+    }
+    public function getUsersWithImageswithId(Request $request, $id)
+    {
+        $users = User::with('photos.uploadTrack')
+            ->when($request->name, function ($query) use ($request) {
+                return $query->where('name', 'like', '%' . $request->name . '%');
+            })
+            ->when($id, function ($query) use ($id) {
+                return $query->where('id', $id);
+            })
+            ->get();
+        $data = [];
+        $serialNumber = 1;
 
-//         foreach ($users as $user) {
-//             foreach ($user->photos as $photo) {
+        foreach ($users as $user) {
+            foreach ($user->photos as $photo) {
 
-//                 $track = $photo->uploadTrack;
+                $track = $photo->uploadTrack;
 
-//                 $data[] = [
-//                     'name'=>$user->name,
-//                     'created_at'=>DateTime::dateFormat($photo->created_at),
-//                     'email'=>$user->email,
-//                     'random_id' => $photo->random_id,
-//                     'serial_number' => $serialNumber++,
-//                     'photo_id' => $photo->id,
-//                     'user_email' => $user->email,
-//                     'view_count' => $photo->view_count ?? 0,
-//                     'image' => $photo->photo ? asset('storage/' . $photo->photo) : '',
-//                     'date_time' => DateTime::dateFormat($photo->word_api_date_time) ?? '',
-//                     'location' => $photo->location ?? '',
-//                     // 'country' => isset($photo->country) ? $photo->country : (isset($track->country) ? $track->country : ''),
-//                     // 'region' => isset($photo->region_name) ? $photo->region_name : (isset($track->region_name) ? $track->region_name : ''),
-//                     // 'city' => isset($photo->city) ? $photo->city : (isset($track->city) ? $track->city : ''),
-//                     // 'zip' => isset($photo->zip) ? $photo->zip : (isset($track->zip) ? $track->zip : ''),
-//                     'timezone' => isset($photo->timezone) ? $photo->timezone : (isset($track->timezone) ? $track->timezone : ''),
-//                     'latitude' => isset($photo->latitude) 
-//                         ? number_format($photo->latitude, 8, '.', '') 
-//                         : (isset($track->latitude) ? number_format($track->latitude, 8, '.', '') : null),
+                $data[] = [
+                    'name'=>$user->name,
+                    'created_at'=>DateTime::dateFormat($photo->created_at),
+                    'email'=>$user->email,
+                    'random_id' => $photo->random_id,
+                    'serial_number' => $serialNumber++,
+                    'photo_id' => $photo->id,
+                    'user_email' => $user->email,
+                    'view_count' => $photo->view_count ?? 0,
+                    'image' => $photo->photo ? asset('storage/' . $photo->photo) : '',
+                    'date_time' => DateTime::dateFormat($photo->word_api_date_time) ?? '',
+                    'location' => $photo->location ?? '',
+                    // 'country' => isset($photo->country) ? $photo->country : (isset($track->country) ? $track->country : ''),
+                    // 'region' => isset($photo->region_name) ? $photo->region_name : (isset($track->region_name) ? $track->region_name : ''),
+                    // 'city' => isset($photo->city) ? $photo->city : (isset($track->city) ? $track->city : ''),
+                    // 'zip' => isset($photo->zip) ? $photo->zip : (isset($track->zip) ? $track->zip : ''),
+                    'timezone' => isset($photo->timezone) ? $photo->timezone : (isset($track->timezone) ? $track->timezone : ''),
+                    'latitude' => isset($photo->latitude) 
+                        ? number_format($photo->latitude, 8, '.', '') 
+                        : (isset($track->latitude) ? number_format($track->latitude, 8, '.', '') : null),
 
-//                     'longitude' => isset($photo->longitude) 
-//                         ? number_format($photo->longitude, 8, '.', '') 
-//                         : (isset($track->longitude) ? number_format($track->longitude, 8, '.', '') : null),
-//                     'ip_address' => $track->ip_address ?? '',
-//                     'device_type' => $photo->device_type ?? '',
-//                     'device_brand' => $photo->device_brand ?? '',
-//                     'device_model' => $photo->device_model ?? '',
-//                     'device_name' => $photo->device_name ?? '',
-//                     'device_manufacturer' => $photo->device_manufacturer ?? '',
-//                     'android_version' => $photo->android_version ?? '',
-//                     'android_sdk' => $photo->android_sdk ?? '',
-//                     'ios_system_version' => $photo->ios_system_version ?? '',
-//                     'ios_identifier' => $photo->ios_identifier ?? '',
-//                     'isp' => $track->isp ?? '',
-//                     'state' => $photo->state ?? '',
+                    'longitude' => isset($photo->longitude) 
+                        ? number_format($photo->longitude, 8, '.', '') 
+                        : (isset($track->longitude) ? number_format($track->longitude, 8, '.', '') : null),
+                    'ip_address' => $track->ip_address ?? '',
+                    'device_type' => $photo->device_type ?? '',
+                    'device_brand' => $photo->device_brand ?? '',
+                    'device_model' => $photo->device_model ?? '',
+                    'device_name' => $photo->device_name ?? '',
+                    'device_manufacturer' => $photo->device_manufacturer ?? '',
+                    'android_version' => $photo->android_version ?? '',
+                    'android_sdk' => $photo->android_sdk ?? '',
+                    'ios_system_version' => $photo->ios_system_version ?? '',
+                    'ios_identifier' => $photo->ios_identifier ?? '',
+                    'isp' => $track->isp ?? '',
+                    'state' => $photo->state ?? '',
                     
-//                 ];
-//             }
-//         }
+                ];
+            }
+        }
 
-//        return DataTables::of($data)
-//             ->addColumn('images', function ($row) {
-//                  $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
-//                 // return $row['image']
-//                 //     ? '<img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">'
-//                 //     :  $default;
-//                   return '<a href="'.route('admin.photos.show', $row['photo_id']).'">
-//                         <img src="'.$row['image'].'" width="80" height="80" style="border-radius:5px;">
-//                     </a>';
-//     //             return $row['image']
-//     // ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
-//     //         <img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">
-//     //    </button>'
-//     // : 'No Image';
-//             })
-//             ->addColumn('view_count', function ($row) {
-//                 return '<span class="badge bg-info" style="
-//                         font-size: 1.2rem; 
-//                         padding: 0.6em 1em; 
-//                         text-decoration: none; 
-//                         border-radius: 0.5rem;
-//                         display: inline-block;
-//                     "><a href="'.route('admin.photos.show',  $row['photo_id']).'" class="badge bg-info">
-//                     '.$row['view_count'].'
-//                     </a></span>';
-//             })
-//             ->addColumn('action', function ($row) {
-//                 return '<button class="btn btn-sm btn-primary viewTrackBtn">View Track</button>';
-//             })
-//             ->addColumn('status', function ($row) {
-//             if ($row['state'] == 1) {
-//                     return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$row['photo_id'].'" data-state="0">Active</button>';
-//             }
-//             if ($row['state'] == 0) {
-//                     return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$row['photo_id'].'" data-state="1">Inactive</button>';
+       return DataTables::of($data)
+            ->addColumn('images', function ($row) {
+                 $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                // return $row['image']
+                //     ? '<img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">'
+                //     :  $default;
+                  return '<a href="'.route('admin.photos.show', $row['photo_id']).'">
+                        <img src="'.$row['image'].'" width="80" height="80" style="border-radius:5px;">
+                    </a>';
+    //             return $row['image']
+    // ? '<button class="btn btn-sm btn-primary viewTrackBtn" style="padding:0; border:none; background:none;">
+    //         <img src="' . $row['image'] . '" width="80" height="80" style="border-radius:5px;">
+    //    </button>'
+    // : 'No Image';
+            })
+            ->addColumn('view_count', function ($row) {
+                return '<span class="badge bg-info" style="
+                        font-size: 1.2rem; 
+                        padding: 0.6em 1em; 
+                        text-decoration: none; 
+                        border-radius: 0.5rem;
+                        display: inline-block;
+                    "><a href="'.route('admin.photos.show',  $row['photo_id']).'" class="badge bg-info">
+                    '.$row['view_count'].'
+                    </a></span>';
+            })
+            ->addColumn('action', function ($row) {
+                return '<button class="btn btn-sm btn-primary viewTrackBtn">View Track</button>';
+            })
+            ->addColumn('status', function ($row) {
+            if ($row['state'] == 1) {
+                    return '<button class="btn btn-sm btn-success toggle-state" data-id="'.$row['photo_id'].'" data-state="0">Active</button>';
+            }
+            if ($row['state'] == 0) {
+                    return '<button class="btn btn-sm btn-warning toggle-state" data-id="'.$row['photo_id'].'" data-state="1">Inactive</button>';
                     
-//             }
-//             })
-//             ->rawColumns(['images', 'action', 'view_count','status']) // 👈 FIX HERE
-//             ->make(true);
-//         }
+            }
+            })
+            ->rawColumns(['images', 'action', 'view_count','status']) // 👈 FIX HERE
+            ->make(true);
+        }
 
 //     public function getUsersWithImageswithIdbkbysamdeep(Request $request,$id)
 //     {

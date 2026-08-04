@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <h4>Employees {{ request('organization_name') ? '— '.request('organization_name') : '' }}</h4>
-        <a href="{{ url()->previous() }}" class="btn btn-sm btn-secondary">&larr; Back</a>
+        <!-- <a href="{{ url()->previous() }}" class="btn btn-sm btn-secondary">&larr; Back</a> -->
     </div>
     <div class="card-body">
         <table id="userTableList" class="table table-bordered w-100">
@@ -21,6 +21,7 @@
                     <th>Zip</th>
                     <th>Device</th>
                     <th>Organization</th>
+                    <th>Role</th>
                     <th>Created</th>
                     <th>Photos</th>
                     <th>Status</th>
