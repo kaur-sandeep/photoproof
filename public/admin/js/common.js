@@ -1316,6 +1316,7 @@ $(document).ready(function() {
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'phone_number', name: 'phone_number' },
+            { data: 'role', name: 'role' },
             { data: 'photo_count', name: 'photo_count', orderable: false, searchable: false },
             { data: 'status', name: 'status', orderable: false, searchable: false },
             { data: 'actions', name: 'actions', orderable: false, searchable: false }

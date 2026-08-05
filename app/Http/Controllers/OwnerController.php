@@ -24,7 +24,8 @@ class OwnerController extends Controller
     {
         $id = Auth::user()->id;
         $org_id =  (int)User::find(Auth::id())->organization_id;
-        $users = User::where('state', '!=', -1)->where('organization_id',$org_id)->where('id', '!=', $id)->orderBy('created_at', 'desc')->get();
+        //$users = User::where('state', '!=', -1)->where('organization_id',$org_id)->where('id', '!=', $id)->orderBy('created_at', 'desc')->get();
+        $users = User::where('state', '!=', -1)->where('organization_id',$org_id)->orderBy('created_at', 'desc')->get();
         $total_employees = count($users);
         $totalPhotos = PhotoDetail::whereHas('user', function ($query) use ($org_id) {
             $query->where('organization_id', $org_id)
@@ -336,7 +337,8 @@ class OwnerController extends Controller
     {
         $id = Auth::user()->id;
         $org_id =  (int)User::find(Auth::id())->organization_id;
-        $users = User::where('state', '!=', -1)->withCount('photos')->where('organization_id',$org_id)->where('id', '!=', $id)->orderBy('created_at', 'desc')->get();
+       // $users = User::where('state', '!=', -1)->withCount('photos')->where('organization_id',$org_id)->where('id', '!=', $id)->orderBy('created_at', 'desc')->get();
+        $users = User::where('state', '!=', -1)->withCount('photos')->where('organization_id',$org_id)->orderBy('created_at', 'desc')->get();
         return DataTables::of($users)
         ->addIndexColumn()
         ->addColumn('name', function ($users) {
@@ -348,6 +350,18 @@ class OwnerController extends Controller
         ->addColumn('phone_number', function ($users) {
             return $users->phone_number ?? '--'; // if device is null, show --
         })
+        ->addColumn('role', function ($user) {
+            $roles = $user->getRoleNames();
+
+            if ($roles->isEmpty()) {
+                return '--';
+            }
+
+            return $roles->map(function ($role) {
+                return '<span class="badge bg-info me-1">' . e(ucfirst($role)) . '</span>';
+            })->implode(' ');
+        })
+        ->rawColumns(['role'])
         ->addColumn('photo_count', function ($user) {
             return '<span class="badge bg-info" style="
                   font-size: 1.2rem; 
@@ -376,8 +390,8 @@ class OwnerController extends Controller
              return '<a href="'.route('owner.employee.edit.data', $users->id).'" class="btn btn-sm btn-warning">Edit</a>
                     <button class="btn btn-sm btn-danger delete-user" data-id="'.$users->id.'">Delete</button>';
             
-        })
-        ->rawColumns(['status','photo_count', 'actions'])
+        }) 
+        ->rawColumns(['role','status','photo_count', 'actions'])
         ->make(true);
         
     }

@@ -18,9 +18,10 @@
                 <thead>
                     <tr>
                         <th>#</th>
-                        <th>Employee Name</th>
-                        <th>Employee Email</th>
-                        <th>Employee Phone</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role</th>
                         <th>Photos</th>
                         <th>Status</th>
                         <th>Actions</th>

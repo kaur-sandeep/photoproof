@@ -35,7 +35,7 @@
 
         <div class="col-lg-3 col-6">
             <div class="card text-bg-primary">
-                <a href="" style="text-decoration: none; color: inherit;">
+                <a href="{{ route('owner.photos') }}" style="text-decoration: none; color: inherit;">
                 <div class="card-body">
                     <h5>Monthly Photo Usage</h5>
                    <h3>{{ $monthlyPhotos }} / {{ $monthlyPhotoLimit }}</h3>

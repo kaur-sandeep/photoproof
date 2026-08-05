@@ -26,7 +26,7 @@
                 data-bs-toggle="dropdown">
 
                     <img src="{{ auth()->user()->profile_image 
-                            ? asset('storage/profile/'.auth()->user()->profile_image) 
+                            ? asset('storage/'.auth()->user()->profile_image) 
                             : 'https://cdn-icons-png.flaticon.com/512/149/149071.png' }}"
                         class="user-image rounded-circle shadow me-2"
                         alt="User Image"

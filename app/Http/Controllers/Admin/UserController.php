@@ -601,7 +601,7 @@ public function list(Request $request){
     }
 
     return $roles->map(function ($role) {
-        return '<span class="badge bg-info me-1">' . e($role) . '</span>';
+        return '<span class="badge bg-info me-1">' . e(ucfirst($role)) . '</span>';
     })->implode(' ');
 })
 ->rawColumns(['role'])
