@@ -495,10 +495,10 @@ class AuthController extends Controller
 
     /*
     |--------------------------------------------------------------------------
-    | 📄 Pagination (10 per page)
+    | 📄 Pagination (20 per page)
     |--------------------------------------------------------------------------
     */
-    $photos = $query->latest()->paginate(10);
+    $photos = $query->latest()->paginate(20);
 
     return response()->json([
         'status' => true,
