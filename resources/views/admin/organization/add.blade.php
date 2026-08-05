@@ -68,7 +68,16 @@
                     @endforeach
                    </select>
                   </div>
-
+                   <div class="form-group col-md-4">
+                    <label for="message">Message <span class="text-danger"></span></label>
+                    <textarea
+                        name="message"
+                        class="form-control"
+                        id="message"
+                        rows="5"
+                        placeholder="Enter Message"
+                        ></textarea>
+                  </div>
                   <div class="form-group col-md-4">
                       <label for="email_enabled"></label>
 
