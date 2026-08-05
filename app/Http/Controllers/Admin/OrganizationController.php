@@ -681,10 +681,18 @@ public function updateOrganization(Request $request, $id)
         ' from ' . ($statusText[$oldStatus] ?? $oldStatus) .
         ' to ' . ($statusText[$request->status] ?? $request->status)
     );
+    if($request->status == -1){
+          return response()->json([
+            'success' => true,
+            'message' => 'Organization is deleted successfully'
+        ]);
+    }else{
+         return response()->json([
+            'success' => true,
+            'message' => 'Organization status updated successfully'
+        ]);
+    }
 
-    return response()->json([
-        'success' => true,
-        'message' => 'Organization status updated successfully'
-    ]);
+   
 }
 }
