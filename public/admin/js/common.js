@@ -1247,6 +1247,7 @@ $(document).ready(function() {
             { data: 'limit', name: 'limit'},
             { data: 'employee_count', name: 'employee_count' },
             { data: 'photo_count', name: 'photo_count' },
+            { data: 'message', name: 'message', orderable: false, searchable: false },
             { data: 'organization_created', name: 'organization_created', orderable: false, searchable: false },
             { data: 'status', name: 'status', orderable: false, searchable: false },
             { data: 'actions', name: 'actions', orderable: false, searchable: false }

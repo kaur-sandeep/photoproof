@@ -63,6 +63,15 @@ public function list(Request $request){
                 <a href="'.$url.'" style="color:#fff;">'.$count.'</a>
             </span>';
         })
+         ->addColumn('organization_name', function ($organizations) {
+            return $organizations->organization_name ?? '--';
+        })
+       ->addColumn('message', function ($organizations) {
+    return '<div class="message-wrap">'
+            . e($organizations->message ?? '--') .
+           '</div>';
+})
+->rawColumns(['message'])
         ->addColumn('photo_count', function ($organizations) {
                 $count = $organizations->photo_count ?? 0;
                 $url = route('admin.organizations.photos', [
@@ -96,7 +105,7 @@ public function list(Request $request){
              <a href="'.route('admin.organization.edit.data', $organizations->id).'" class="btn btn-sm btn-warning">Edit</a>
              <button class="btn btn-sm btn-danger delete-user" data-id="'.$organizations->id.'">Delete</button>';
         })
-        ->rawColumns(['status', 'actions', 'employee_count', 'photo_count'])
+        ->rawColumns(['status', 'actions', 'employee_count', 'photo_count','message'])
         ->make(true);
 }
 
@@ -264,8 +273,7 @@ public function list(Request $request){
             'Organizations',
             'Created new organization: ' . $request->organization_name
         );
-
-        return redirect()->back()->with('success', 'Organization added successfully!');
+       return redirect()->back()->with('success', 'Organization added successfully!');
     }
 
     public function showOrganization(Request $request,$id)

@@ -6,7 +6,7 @@
 
 <div class="container-fluid">
     <div class="admin-page-header">
-        <h3 class="card-title"><b>Add Organization User </b></h3>
+        <h3 class="card-title"><b>Edit Organization User </b></h3>
     </div>
     <div class="row">
   @if(session('success'))
@@ -46,6 +46,8 @@
                     <label for="organization_email"> Email Address <span class="text-danger">*</span></label>
                     <input type="email" name ="organization_email" class="form-control" id="organization_email" placeholder="Enter Email" value="{{ $user_data->email}}" readonly  >
                   </div>
+
+                 
                   
                    <div class="form-group col-md-4">
                     <label for="mobile_number">Mobile  Number <span class="text-danger"></span></label>
@@ -65,6 +67,17 @@
                           @endforeach
                         </select>
                   </div>
+
+                  <div class="form-group col-md-4">
+                    <label for="message">Message <span class="text-danger"></span></label>
+                    <textarea
+                        name="message"
+                        class="form-control"
+                        id="message"
+                        rows="5"
+                        placeholder="Enter Message"
+                        >{{ $organization->message }}</textarea>
+                </div>
 
                   <div class="form-group col-md-4">
                     <div class="form-check mt-2">

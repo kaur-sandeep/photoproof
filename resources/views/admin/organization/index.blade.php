@@ -3,6 +3,21 @@
 @section('title', 'Organizations List')
 
 @section('content')
+<style>
+    #organizationList td {
+        white-space: normal !important;
+        word-break: break-word;
+        overflow-wrap: break-word;
+        vertical-align: top;
+    }
+
+    /* Message column */
+    #organizationList td:nth-child(8),
+    #organizationList th:nth-child(8) {
+        max-width: 250px;
+        width: 250px;
+    }
+</style>
 
 <div class="container-fluid">
     <div class="admin-page-header">
@@ -26,6 +41,7 @@
                         <!-- <th>Organization Code</th> -->
                         <th>Total Employee</th>
                         <th>Total Photos</th>
+                        <th>Message</th>
                         <th>Created at</th>
                          <th>Status</th>
                         <th>Actions</th>
