@@ -21,8 +21,8 @@ class Organization extends Model
         'message',
         'state',
         'created_by',
-        'enable_photo_email'
-        
+        'enable_photo_email',
+        'organization_logo'
     ];
 
 

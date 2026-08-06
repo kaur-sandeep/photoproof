@@ -1,12 +1,12 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Add Organization User')
+@section('title', 'Add Organization')
 
 @section('content')
 
 <div class="container-fluid">
     <div class="admin-page-header">
-        <h3 class="card-title"><b>Add Organization User </b></h3>
+        <h3 class="card-title"><b>Add Organization</b></h3>
     </div>
     <div class="row">
           @if(session('success'))
@@ -30,34 +30,32 @@
                  <form method="POST" action="{{ route('admin.store.organization') }}" enctype="multipart/form-data">
                     @csrf
                  <div class="card-body row">
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4 mb-4">
                     <label for="organization_name">Organization Name <span class="text-danger">*</span></label>
                     <input type="text" name="organization_name" class="form-control" id="organization_name" placeholder="Enter Organization Name" value="{{ old('organization_name', request('name')) }}">
                   </div>
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4 mb-4">
                     <label for="business_type">Business Type <span class="text-danger"></span></label>
                     <input type="text" name="business_type" class="form-control" id="business_type" placeholder="Enter Business Type" value="{{ old('business_type') }}">
                   </div>
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4 mb-4">
                     <label for="owner_name">Owner Name <span class="text-danger"></span></label>
                     <input type="text" name="owner_name" class="form-control" id="owner_name" placeholder="Enter Owner Name" value="{{ old('owner_name') }}">
                   </div>
-                  <div class="form-group col-md-4">
-                    <label for="organization_email"> Email Address <span class="text-danger">*</span></label>
-                    <input type="email" name="organization_email" class="form-control" id="organization_email" placeholder="Enter Email" value="{{ old('organization_email',request('email')) }}">
-                  </div>
-
-                   <div class="form-group col-md-4">
+                   <div class="form-group col-md-4 mb-4">
                     <label for="mobile_number">Mobile  Number <span class="text-danger"></span></label>
                     <input type="text" name="mobile_number" class="form-control" id="mobile_number" placeholder="Enter Mobile Number" value="{{ old('mobile_number') }}">
                   </div>
-
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4 mb-4">
+                    <label for="organization_email"> Email Address <span class="text-danger">*</span></label>
+                    <input type="email" name="organization_email" class="form-control" id="organization_email" placeholder="Enter Email" value="{{ old('organization_email',request('email')) }}">
+                  </div>
+                  <div class="form-group col-md-4 mb-4">
                     <label for="password">Password <span class="text-danger">*</span></label>
                     <input type="password" class="form-control" name="password" id="password" placeholder="Enter Password">
                   </div>
 
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4 mb-4">
                     <label for="subscription_plan">Subscription Plan<span class="text-danger">*</span></label>
                    <select name="subscription_plan" class="form-control" id="subscription_plan">
                     <option value="">Please Select Plan</option>
@@ -68,17 +66,38 @@
                     @endforeach
                    </select>
                   </div>
-                   <div class="form-group col-md-4">
-                    <label for="message">Message <span class="text-danger"></span></label>
-                    <textarea
-                        name="message"
-                        class="form-control"
-                        id="message"
-                        rows="5"
-                        placeholder="Enter Message"
-                        ></textarea>
-                  </div>
-                  <div class="form-group col-md-4">
+
+                  <div class="form-group col-md-4 mb-4">
+                    <label for="organization_logo">
+                        Organization Logo
+                    </label>
+
+                    <div class="custom-file">
+                        <input
+                            type="file"
+                            class="custom-file-input"
+                            id="organization_logo"
+                            name="organization_logo"
+                            accept=".jpg,.jpeg,.png"
+                        >
+                        <!-- <label class="custom-file-label" for="organization_logo">
+                            Choose Logo
+                        </label> -->
+                    </div>
+
+                    <small class="text-muted">
+                        JPG, PNG (Max 2MB)
+                    </small>
+
+                    <div class="mt-3">
+                        <img id="logoPreview"
+                            src="{{ asset('images/no-image.png') }}"
+                            style="max-height:120px;display:none;border:1px solid #ddd;padding:5px;border-radius:8px;">
+                    </div>
+
+                </div>
+
+                  <div class="form-group col-md-4 mb-4">
                       <label for="email_enabled"></label>
 
                       <div class="form-check mt-2">
@@ -103,5 +122,27 @@
     </div>
 
 </div>
+<script>
+$('#organization_logo').change(function(e){
 
+    let file = e.target.files[0];
+
+    if(file){
+
+        $('.custom-file-label').text(file.name);
+
+        let reader = new FileReader();
+
+        reader.onload = function(event){
+            $('#logoPreview')
+                .attr('src',event.target.result)
+                .show();
+        }
+
+        reader.readAsDataURL(file);
+
+    }
+
+});
+</script>
 @endsection

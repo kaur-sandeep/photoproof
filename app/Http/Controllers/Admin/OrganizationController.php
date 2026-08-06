@@ -174,6 +174,11 @@ public function list(Request $request){
 
         DB::beginTransaction();
         try {
+                    if ($request->hasFile('organization_logo')) {
+                        $path = $request->file('organization_logo')
+                                        ->store('organization_logos', 'public');                      
+                    }
+    
             $organization = Organization::create([
                 'organization_name'  => $request->organization_name,
                 'business_type'      => $request->business_type,
@@ -182,6 +187,7 @@ public function list(Request $request){
                 'message'            => $request->message,
                 'enable_photo_email' => $request->boolean('email_enabled'),
                 'created_by'         => Auth::user()->id,
+                'organization_logo' =>$path,
                 'state'              => 1
             ]);
 
@@ -475,6 +481,7 @@ public function updateOrganization(Request $request, $id)
     DB::beginTransaction();
 
     try {
+     
 
         $updateData = [
             'organization_name' => $request->organization_name,
@@ -483,6 +490,24 @@ public function updateOrganization(Request $request, $id)
             'enable_photo_email' => $request->boolean('email_enabled'),
             'message'           => $request->message,
         ];
+
+            
+        if ($request->hasFile('organization_logo')) {
+
+            // Delete old logo
+            if (!empty($organization->organization_logo) &&
+                Storage::disk('public')->exists($organization->organization_logo)) {
+
+                Storage::disk('public')->delete($organization->organization_logo);
+            }
+
+            // Upload new logo
+            $logoPath = $request->file('organization_logo')
+                                ->store('organization_logos', 'public');
+
+            // Save path in database
+            $updateData['organization_logo'] = $logoPath;
+        }
 
         // \Log::info("[$traceId] About to update Organization with data:", $updateData);
 

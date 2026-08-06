@@ -24,7 +24,7 @@
                     <a href="{{ route('owner.employee') }}"
                        class="nav-link text-white">
                         <i class="bi bi-people me-2"></i>
-                        Employees
+                        My Employees
                     </a>
                 </li>
 

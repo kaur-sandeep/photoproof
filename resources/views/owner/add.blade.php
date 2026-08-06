@@ -30,16 +30,16 @@
                  <form method="POST" action="{{ route('owner.employee.store') }}" enctype="multipart/form-data">
                     @csrf
                 <div class="card-body row">
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4 mb-4">
                     <label for="name">Name <span class="text-danger">*</span></label>
                     <input type="name" name ="name" class="form-control" id="name" placeholder="Enter Name">
                   </div>
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4 mb-4">
                     <label for="email">Email <span class="text-danger">*</span></label>
                     <input type="email" name ="email" class="form-control" id="email" placeholder="Enter Email">
                   </div>
                   
-                   <div class="form-group col-md-4">
+                   <div class="form-group col-md-4 mb-4">
                     <label for="number">Phone Number <span class="text-danger">*</span></label>
                     <input type="text" name ="phone_number" class="form-control" id="number" placeholder="Enter Phone Number">
                   </div>

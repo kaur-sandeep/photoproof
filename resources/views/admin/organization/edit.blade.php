@@ -1,12 +1,12 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Add Organization User')
+@section('title', 'Edit Organization')
 
 @section('content')
 
 <div class="container-fluid">
     <div class="admin-page-header">
-        <h3 class="card-title"><b>Edit Organization User </b></h3>
+        <h3 class="card-title"><b>Edit Organization</b></h3>
     </div>
     <div class="row">
   @if(session('success'))
@@ -30,32 +30,32 @@
                  <form method="POST" action="{{ route('admin.update.organization', $organization->id) }}" enctype="multipart/form-data">
                     @csrf
                  <div class="card-body row">
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4  mb-4">
                     <label for="organization_name">Organization Name <span class="text-danger">*</span></label>
                     <input type="text" name="organization_name" class="form-control" id="organization_name" placeholder="Enter Organization Name" value="{{ $organization->organization_name }}">
                   </div>
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4  mb-4">
                     <label for="business_type">Business Type <span class="text-danger"></span></label>
                     <input type="text" name="business_type" class="form-control" id="business_type" placeholder="Enter Business Type" value="{{ $organization->business_type}}">
                   </div>
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4  mb-4">
                     <label for="owner_name">Owner Name <span class="text-danger"></span></label>
                     <input type="text" name ="owner_name" class="form-control" id="owner_name" placeholder="Enter Owner Name" value="{{ $user_data->name ?? '' }}">  
                   </div>
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4  mb-4">
                     <label for="organization_email"> Email Address <span class="text-danger">*</span></label>
                     <input type="email" name ="organization_email" class="form-control" id="organization_email" placeholder="Enter Email" value="{{ $user_data->email}}" readonly  >
                   </div>
 
                  
                   
-                   <div class="form-group col-md-4">
+                   <div class="form-group col-md-4  mb-4">
                     <label for="mobile_number">Mobile  Number <span class="text-danger"></span></label>
                     <input type="text" name ="mobile_number" class="form-control" id="mobile_number" placeholder="Enter Mobile Number" value="{{ $user_data->phone_number}}">
                   </div>
                  
 
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4  mb-4">
                     <label for="subscription_plan">Subscription Plan<span class="text-danger">*</span></label>
                         <select name="subscription_plan" class="form-control" id="subscription_plan">
                           <option value="">Please Select Plan</option>
@@ -68,18 +68,31 @@
                         </select>
                   </div>
 
-                  <div class="form-group col-md-4">
-                    <label for="message">Message <span class="text-danger"></span></label>
-                    <textarea
-                        name="message"
-                        class="form-control"
-                        id="message"
-                        rows="5"
-                        placeholder="Enter Message"
-                        >{{ $organization->message }}</textarea>
-                </div>
+                    <div class="form-group col-md-4 mb-4">
+                      <label for="organization_logo">
+                          Organization Logo
+                      </label>
 
-                  <div class="form-group col-md-4">
+                      <input
+                          type="file"
+                          class="form-control"
+                          id="organization_logo"
+                          name="organization_logo"
+                          accept=".jpg,.jpeg,.png">
+
+                      <small class="text-muted d-block mt-2">
+                          JPG, PNG (Max 2MB)
+                      </small>
+
+                      <div class="mt-3">
+                          <img id="logoPreview"
+                              src="{{ $organization->organization_logo ? asset('storage/'.$organization->organization_logo) : asset('images/no-image.png') }}"
+                              class="img-thumbnail"
+                              style="width:120px;height:120px;object-fit:contain;">
+                      </div>
+                  </div>
+
+                  <div class="form-group col-md-4  mb-4">
                     <div class="form-check mt-2">
                         <input
                             class="form-check-input"
@@ -109,5 +122,25 @@
     </div>
 
 </div>
+<script>
+$('#organization_logo').on('change', function(e){
 
+    let file = e.target.files[0];
+
+    if(file){
+
+        let reader = new FileReader();
+
+        reader.onload = function(event){
+
+            $('#logoPreview')
+                .attr('src', event.target.result);
+
+        }
+
+        reader.readAsDataURL(file);
+    }
+
+});
+</script>
 @endsection

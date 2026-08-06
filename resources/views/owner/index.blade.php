@@ -1,13 +1,13 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Employees  List')
+@section('title', 'My Employees')
 
 @section('content')
 
 <div class="container-fluid">
     <div class="admin-page-header">
 
-<h3 class="card-title"><b>Employees List </b></h3>
+<h3 class="card-title"><b>My Employees </b></h3>
              <a href="{{ route('owner.employee.create') }}" class="btn btn-primary mb-3" style="float:right">Add Employee</a>
 
     </div>

@@ -614,6 +614,9 @@ public function forgotPassword(Request $request)
         }
 
         $user->save();
+        $user->profile_image = $user->profile_image
+        ? asset('storage/' . $user->profile_image)
+        : null;
 
         return response()->json([
             'status' => true,
@@ -749,7 +752,14 @@ public function forgotPassword(Request $request)
                 return response()->json([
                     'status' => true,
                     'message' => 'OTP has been sent to your registered email address.',
-                    'otp'=>$otp
+                    'otp'=>$otp,
+                    'organization' => [
+                        'id' => $organization->id,
+                        'organization_name ' => $organization->organization_name ,
+                        'organization_logo' => $organization->organization_logo
+                        ? asset('storage/' . $organization->organization_logo)
+                        : null,
+                    ],
                 ]);
 
             } catch (\Exception $e) {
@@ -918,6 +928,9 @@ public function forgotPassword(Request $request)
                     'id' => $organization->id,
                     'organization_name ' => $organization->organization_name ,
                     'organization_code' => $organization->organization_code,
+                     'organization_logo' => $organization->organization_logo
+        ? asset('storage/' . $organization->organization_logo)
+        : null,
                 ],
 
                 'subscription' => [
@@ -1293,6 +1306,9 @@ public function forgotPassword(Request $request)
                     'id' => $organization->id,
                     'organization_name' => $organization->organization_name,
                     'organization_code' => $organization->organization_code,
+                     'organization_logo' => $organization->organization_logo
+        ? asset('storage/' . $organization->organization_logo)
+        : null,
                 ] : null,
 
                 'subscription' => $subscription ? [

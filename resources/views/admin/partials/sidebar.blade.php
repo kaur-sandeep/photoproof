@@ -36,7 +36,7 @@
                     <a href="{{ route('admin.organization.data') }}"
                        class="nav-link text-white">
                         <i class="bi bi-buildings me-2"></i>
-                        Organization
+                        Organizations
                     </a>
                 </li>
 

@@ -27,15 +27,15 @@
                  <form method="POST" action="{{ route('admin.update.users.data',$admin->id) }}" enctype="multipart/form-data">
                     @csrf
                 <div class="card-body row">
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4 mb-4">
                     <label for="name">Name <span class="text-danger">*</span></label>
                     <input type="name" name ="name" class="form-control" id="name" placeholder="Enter Name"  value="{{ $admin->name}}">
                   </div>
-                  <div class="form-group col-md-4">
+                  <div class="form-group col-md-4 mb-4">
                     <label for="email">Email <span class="text-danger">*</span></label>
                     <input type="email" name ="email" class="form-control" id="email" placeholder="Enter Email"  value = "{{ $admin->email }}" readonly>
                   </div>
-                   <div class="form-group col-md-4">
+                   <div class="form-group col-md-4 mb-4">
                     <label for="number">Phone Number <span class="text-danger">*</span></label>
                     <input type="text" name ="phone_number" class="form-control" id="number" placeholder="Enter Number"  value = "{{ $admin->phone_number }}" >
                   </div>
@@ -59,7 +59,7 @@
                           </div>
                       @endif
 
-                  <div class="input-group col-md-4">
+                  <div class="input-group col-md-4 mb-4">
                       <input type="file" name="profile_image" class="form-control" id="inputGroupFile02">
                       <label class="input-group-text" for="inputGroupFile02">Upload</label>
                   </div>
