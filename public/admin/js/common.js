@@ -1247,11 +1247,30 @@ $(document).ready(function() {
             { data: 'limit', name: 'limit'},
             { data: 'employee_count', name: 'employee_count' },
             { data: 'photo_count', name: 'photo_count' },
-            { data: 'message', name: 'message', orderable: false, searchable: false },
+            //{ data: 'message', name: 'message', orderable: false, searchable: false },
             { data: 'organization_created', name: 'organization_created', orderable: false, searchable: false },
             { data: 'status', name: 'status', orderable: false, searchable: false },
             { data: 'actions', name: 'actions', orderable: false, searchable: false }
         ]
+    });
+
+    $('#organizationList').on('click', '.view-organization', function () {
+
+        // Get complete row data from DataTable
+        let data = table.row($(this).closest('tr')).data();
+
+        $('#m_code').html(data.organization_code);
+        $('#m_name').html(data.organization_name);
+        $('#m_email').html(data.organization_email);
+        $('#m_plan').html(data.plan);
+        $('#m_limit').html(data.limit);
+        $('#m_employee').html(data.employee_count);
+        $('#m_photo').html(data.photo_count);
+        $('#m_message').html(data.message);
+        $('#m_created').html(data.organization_created);
+        $('#m_status').html(data.status);
+
+        $('#organizationModal').modal('show');
     });
 
     // STATUS TOGGLE

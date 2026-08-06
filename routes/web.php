@@ -140,7 +140,8 @@ Route::prefix('admin')->group(function () {
         ->name('plans');
     Route::get('/organization', [OrganizationsController::class, 'index'])->name('organization');
     Route::post('/organization/store', [OrganizationsController::class, 'store'])->name('organization.store');
-
+    Route::get('/admin/organizations/{id}', [OrganizationController::class, 'show'])
+    ->name('admin.organizations.show');
     Route::post('/contact-submit', [PhotoController::class, 'contact_submit'])->name('contact_submit');
     Route::get('/contact-thank-you', function () {
             return view('user.contact_thankyou');

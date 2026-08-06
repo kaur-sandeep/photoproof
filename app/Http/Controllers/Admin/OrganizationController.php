@@ -101,13 +101,24 @@ public function list(Request $request){
             return DateTime::dateFormat($organizations->created_at) ?? '--';
         })
         ->addColumn('actions', function ($organizations) {
-            return '
+            return '   <button class="btn btn-sm btn-info view-organization"><i class="fa fa-eye"></i> View </button>
              <a href="'.route('admin.organization.edit.data', $organizations->id).'" class="btn btn-sm btn-warning">Edit</a>
              <button class="btn btn-sm btn-danger delete-user" data-id="'.$organizations->id.'">Delete</button>';
         })
         ->rawColumns(['status', 'actions', 'employee_count', 'photo_count','message'])
         ->make(true);
 }
+
+    public function show($id)
+    {
+        $organization = Organization::with([
+            'subscriptionPlan',
+            'users',
+            'photos'
+        ])->findOrFail($id);
+
+        return view('admin.organizations.org_show', compact('organization'));
+    }
 
     // public function employeeList(Request $request, $organizationId){
     //     // dd($organizationId);
