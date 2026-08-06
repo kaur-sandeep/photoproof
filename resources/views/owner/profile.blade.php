@@ -62,7 +62,7 @@
                     <div class="mb-3 col-md-4">
                       @if($user->profile_image)
                           <div class="mb-2">
-                              <img src="{{ asset('storage/profile/'.$user->profile_image) }}"
+                              <img src="{{ asset('storage/'.$user->profile_image) }}"
                                   alt="Profile Image"
                                   width="120"
                                   height="120"

@@ -678,7 +678,7 @@ public function forgotPassword(Request $request)
         if ($user->state != 1) {
 
             return response()->json([
-                'message'=>'User account inactive.'
+                'message'=>'Your account is no longer active. Please contact the administrator for assistance.'
             ],403);
         }
     

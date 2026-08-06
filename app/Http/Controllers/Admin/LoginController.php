@@ -73,8 +73,15 @@ class LoginController extends Controller
 
         // Check Admin
         $admin = Admin::where('email', $request->email)->first();
+   
 
         if ($admin) {
+            if ($admin->state != 1) {
+                return back()->withInput()->with(
+                    'error',
+                    'Your account is no longer active. Please contact the administrator for assistance.'
+                );
+            }
 
             if (!Auth::guard('admin')->attempt([
                 'email' => $request->email,
@@ -98,8 +105,14 @@ class LoginController extends Controller
 
         // Check User
         $user = User::where('email', $request->email)->first();
-
+     
         if ($user) {
+               if ($user->state != 1) {
+                    return back()->withInput()->with(
+                        'error',
+                        'Your account is no longer active. Please contact the administrator for assistance.'
+                    );
+                }
 
             if (!Auth::guard('web')->attempt([
                 'email' => $request->email,

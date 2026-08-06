@@ -28,13 +28,13 @@ class OwnerController extends Controller
         $users = User::where('state', '!=', -1)->where('organization_id',$org_id)->orderBy('created_at', 'desc')->get();
         $total_employees = count($users);
         $totalPhotos = PhotoDetail::whereHas('user', function ($query) use ($org_id) {
-            $query->where('organization_id', $org_id)
-                ->where('state', '!=', -1);
+            $query->where('organization_id', $org_id);
+                // ->where('state', '!=', -1);
         })->count();
 
         $monthlyPhotos = PhotoDetail::whereHas('user', function ($query) use ($org_id) {
-         $query->where('organization_id', $org_id)
-          ->where('state', '!=', -1);
+         $query->where('organization_id', $org_id);
+        //   ->where('state', '!=', -1);
         })
         ->whereMonth('created_at', Carbon::now()->month)
         ->whereYear('created_at', Carbon::now()->year)
@@ -89,16 +89,17 @@ class OwnerController extends Controller
         if ($request->hasFile('image')) {
 
         // Delete old image
-            if ($owner->profile_image && Storage::disk('public')->exists('profile/' . $owner->profile_image)) {
-                Storage::disk('public')->delete('profile/' . $owner->profile_image);
+          if ($owner->profile_image && \Storage::disk('public')->exists($owner->profile_image)) {
+                \Storage::disk('public')->delete($owner->profile_image);
             }
 
-            // Store image (auto generate name)
-            $path = $request->file('image')->store('profile', 'public');
-
+            $path = $request->file('image')->store('profiles', 'public');
+            
             // Save only filename
-            $owner->profile_image = basename($path);
+            $owner->profile_image = $path;
         }
+
+        
         $owner->save();
 
         return redirect()->back()->with('success', 'Profile updated successfully!');
@@ -374,21 +375,30 @@ class OwnerController extends Controller
             </a></span>';
         })
         ->addColumn('status', function ($users) {
-                if ($users->state == 1) {
-                    return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$users->id.'" data-status="0">Active</button>';
+                if (!$users->hasRole('owner')) {
+                    if ($users->state == 1) {
+                        return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$users->id.'" data-status="0">Active</button>';
+                    }
+                    if ($users->state == 0) {
+                        return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$users->id.'" data-status="1">Pending</button>';
+                        
+                    }
+                    return '<span class="badge bg-danger">Deleted</span>';
                 }
-                if ($users->state == 0) {
-                    return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$users->id.'" data-status="1">Pending</button>';
-                    
-                }
-                return '<span class="badge bg-danger">Deleted</span>';
+                else{
+                return '-';
+               }
         })
         ->addColumn('actions', function ($users) {
             // return '<a href="'.route('admin.users.show.data', $admins->id).'" class="btn btn-sm btn-primary">View</a>
             //         <a href="'.route('admin.users.edit.data', $admins->id).'" class="btn btn-sm btn-warning">Edit</a>
             //         <button class="btn btn-sm btn-danger delete-user" data-id="'.$admins->id.'">Delete</button>';
-             return '<a href="'.route('owner.employee.edit.data', $users->id).'" class="btn btn-sm btn-warning">Edit</a>
-                    <button class="btn btn-sm btn-danger delete-user" data-id="'.$users->id.'">Delete</button>';
+               if (!$users->hasRole('owner')) {
+                return '<a href="'.route('owner.employee.edit.data', $users->id).'" class="btn btn-sm btn-warning">Edit</a>
+                        <button class="btn btn-sm btn-danger delete-user" data-id="'.$users->id.'">Delete</button>';
+               }else{
+                return '-';
+               }
             
         }) 
         ->rawColumns(['role','status','photo_count', 'actions'])
