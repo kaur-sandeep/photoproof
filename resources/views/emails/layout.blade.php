@@ -24,7 +24,7 @@
    {!! $slot !!}
 
 
-<p>Thank you for using Photo Proof.<br><br>
+<br>
     Best regards,<br>
     Team Photo Proof 
 </p>

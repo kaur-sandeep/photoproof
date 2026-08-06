@@ -33,7 +33,6 @@
                 <thead>
                     <tr>
                         <!-- <th>#</th> -->
-                         <th>#</th>
                         <th>Organization Name</th>
                         <th>Email Address</th>
                         <th>Plan Name</th>
@@ -68,11 +67,6 @@
                 <table class="table table-bordered">
 
                     <tr>
-                        <th>Organization Code</th>
-                        <td id="m_code"></td>
-                    </tr>
-
-                    <tr>
                         <th>Organization Name</th>
                         <td id="m_name"></td>
                     </tr>
@@ -98,7 +92,7 @@
                     </tr>
 
                     <tr>
-                        <th>Total Photos</th>
+                        <th>Photos Uploaded</th>
                         <td id="m_photo"></td>
                     </tr>
 

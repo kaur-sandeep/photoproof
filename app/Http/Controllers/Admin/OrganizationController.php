@@ -44,9 +44,9 @@ public function list(Request $request){
         ->addColumn('organization_email', function ($organizations) {
             return optional($organizations->users->sortBy('created_at')->first())->email ?? '--';
         })
-        ->addColumn('organization_code', function ($organizations) {
-            return 'org_'.$organizations->id ?? '--';
-        })
+        // ->addColumn('organization_code', function ($organizations) {
+        //     return 'org_'.$organizations->id ?? '--';
+        // })
         ->addColumn('plan', function ($organizations) {
             return $organizations->subscription->plan->name ?? '--';
         })
@@ -233,7 +233,6 @@ public function list(Request $request){
             <p><strong>Username / Email:</strong> '.$user->email.'</p>
             <p><strong>Temporary Password:</strong> '.$request->password.'</p>
             <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
-            <p><strong>Organization Code:</strong> '.$organization->organization_code.'</p>
             <p><strong>Subscription Plan:</strong> '.$getPlanDataById->name.'</p>
             <hr>
             <h3>Next Steps</h3>
@@ -251,7 +250,6 @@ public function list(Request $request){
             <hr>
             <h3>Organization Details</h3>
             <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
-            <p><strong>Organization Code:</strong> '.$organization->organization_code.'</p>
             <p><strong>Owner Name:</strong> '.$user->name.'</p>
             <p><strong>Owner Email:</strong> '.$user->email.'</p>
             <p><strong>Temporary Password:</strong> '.$request->password.'</p>
