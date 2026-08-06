@@ -16,7 +16,7 @@
                         <th>Random Id</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Message</th>
+                      
                         <th>Type</th>
                         <th>IP Address</th>
                         <th>Date</th>
@@ -50,11 +50,6 @@
           <div id="row_email" class="detail-row">
             <span class="detail-label">Email</span>
             <span id="email" class="detail-value"></span>
-          </div>
-
-          <div id="row_message" class="detail-row detail-row-full">
-            <span class="detail-label">Message</span>
-            <span id="message" class="detail-value"></span>
           </div>
 
           <div id="row_browser" class="detail-row">

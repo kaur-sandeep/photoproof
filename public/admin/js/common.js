@@ -1948,7 +1948,6 @@ $(document).ready(function() {
            
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
-            { data: 'message', name: 'message' },
             { data: 'type', name: 'type' },
             { data: 'ip_address', name: 'ip_address'},
             { data: 'date', name: 'date'},
