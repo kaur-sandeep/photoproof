@@ -34,7 +34,7 @@
                     <tr>
                         <!-- <th>#</th> -->
                         <th>Organization Name</th>
-                        <th>Email Address</th>
+                        <th>Email</th>
                         <th>Plan Name</th>
                          <th>Monthly Photo Limit</th>
                         <!-- <th>Organization Code</th> -->

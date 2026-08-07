@@ -103,8 +103,8 @@ class OrganizationsController extends Controller
             <h3>Organization Details</h3>
 
             <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
-            <p><strong>Owner Name:</strong> '.$user->name.'</p>
-            <p><strong>Owner Email:</strong> '.$user->email.'</p>
+            <p><strong>Contact Person Name:</strong> '.$user->name.'</p>
+            <p><strong>Contact Person Email:</strong> '.$user->email.'</p>
             <p><strong>Temporary Password:</strong> '.$request->password.'</p>
             <p><strong>Created At:</strong> '.now()->format('d M Y, h:i A').'</p>
 

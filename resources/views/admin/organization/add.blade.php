@@ -39,16 +39,16 @@
                     <input type="text" name="business_type" class="form-control" id="business_type" placeholder="Enter Business Type" value="{{ old('business_type') }}">
                   </div>
                   <div class="form-group col-md-4 mb-4">
-                    <label for="owner_name">Owner Name <span class="text-danger"></span></label>
-                    <input type="text" name="owner_name" class="form-control" id="owner_name" placeholder="Enter Owner Name" value="{{ old('owner_name') }}">
+                    <label for="owner_name">Contact Person Name <span class="text-danger"></span></label>
+                    <input type="text" name="owner_name" class="form-control" id="owner_name" placeholder="Enter Contact Person Name" value="{{ old('owner_name') }}">
                   </div>
                    <div class="form-group col-md-4 mb-4">
-                    <label for="mobile_number">Mobile  Number <span class="text-danger"></span></label>
-                    <input type="text" name="mobile_number" class="form-control" id="mobile_number" placeholder="Enter Mobile Number" value="{{ old('mobile_number') }}">
+                    <label for="mobile_number">Contact Person Mobile  Number <span class="text-danger"></span></label>
+                    <input type="text" name="mobile_number" class="form-control" id="mobile_number" placeholder="Enter Contact Person Mobile Number" value="{{ old('mobile_number') }}">
                   </div>
                   <div class="form-group col-md-4 mb-4">
-                    <label for="organization_email"> Email Address <span class="text-danger">*</span></label>
-                    <input type="email" name="organization_email" class="form-control" id="organization_email" placeholder="Enter Email" value="{{ old('organization_email',request('email')) }}">
+                    <label for="organization_email"> Contact Person Email Address <span class="text-danger">*</span></label>
+                    <input type="email" name="organization_email" class="form-control" id="organization_email" placeholder="Enter Contact Person Email" value="{{ old('organization_email',request('email')) }}">
                   </div>
                   <div class="form-group col-md-4 mb-4">
                     <label for="password">Password <span class="text-danger">*</span></label>
@@ -91,7 +91,7 @@
 
                     <div class="mt-3">
                         <img id="logoPreview"
-                            src="{{ asset('images/no-image.png') }}"
+                            src="{{ asset('images/no-images.png') }}"
                             style="max-height:120px;display:none;border:1px solid #ddd;padding:5px;border-radius:8px;">
                     </div>
 

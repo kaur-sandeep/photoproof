@@ -500,11 +500,25 @@ class AuthController extends Controller
     */
     $photos = $query->latest()->paginate(20);
 
-    return response()->json([
-        'status' => true,
-        'photos' => $photos
-    ]);
-}
+        $subscription = OrganizationSubscriptions::with('plan')
+            ->where('organization_id', $user->organization_id)
+            ->where('state', 1)
+            ->where('starts_at', '<=', now())
+            ->where('expires_at', '>=', now())
+            ->first();
+      
+
+        return response()->json([
+            'status' => true,
+            'photos' => $photos,
+            'subscription' => [
+                'plan_name' => optional($subscription->plan)->name,
+                'photo_limit' => $subscription->monthly_photo_limit,
+                'photo_used' => $subscription->monthly_photo_used,
+                'expires_at' => $subscription->expires_at,
+            ]
+        ]);
+    }
 
 public function forgotPassword(Request $request)
 {

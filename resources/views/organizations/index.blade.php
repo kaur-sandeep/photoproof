@@ -156,28 +156,28 @@
 
           <div class="org-form">
             <div class="org-form-group">
-              <label>Organization name<span class="req">*</span></label>
-              <input type="text" name="organization_name" placeholder="Enter organization name" value="{{ old('organization_name') }}">
+              <label>Organization Name<span class="req">*</span></label>
+              <input type="text" name="organization_name" placeholder="Enter Organization Name" value="{{ old('organization_name') }}">
             </div>
 
             <div class="org-form-group">
-              <label>Business type</label>
-              <input type="text" name="business_type" placeholder="Enter business type" value="{{ old('business_type') }}">
+              <label>Business Type</label>
+              <input type="text" name="business_type" placeholder="Enter Business Type" value="{{ old('business_type') }}">
             </div>
 
             <div class="org-form-group">
-              <label>Owner name</label>
-              <input type="text" name="owner_name" placeholder="Enter owner name" value="{{ old('owner_name') }}">
+              <label>Contact Person name</label>
+              <input type="text" name="owner_name" placeholder="Enter Contact Person Name" value="{{ old('owner_name') }}">
             </div>
 
             <div class="org-form-group">
-              <label>Email address<span class="req">*</span></label>
-              <input type="email" name="organization_email" placeholder="Enter email" value="{{ old('organization_email') }}">
+              <label>Contact Person Mobile Number</label>
+              <input type="text" name="mobile_number" placeholder="Enter Contact Person Mobile Number" value="{{ old('mobile_number') }}">
             </div>
-
+            
             <div class="org-form-group">
-              <label>Mobile number</label>
-              <input type="text" name="mobile_number" placeholder="Enter mobile number" value="{{ old('mobile_number') }}">
+              <label>Contact Person Email Address<span class="req">*</span></label>
+              <input type="email" name="organization_email" placeholder="Enter Contact Person Email" value="{{ old('organization_email') }}">
             </div>
 
             <div class="org-form-group">
