@@ -223,39 +223,70 @@ public function list(Request $request){
             DB::rollBack();
             return redirect()->back()->withInput()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
-
         $slot = '
             <p>Dear <strong>' . ($user->name ?? 'User') . '</strong>,</p>
             <p>Welcome! Your organization has been created successfully.</p>
             <hr>
-            <h3>Login Details</h3>
-            <p><strong>Login URL:</strong> <a href="'.url('/admin/login').'">'.url('/admin/login').'</a></p>
-            <p><strong>Username / Email:</strong> '.$user->email.'</p>
-            <p><strong>Temporary Password:</strong> '.$request->password.'</p>
-            <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
-            <p><strong>Subscription Plan:</strong> '.$getPlanDataById->name.'</p>
-            <hr>
-            <h3>Next Steps</h3>
-            <ul>
-                <li>Log in using the credentials above.</li>
-                <li>Change your password after your first login.</li>
-                <li>Invite your employees from the dashboard.</li>
-                <li>Assign roles and permissions to your employees.</li>
-            </ul>';
+            <h3>Login Details</h3>';
 
-        // ✅ Admin ke liye alag content
-        $adminSlot = '
-            <p>Dear Admin,</p>
-            <p>A new organization has been registered on the platform.</p>
-            <hr>
-            <h3>Organization Details</h3>
-            <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
-            <p><strong>Contact Person Name:</strong> '.$user->name.'</p>
-            <p><strong>Contact Person Email:</strong> '.$user->email.'</p>
-            <p><strong>Temporary Password:</strong> '.$request->password.'</p>
-            <p><strong>Subscription Plan:</strong> '.$getPlanDataById->name.'</p>
-            <p><strong>Created At:</strong> '.now()->format('d M Y, h:i A').'</p>
-            <hr>';
+        if (!empty($user->email)) {
+            $slot .= '
+            <p><strong>Username / Email:</strong> ' . $user->email . '</p>';
+        }
+
+        if (!empty($request->password)) {
+            $slot .= '
+            <p><strong>Temporary Password:</strong> ' . $request->password . '</p>';
+        }
+
+        if (!empty($organization->organization_name)) {
+            $slot .= '
+            <p><strong>Organization Name:</strong> ' . $organization->organization_name . '</p>';
+        }
+
+         if (!empty($user->phone_number)) {
+            $slot .= '
+            <p><strong>Phone Number:</strong> ' . $user->phone_number . '</p>';
+        }
+
+        if (!empty($getPlanDataById->name)) {
+            $slot .= '
+            <p><strong>Subscription Plan:</strong> ' . $getPlanDataById->name . '</p>';
+        }
+
+            $slot .= '
+                <hr>
+                <h3>Next Steps</h3>
+                <ul>
+                    <li>Log in using the credentials above.</li>
+                    <li>Change your password after your first login.</li>
+                    <li>Invite your employees from the dashboard.</li>
+                    <li>Assign roles and permissions to your employees.</li>
+                </ul>';
+
+            $adminSlot = ' <p>Dear Admin,</p> 
+            <p>A new organization has been registered on the platform.</p>  <hr> <h3>Organization Details</h3> '; 
+            if (!empty($organization->organization_name)) { 
+                $adminSlot .= ' <p><strong>Organization Name:</strong> ' . $organization->organization_name . '</p>';
+             } 
+            if (!empty($user->phone_number)) {
+                $adminSlot .= '
+                <p><strong>Phone Number:</strong> ' . $user->phone_number . '</p>';
+            }
+
+             if (!empty($user->name)) { 
+                $adminSlot .= ' <p><strong>Contact Person Name:</strong> ' . $user->name . '</p>';
+             } 
+            if (!empty($user->email)) { 
+                $adminSlot .= ' <p><strong>Contact Person Email:</strong> ' . $user->email . '</p>'; 
+            } 
+            if (!empty($request->password)) { 
+                $adminSlot .= ' <p><strong>Temporary Password:</strong> ' . $request->password . '</p>'; 
+            } 
+            if (!empty($getPlanDataById->name)) {
+                 $adminSlot .= ' <p><strong>Subscription Plan:</strong> ' . $getPlanDataById->name . '</p>'; 
+             } 
+                $adminSlot .= ' <p><strong>Created At:</strong> ' . now()->format('d M Y, h:i A') . '</p> <hr>';
 
         // ✅ User ko uska content
         try {

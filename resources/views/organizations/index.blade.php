@@ -174,15 +174,21 @@
               <label>Contact Person Mobile Number</label>
               <input type="text" name="mobile_number" placeholder="Enter Contact Person Mobile Number" value="{{ old('mobile_number') }}">
             </div>
-            
+
             <div class="org-form-group">
               <label>Contact Person Email Address<span class="req">*</span></label>
               <input type="email" name="organization_email" placeholder="Enter Contact Person Email" value="{{ old('organization_email') }}">
             </div>
-
+             <div class="org-form-group">
+              </div>
             <div class="org-form-group">
               <label>Password<span class="req">*</span></label>
-              <input type="password" name="password" placeholder="Enter password">
+              <input type="password" name="password" placeholder="Enter password" value="{{ old('password') }}">
+            </div>
+
+            <div class="org-form-group"> 
+              <label>Confirm Password<span class="req">*</span></label> 
+              <input type="password" name="password_confirmation" id="password_confirmation" placeholder="Confirm password" value="{{ old('password_confirmation') }}"> 
             </div>
 
             <div class="org-form-group full">
@@ -190,6 +196,20 @@
               <textarea name="message" placeholder="Enter your message" rows="4">{{ old('message') }}</textarea>
             </div>
 
+              <div class="org-form-group full">
+                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+            </div>
+             <div class="org-form-group full"> 
+              <label style="display: flex; align-items: center; gap: 8px;">
+                 <input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }}> 
+                 <span> I agree to the <a href="{{ url('/terms-conditions') }}" target="_blank"> 
+                  Terms & Conditions </a>
+                 </span> 
+                </label> 
+              </div>
+
+          <input type="hidden" name="initial_landing_page" id="initial_landing_page">
+         <input type="hidden" name="submitted_from" id="submitted_from">
             <div class="org-footer">
               <button type="button" class="org-btn org-btn-secondary" onclick="window.history.back()">Cancel</button>
               <button type="submit" class="org-btn org-btn-primary">Create organization</button>
@@ -204,16 +224,30 @@
 </section>
 
 <script>
-    setTimeout(function () {
-        const flash = document.getElementById('flash-message');
-        if (flash) {
-            flash.style.transition = 'opacity 0.5s ease';
-            flash.style.opacity = '0';
+document.addEventListener('DOMContentLoaded', function () {
 
-            setTimeout(() => {
-                flash.remove();
-            }, 500);
-        }
-    }, 15000); // Hide after 15 seconds
+    /*
+     * Initial Landing Page
+     */
+    const initialLandingPage = sessionStorage.getItem('initial_landing_page');
+
+    const initialLandingField = document.getElementById('initial_landing_page');
+
+    if (initialLandingField) {
+        initialLandingField.value = initialLandingPage || window.location.href;
+    }
+
+
+    /*
+     * Submitted From
+     * This is the actual page where the user filled/submitted the form.
+     */
+    const submittedFromField = document.getElementById('submitted_from');
+
+    if (submittedFromField) {
+        submittedFromField.value = window.location.href;
+    }
+
+});
 </script>
 @endsection

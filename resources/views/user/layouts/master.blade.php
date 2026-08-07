@@ -40,6 +40,23 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
 
 @include('user.partials.popup')
 @include('user.partials.scripts')
+<script>
+(function () {
 
+    // Get the first page opened by the visitor
+    let initialLandingPage = sessionStorage.getItem('initial_landing_page');
+
+    // If not already stored, save the current first page
+    if (!initialLandingPage) {
+        initialLandingPage = window.location.href;
+
+        sessionStorage.setItem(
+            'initial_landing_page',
+            initialLandingPage
+        );
+    }
+
+})();
+</script>
 </body>
 </html>

@@ -516,6 +516,7 @@ class AuthController extends Controller
                 'photo_limit' => $subscription->monthly_photo_limit,
                 'photo_used' => $subscription->monthly_photo_used,
                 'expires_at' => $subscription->expires_at,
+                'sub_type'=>'Monthly'
             ]
         ]);
     }
@@ -952,6 +953,7 @@ public function forgotPassword(Request $request)
                     'photo_limit' => $subscription->monthly_photo_limit,
                     'photo_used' => $subscription->monthly_photo_used,
                     'expires_at' => $subscription->expires_at,
+                    'sub_type'=>'Monthly'
                 ]
             ]);
         }
@@ -961,7 +963,8 @@ public function forgotPassword(Request $request)
         $validator = Validator::make($request->all(), [
             // 'display_name' => 'required|string|max:255',
             'photo' => 'required|image|mimes:jpg,jpeg,png|max:15360', // max 5MB
-            'location' => 'nullable|string|max:255'
+            'location' => 'nullable|string|max:255',
+            'password' => 'required|min:6|confirmed',
         ]);
 
         if ($validator->fails()) {
@@ -1240,6 +1243,7 @@ public function forgotPassword(Request $request)
                     'photo_limit' => $subscription->monthly_photo_limit,
                     'photo_used' => $subscription->monthly_photo_used,
                     'expires_at' => $subscription->expires_at,
+                    'sub_type'=>'Monthly'
                 ]
         ]);
     }
@@ -1330,6 +1334,7 @@ public function forgotPassword(Request $request)
                     'photo_limit' => $subscription->monthly_photo_limit,
                     'photo_used' => $subscription->monthly_photo_used,
                     'expires_at' => $subscription->expires_at,
+                    'sub_type'=>'Monthly'
                 ] : null,
             ]);
         }

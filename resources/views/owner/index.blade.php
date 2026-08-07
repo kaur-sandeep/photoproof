@@ -11,6 +11,7 @@
              <a href="{{ route('owner.employee.create') }}" class="btn btn-primary mb-3" style="float:right">Add Employee</a>
 
     </div>
+      
     <div class="card">
        
         <div class="card-body">

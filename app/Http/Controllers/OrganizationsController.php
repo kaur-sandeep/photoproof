@@ -11,6 +11,7 @@ use App\Notifications\CommonMailNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Helpers\ActivityLogger;
 use App\Models\Setting;
+
 class OrganizationsController extends Controller
 {
     public function index()
@@ -25,8 +26,31 @@ class OrganizationsController extends Controller
             'organization_name'   => 'required|string|max:255',
             'organization_email'  => 'required|email|unique:users,email',
             // 'mobile_number' => 'numeric|digits_between:10,14',
-            'password' => 'required|min:6',
-        ]);
+            'password' => 'required|min:6|confirmed|regex:/^[A-Z](?=.*[a-z])(?=.*\d).+$/',
+             'g-recaptcha-response' => 'required',
+             'terms'              => 'required|accepted',
+        ],
+            [
+                'g-recaptcha-response.required' => 'Google captcha field is required.',
+                'terms.required' => 'Terms & Conditions is required.',
+                'terms.accepted' => 'You must accept the Terms & Conditions.',
+                'password.required' => 'Password is required.',
+                'password.min' => 'Password must be at least 6 characters.',
+                'password.confirmed' => 'Password and Confirm Password must be the same.',
+                'password.regex' => 'Password must start with a capital letter and contain at least one lowercase letter and one number.',
+
+            ]);
+             $response = Http::asForm()->post(
+                'https://www.google.com/recaptcha/api/siteverify',
+                [
+                    'secret' => env('RECAPTCHA_SECRET_KEY'),
+                    'response' => $request->input('g-recaptcha-response'),
+                ]
+            );
+
+            if (!$response->json()['success']) {
+                return back()->with('error', 'Captcha verification failed.');
+            }
 
         DB::beginTransaction();
         try {
@@ -63,52 +87,91 @@ class OrganizationsController extends Controller
 
        $slot = '
             <p>Dear <strong>' . ($user->name ?? 'User') . '</strong>,</p>
-
             <p>Welcome! Your organization has been created successfully.</p>
-
             <hr>
+            <h3>Login Details</h3>';
 
-            <h3>Login Details</h3>
+        if (!empty($user->email)) {
+            $slot .= '
+            <p><strong>Username / Email:</strong> ' . $user->email . '</p>';
+        }
 
-            <p><strong>Login URL:</strong>
-                <a href="'.url('/login').'">'.url('/login').'</a>
-            </p>
+        if (!empty($request->password)) {
+            $slot .= '
+            <p><strong>Temporary Password:</strong> ' . $request->password . '</p>';
+        }
 
-            <p><strong>Username / Email:</strong> '.$user->email.'</p>
+        if (!empty($organization->organization_name)) {
+            $slot .= '
+            <p><strong>Organization Name:</strong> ' . $organization->organization_name . '</p>';
+        }
 
-            <p><strong>Temporary Password:</strong> '.$request->password.'</p>
+         if (!empty($user->phone_number)) {
+            $slot .= '
+            <p><strong>Phone Number:</strong> ' . $user->phone_number . '</p>';
+        }
 
-            <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
-            <hr>
+        if (!empty($getPlanDataById->name)) {
+            $slot .= '
+            <p><strong>Subscription Plan:</strong> ' . $getPlanDataById->name . '</p>';
+        }
 
-            <h3>Next Steps</h3>
+            $slot .= '
+                <hr>
+                <h3>Next Steps</h3>
+                <ul>
+                    <li>Log in using the credentials above.</li>
+                    <li>Change your password after your first login.</li>
+                    <li>Invite your employees from the dashboard.</li>
+                    <li>Assign roles and permissions to your employees.</li>
+                </ul>';
 
-            <ul>
-                <li>Log in using the credentials above.</li>
-                <li>Change your password after your first login.</li>
-                <li>Invite your employees from the dashboard.</li>
-                <li>Assign roles and permissions to your employees.</li>
-            </ul>
+            $adminSlot = ' <p>Dear Admin,</p> 
+            <p>A new organization has been registered on the platform.</p>  <hr> <h3>Organization Details</h3> '; 
+            if (!empty($organization->organization_name)) { 
+                $adminSlot .= ' <p><strong>Organization Name:</strong> ' . $organization->organization_name . '</p>';
+             } 
 
-            <p>If you have any questions, please contact our support team.</p>';
+             if (!empty($user->name)) { 
+                $adminSlot .= ' <p><strong>Contact Person Name:</strong> ' . $user->name . '</p>';
+             } 
+            if (!empty($user->phone_number)) {
+                $adminSlot .= '
+                <p><strong>Phone Number:</strong> ' . $user->phone_number . '</p>';
+            }
+            if (!empty($user->email)) { 
+                $adminSlot .= ' <p><strong>Contact Person Email:</strong> ' . $user->email . '</p>'; 
+            } 
+            if (!empty($request->password)) { 
+                $adminSlot .= ' <p><strong>Temporary Password:</strong> ' . $request->password . '</p>'; 
+            } 
+            if (!empty($getPlanDataById->name)) {
+                 $adminSlot .= ' <p><strong>Subscription Plan:</strong> ' . $getPlanDataById->name . '</p>'; 
+             } 
+             if (!empty($request->message)) {
+                 $adminSlot .= ' <p><strong>Message:</strong> ' . $request->message . '</p>'; 
+             } 
 
-            // ✅ Admin ke liye alag content
-            $adminSlot = '
-            <p>Dear Admin,</p>
 
-            <p>A new organization has been registered on the platform.</p>
+             $adminSlot .= ' <hr> <h3>Cookie Information</h3> '; 
+             if (!empty($request->initial_landing_page)) {
+                    $adminSlot .= '
+                        <p><strong>Initial Landing Page:</strong> ' .
+                        $request->initial_landing_page .
+                        '</p>';
+                }
+                        
+           if (!empty($request->input('submitted_from'))) {
+                $adminSlot .= '
+                    <p><strong>Submitted From:</strong> ' .
+                    $request->input('submitted_from') .
+                    '</p>';
+            }
+            $adminSlot .= ' <p><strong>Date and Time:</strong> ' . now()->format('d M Y, h:i A') . '</p> '; 
+            if (!empty($request->ip())) { 
+                $adminSlot .= ' <p><strong>IP Address:</strong> ' . $request->ip() . '</p>'; } if (!empty($request->userAgent())) { $adminSlot .= ' <p><strong>Browser:</strong> ' . $request->userAgent() . '</p>'; }
 
-            <hr>
-
-            <h3>Organization Details</h3>
-
-            <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
-            <p><strong>Contact Person Name:</strong> '.$user->name.'</p>
-            <p><strong>Contact Person Email:</strong> '.$user->email.'</p>
-            <p><strong>Temporary Password:</strong> '.$request->password.'</p>
-            <p><strong>Created At:</strong> '.now()->format('d M Y, h:i A').'</p>
-
-            <hr>';
+                $adminSlot .= ' <p><strong>Created At:</strong> ' . now()->format('d M Y, h:i A') . '</p> <hr>';
 
             // ✅ User ko uska content
             try {
@@ -142,7 +205,7 @@ class OrganizationsController extends Controller
             'Created new organization: ' . $request->organization_name
         );
 
-        return redirect()->back()->with('success', 'Your organization registration request has been submitted successfully. It is currently pending approval. Our administrator will contact you shortly.');
+        return redirect()->back()->with('success', 'Your organization registration request has been submitted successfully. It is currently pending approval. Our administrator will contact you shortly.')->withInput([]);;
     }
 
 }

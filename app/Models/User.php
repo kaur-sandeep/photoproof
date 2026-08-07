@@ -42,7 +42,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'device_type',
         'timezone',
         'organization_id',
-        'device_id'
+        'device_id',
+         'terms_accepted'
     ];
 
     /**
