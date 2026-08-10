@@ -1899,23 +1899,13 @@ $(document).ready(function() {
         },
 
         columns: [
-            { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
-             { data: 'image', name: 'image' },
-            { data: 'photo_random_id', name: 'photo_random_id' },
-           
-            { data: 'name', name: 'name' },
-            { data: 'email', name: 'email' },
-            { data: 'type', name: 'type' },
-            { data: 'ip_address', name: 'ip_address'},
-            { data: 'date', name: 'date'},
-            { data:'actions',name: 'actions',orderable: false,}
+            { data: 'notification', name: 'notification', orderable: false, searchable: true }
         ],
-         columnDefs: [
-            {
-                targets: 2,
-                visible: notificationType != 'Contact us'
-            }
-        ]
+        language: {
+            emptyTable: 'No notifications to show.',
+            zeroRecords: 'No notifications match your search.'
+        },
+        dom: '<"d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3"lf>rt<"d-flex flex-wrap justify-content-between align-items-center"ip>'
 
     });
 
@@ -2180,6 +2170,7 @@ $(document).on('click', '.ownerviewNotification', function () {
     let notificationId = $(this).data('id');
     let button = $(this);
     let row = button.closest('tr');
+    let notificationItem = button.closest('.owner-notification-item');
 
     button.prop('disabled', true);
 
@@ -2192,13 +2183,14 @@ $(document).on('click', '.ownerviewNotification', function () {
         success: function (response) {
 
             row.removeClass('custom-unread-row').addClass('custom-read-row');
+            notificationItem.removeClass('is-unread');
 
             let updatedCount = parseInt(response.newCount);
 
             if (updatedCount <= 0) {
-                $('#notificationCount').text(0).hide();
+                $('#ownernotificationCount').text(0).hide();
             } else {
-                $('#notificationCount').text(updatedCount).show();
+                $('#ownernotificationCount').text(updatedCount).show();
             }
         },
         complete: function () {
@@ -2220,7 +2212,6 @@ $(document).on('click', '.ownerviewNotification', function () {
     // Show Image
     toggleImage(button.data('image'), 'reported_image', 'row_image');
 
-    $('#shwonotificationModal').modal('show');
 });
 
 function toggleField(value, spanId, rowId) {

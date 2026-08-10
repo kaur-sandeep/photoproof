@@ -905,8 +905,9 @@ class OwnerController extends Controller
 
     public function notificationsList(Request $request)
 {
-    $org_id = (int) User::find(Auth::id())->organization_id;
-
+    $user_data =  User::find(Auth::id());
+    $org_id = (int) $user_data->organization_id;
+    
     $notifications = Notifications::query()
         ->where('organization_id', $org_id); // ✅ direct filter, no join needed
 
@@ -918,7 +919,6 @@ class OwnerController extends Controller
         ->where('state', '!=', -1)
         ->orderBy('created_at', 'desc')
         ->get();
-
     return DataTables::of($notifications)
         ->addIndexColumn()
         ->setRowClass(function ($notifications) {
@@ -983,7 +983,7 @@ class OwnerController extends Controller
             $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
             $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
             $image = $photo ? asset('storage/' . ($photo->thumbnail ?: $photo->photo)) : $default;
-
+            
             return '
                 <button
                     class="btn btn-primary btn-sm ownerviewNotification"
@@ -1005,7 +1005,54 @@ class OwnerController extends Controller
                 </button>
                 ';
         })
-        ->rawColumns(['image','name','actions','message','email','type','ip_address','date'])
+        ->addColumn('notification', function ($notifications) {
+            $data = json_decode($notifications->data, true) ?: [];
+            $notificationUser = User::where('email', $notifications->email)->first();
+            $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
+            $photoUrl = $photo ? asset('storage/' . ($photo->thumbnail ?: $photo->photo)) : '';
+            $avatarUrl = $notificationUser && $notificationUser->profile_image ? asset('storage/' . $notificationUser->profile_image) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
+            $name = $notifications->name ?: 'Someone';
+            $message = $data['message'] ?? 'New activity was recorded.';
+            $type = ucwords($notifications->type ?: 'Notification');
+            $date = DateTime::dateFormat($notifications->created_at);
+            $ip = $data['ip'] ?? '';
+            $browser = $data['browser'] ?? '';
+            $platform = $data['platform'] ?? '';
+            $deviceType = $data['deviceType'] ?? '';
+            $location = !empty($data['country']) && !empty($data['region']) && !empty($data['city']) && !empty($data['zip'])
+                ? implode(', ', [$data['country'], $data['region'], $data['city'], $data['zip']])
+                : '';
+            $photoThumbnail = $photoUrl
+                ? '<img src="'.e($photoUrl).'" alt="Related photo" class="notification-photo">'
+                : '';
+            $unreadClass = $notifications->is_read == 0 ? ' is-unread' : '';
+
+            return '<article class="owner-notification-item'.$unreadClass.'">
+                <img src="'.e($avatarUrl).'" alt="'.e($name).'" class="notification-avatar">
+                <div class="notification-copy">
+                    <div class="notification-message">'.e($name).' '.e($type).'</div>
+                    <time class="notification-date">'.e($date).'</time>
+                </div>
+                <div class="notification-side">
+                    '.$photoThumbnail.'
+                    <button type="button" class="notification-view-btn ownerviewNotification"
+                        data-id="'.e($notifications->id).'"
+                        data-name="'.e($name).'"
+                        data-email="'.e($notifications->email).'"
+                        data-message="'.e($message).'"
+                        data-image="'.e($photoUrl).'"
+                        data-ip="'.e($ip).'"
+                        data-type="'.e($type).'"
+                        data-date="'.e($date).'"
+                        data-browser="'.e($browser).'"
+                        data-platform="'.e($platform).'"
+                        data-devicetype="'.e($deviceType).'"
+                        data-location="'.e($location).'"
+                        data-bs-toggle="modal" data-bs-target="#ownerNotificationModal">View details</button>
+                </div>
+            </article>';
+        })
+        ->rawColumns(['image','name','actions','message','email','type','ip_address','date','notification'])
         ->make(true);
 }
 
