@@ -11,12 +11,17 @@ use App\Notifications\CommonMailNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Helpers\ActivityLogger;
 use App\Models\Setting;
-
+use Illuminate\Support\Facades\Http;
 class OrganizationsController extends Controller
 {
     public function index()
     {
         return view('organizations.index');
+    }
+
+    public function thankYou()
+    {
+        return view('organizations.thank-you');
     }
 
 
@@ -26,7 +31,12 @@ class OrganizationsController extends Controller
             'organization_name'   => 'required|string|max:255',
             'organization_email'  => 'required|email|unique:users,email',
             // 'mobile_number' => 'numeric|digits_between:10,14',
-            'password' => 'required|min:6|confirmed|regex:/^[A-Z](?=.*[a-z])(?=.*\d).+$/',
+            'password' => [
+                    'required',
+                    'min:6',
+                    'confirmed',
+                    'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])\S+$/',
+                ],
              'g-recaptcha-response' => 'required',
              'terms'              => 'required|accepted',
         ],
@@ -37,7 +47,7 @@ class OrganizationsController extends Controller
                 'password.required' => 'Password is required.',
                 'password.min' => 'Password must be at least 6 characters.',
                 'password.confirmed' => 'Password and Confirm Password must be the same.',
-                'password.regex' => 'Password must start with a capital letter and contain at least one lowercase letter and one number.',
+               'password.regex' => 'Password must contain at least one letter, one number, and one special character.',
 
             ]);
              $response = Http::asForm()->post(
@@ -205,7 +215,7 @@ class OrganizationsController extends Controller
             'Created new organization: ' . $request->organization_name
         );
 
-        return redirect()->back()->with('success', 'Your organization registration request has been submitted successfully. It is currently pending approval. Our administrator will contact you shortly.')->withInput([]);;
+        return redirect()->route('organization.thank-you');
     }
 
 }
