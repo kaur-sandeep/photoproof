@@ -1095,7 +1095,7 @@ $(document).ready(function() {
                     let html = '<ul class="list-group">';
                     data.forEach(function(item) {
                         html += `
-                            <li class="list-group-item notificationRow d-flex justify-content-between align-items-start bg-light"
+                            <li class="list-group-item ownernotificationRow d-flex justify-content-between align-items-start bg-light"
                                 data-id="${item.id}" data-is-read="${item.is_read}" style="cursor: pointer;">
                                 <div class="notification-text">
                                     <b>${item.name}</b><br>
@@ -1127,7 +1127,7 @@ $(document).ready(function() {
     });
 
     // ✅ Row click → mark as read + redirect (merged both blocks into one working handler)
-    $(document).on('click', '.notificationRow', function () {
+    $(document).on('click', '.ownernotificationRow', function () {
         let row = $(this);
         let id = row.data('id');
         let isRead = row.data('is-read');

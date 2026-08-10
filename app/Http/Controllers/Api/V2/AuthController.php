@@ -964,7 +964,7 @@ public function forgotPassword(Request $request)
             // 'display_name' => 'required|string|max:255',
             'photo' => 'required|image|mimes:jpg,jpeg,png|max:15360', // max 5MB
             'location' => 'nullable|string|max:255',
-            'password' => 'required|min:6|confirmed',
+            // 'password' => 'required|min:6|confirmed',
         ]);
 
         if ($validator->fails()) {
