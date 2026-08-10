@@ -20,7 +20,182 @@ use Carbon\Carbon;
 use App\Models\Notifications;
 class OwnerController extends Controller
 {
-    public function index()
+public function index()
+{
+    $id = Auth::id();
+
+    $org_id = (int) Auth::user()->organization_id;
+
+    /*
+    |--------------------------------------------------------------------------
+    | Total Employees
+    |--------------------------------------------------------------------------
+    */
+
+    $users = User::where('state', '!=', -1)
+        ->where('organization_id', $org_id)
+        ->where('id', '!=', $id)
+        ->orderBy('created_at', 'desc')
+        ->get();
+
+    $total_employees = $users->count();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Total Photos
+    |--------------------------------------------------------------------------
+    */
+
+    $totalPhotos = PhotoDetail::whereHas('user', function ($query) use ($org_id) {
+        $query->where('organization_id', $org_id);
+    })->count();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Current Month Photos
+    |--------------------------------------------------------------------------
+    */
+
+    $monthlyPhotos = PhotoDetail::whereHas('user', function ($query) use ($org_id) {
+        $query->where('organization_id', $org_id);
+    })
+    ->whereMonth('created_at', Carbon::now()->month)
+    ->whereYear('created_at', Carbon::now()->year)
+    ->count();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Subscription / Monthly Limit
+    |--------------------------------------------------------------------------
+    */
+
+    $org = Organization::with('subscription')->findOrFail($org_id);
+
+    $monthlyPhotoLimit = $org->subscription->monthly_photo_limit ?? 0;
+
+    $remainingPhotos = max(
+        0,
+        $monthlyPhotoLimit - $monthlyPhotos
+    );
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Latest 10 Employees
+    |--------------------------------------------------------------------------
+    */
+
+    $latestUsers = User::where('state', '!=', -1)
+        ->where('organization_id', $org_id)
+        ->where('id', '!=', $id)
+        ->orderBy('created_at', 'desc')
+        ->take(10)
+        ->get();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Latest 10 Uploaded Photos
+    |--------------------------------------------------------------------------
+    */
+
+    $latestPhotos = PhotoDetail::with('user')
+        ->whereHas('user', function ($query) use ($org_id) {
+            $query->where('organization_id', $org_id);
+        })
+        ->orderBy('created_at', 'desc')
+        ->take(10)
+        ->get();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Monthly Photo Upload Count Per User
+    |--------------------------------------------------------------------------
+    |
+    | Only users who uploaded at least one photo this month
+    | will be included in the pie chart.
+    |
+    */
+
+    $monthlyUploadedPhotos = PhotoDetail::with('user')
+        ->whereHas('user', function ($query) use ($org_id) {
+            $query->where('organization_id', $org_id);
+        })
+        ->whereMonth('created_at', Carbon::now()->month)
+        ->whereYear('created_at', Carbon::now()->year)
+        ->get();
+
+    $photoUploadsByUser = $monthlyUploadedPhotos
+        ->groupBy('user_id')
+        ->map(function ($photos) {
+            return [
+                'name' => optional($photos->first()->user)->name ?? 'Unknown User',
+                'count' => $photos->count(),
+            ];
+        })
+        ->values();
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Data for Chart.js
+    |--------------------------------------------------------------------------
+    */
+
+    /*
+|--------------------------------------------------------------------------
+| Data for Chart.js
+|--------------------------------------------------------------------------
+*/
+
+// User names
+$chartLabels = $photoUploadsByUser
+    ->pluck('name')
+    ->values()
+    ->toArray();
+
+// User upload counts
+$chartData = $photoUploadsByUser
+    ->pluck('count')
+    ->values()
+    ->toArray();
+
+/*
+|--------------------------------------------------------------------------
+| Add Remaining Photos to Pie Chart
+|--------------------------------------------------------------------------
+*/
+
+$remainingForChart = max(
+    0,
+    $monthlyPhotoLimit - $monthlyPhotos
+);
+
+if ($remainingForChart > 0) {
+
+    $chartLabels[] = 'Remaining';
+
+    $chartData[] = $remainingForChart;
+}
+
+
+    return view('owner.dashboard', compact(
+        'total_employees',
+        'totalPhotos',
+        'monthlyPhotoLimit',
+        'remainingPhotos',
+        'monthlyPhotos',
+        'latestUsers',
+        'latestPhotos',
+        'chartLabels',
+        'chartData'
+    ));
+}
+    public function index_bk()
     {
         $id = Auth::user()->id;
         $org_id =  (int)User::find(Auth::id())->organization_id;
@@ -137,8 +312,30 @@ class OwnerController extends Controller
         return back()->with('success', 'Password changed successfully');
     }
 
-    public function employees(){
-         return view('owner.index');
+    public function employees()
+    {
+        $orgId = (int) Auth::user()->organization_id;
+
+        // Organization + subscription
+        $org = Organization::with('subscription')->findOrFail($orgId);
+
+        $monthlyPhotoLimit = $org->subscription->monthly_photo_limit ?? 0;
+
+        // Photos uploaded THIS MONTH
+        $usedPhotos = PhotoDetail::whereHas('user', function ($query) use ($orgId) {
+                $query->where('organization_id', $orgId);
+            })
+            ->whereMonth('created_at', Carbon::now()->month)
+            ->whereYear('created_at', Carbon::now()->year)
+            ->count();
+
+        $remainingPhotos = max(0, $monthlyPhotoLimit - $usedPhotos);
+
+        return view('owner.index', compact(
+            'monthlyPhotoLimit',
+            'usedPhotos',
+            'remainingPhotos'
+        ));
     }
 
     
