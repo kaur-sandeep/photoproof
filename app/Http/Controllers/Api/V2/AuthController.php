@@ -188,7 +188,8 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             // 'display_name' => 'required|string|max:255',
             'photo' => 'required|image|mimes:jpg,jpeg,png|max:15360', // max 5MB
-            'location' => 'nullable|string|max:255'
+            'location' => 'nullable|string|max:255',
+            'device_id'=>'required',
         ]);
 
         if ($validator->fails()) {
