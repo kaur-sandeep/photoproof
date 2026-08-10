@@ -746,6 +746,36 @@ public function updateOrganization(Request $request, $id)
         ' from ' . ($statusText[$oldStatus] ?? $oldStatus) .
         ' to ' . ($statusText[$request->status] ?? $request->status)
     );
+
+    /* |-------------------------------------------------------------------------- | Send activation email |-------------------------------------------------------------------------- | Only send email when organization becomes Active. */
+    if ($request->status == 1 && $oldStatus != 1) { 
+        $user = User::where('organization_id', $organization->id) ->role('owner') ->first();
+
+        if ($user && !empty($user->email)) {
+                $planName = '';
+                if ($organization->subscription && $organization->subscription->plan) { 
+                $planName = $organization->subscription->plan->name; 
+                } 
+            $slot = ' <p>Dear ' . e($user->name ?? 'User') . ',</p> <p> Welcome! Your organization has been activated successfully. You can now log in to your account and start using the portal. </p> <h3>Account Details</h3> <p> <strong>Username / Email:</strong> ' . e($user->email) . ' </p> <p> <strong>Organization Name:</strong> ' . e($organization->organization_name) . ' </p>'; 
+            if (!empty($user->phone_number)) { 
+                $slot .= ' <p> <strong>Phone Number:</strong> ' . e($user->phone_number) . ' </p>';
+            }
+            if (!empty($planName)) { 
+                $slot .= ' <p> <strong>Subscription Plan:</strong> ' . e($planName) . ' </p>'; 
+            } 
+                $slot .= '<hr> <h3>Next Steps</h3> <ul> <li>Log in using your registered email address.</li>  <li>Invite your employees from the dashboard.</li> </ul> <p> Thank you for choosing our platform. </p>'; 
+            try { 
+                Notification::route('mail', $user->email) ->notify( new CommonMailNotification( 'Your Organization Account Has Been Activated', $slot ) );
+              
+            } catch (\Exception $e) { 
+            // Email failure should not stop status update 
+              
+                \Log::error( 'Organization activation email failed: ' . $e->getMessage() ); 
+            } 
+        } 
+    }
+
+
     if($request->status == -1){
           return response()->json([
             'success' => true,

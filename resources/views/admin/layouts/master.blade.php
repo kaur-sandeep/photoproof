@@ -5,7 +5,7 @@
 </head>
 
 <body class="layout-fixed sidebar-expand-lg bg-body-tertiary">
-
+<div id="loader" class="loader-overlay" style="display: none;"> <div class="loader-content"> <div class="spinner-border text-primary" role="status"></div> <div class="processing-text">Processing...</div> </div> </div>
 <div class="app-wrapper">
     @include('admin.partials.header')
     

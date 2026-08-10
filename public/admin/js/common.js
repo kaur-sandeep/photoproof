@@ -1214,7 +1214,7 @@ $(document).ready(function() {
     $('#organizationList').on('click', '.toggle-status', function () {
         let id = $(this).data('id');
         let status = $(this).data('status');
-
+        $('#loader').show();
         if (confirm("Are you sure you want to change the status?")) {
             $.ajax({
                 url: window.APP_URL + '/admin/update/organizations/status',
@@ -1224,7 +1224,7 @@ $(document).ready(function() {
                     status: status
                 },
                 success: function (response) {
-
+                    $('#loader').hide();
                     // ✅ Plan missing / any failure case — show the backend message
                     if (!response.success) {
                         alert(response.message);
@@ -1236,6 +1236,7 @@ $(document).ready(function() {
                     table.ajax.reload(null, false);
                 },
                 error: function (xhr) {
+                    $('#loader').hide();
                     console.log("STATUS CODE:", xhr.status);
                     console.log("RESPONSE:", xhr.responseText);
                     alert("Failed. Check console.");
