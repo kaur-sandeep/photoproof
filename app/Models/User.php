@@ -43,7 +43,8 @@ class User extends Authenticatable implements MustVerifyEmail
         'timezone',
         'organization_id',
         'device_id',
-         'terms_accepted'
+         'terms_accepted',
+         'fcm_token'
     ];
 
     /**

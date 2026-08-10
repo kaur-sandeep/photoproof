@@ -803,6 +803,7 @@ public function forgotPassword(Request $request)
                 'email' => 'required|email',
                 'otp'   => 'required|digits:6',
                 'device_id'=>'required',
+                  'fcm_token' => 'nullable|string',
             ]);
 
             // Find user
@@ -911,15 +912,11 @@ public function forgotPassword(Request $request)
             // Save device ID
             $user->update([
                 'device_id' => $request->device_id,
+                'fcm_token' => $request->fcm_token,
             ]);
 
             // Remove old login tokens
             $user->tokens()->delete();
-
-            // Create new login token
-            $token = $user->createToken('organization-app')->plainTextToken;
-
-
             // Create new Sanctum token
             $token = $user->createToken('organization-app')->plainTextToken;
             
@@ -964,7 +961,7 @@ public function forgotPassword(Request $request)
             // 'display_name' => 'required|string|max:255',
             'photo' => 'required|image|mimes:jpg,jpeg,png|max:15360', // max 5MB
             'location' => 'nullable|string|max:255',
-            // 'password' => 'required|min:6|confirmed',
+            //'password' => 'required|min:6|confirmed',
         ]);
 
         if ($validator->fails()) {
@@ -1178,6 +1175,22 @@ public function forgotPassword(Request $request)
         ->role('owner')
         ->where('state', 1)
         ->first();
+
+                
+        if ($owner && !empty($owner->fcm_token)) {
+
+            app(\App\Services\FcmService::class)->sendToToken(
+                $owner->fcm_token,
+                'New Photo Uploaded',
+                $user->name . ' uploaded a new photo.',
+                [
+                    'type' => 'photo_uploaded',
+                    'photo_random_id' => $photo->random_id,
+                    'employee_id' => $user->id,
+                ]
+            );
+        }
+
 
         if ($organization && $organization->enable_photo_email) {
           $photoUrl = $photo->photo_url; // from accessor
