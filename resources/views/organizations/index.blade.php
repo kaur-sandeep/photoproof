@@ -10,7 +10,7 @@
     .organization-kicker { display:inline-flex; align-items:center; gap:8px; padding:7px 11px; border-radius:999px; background:#e8f1ff; color:#205fc4; font-size:.74rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
     .organization-intro h1 { max-width:510px; margin:20px 0 16px; color:var(--org-navy); font-family:Montserrat, sans-serif; font-size:clamp(2.2rem, 4vw, 3.5rem); font-weight:700; line-height:1.14; letter-spacing:-.04em; }
     .organization-intro > p { max-width:525px; margin:0; color:#50627e; font-size:1.04rem; line-height:1.7; }
-    .organization-features { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:34px; }
+    .organization-features { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:34px; margin-bottom: 43px; }
     .organization-feature { display:flex; gap:12px; min-height:109px; padding:17px; border:1px solid #e3ebf6; border-radius:14px; background:rgba(255,255,255,.82); box-shadow:0 7px 24px rgba(26, 69, 123, .045); }
     .organization-feature-icon { display:grid; flex:0 0 38px; width:38px; height:38px; place-items:center; border-radius:11px; background:#eaf3ff; color:var(--org-blue); font-size:1.05rem; }
     .organization-feature h2 { margin:1px 0 5px; color:#263750; font-size:.92rem; font-weight:700; }
@@ -144,7 +144,7 @@
                         <div class="organization-form-grid">
                             <div class="organization-form-group full"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell us anything that will help us support your team" rows="4">{{ old('message') }}</textarea></div>
                             <div class="organization-form-group full organization-captcha"><div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div></div>
-                            <div class="organization-form-group full"><label class="organization-terms"><input type="checkbox" name="terms" value="1" {{ old('terms') ? 'checked' : '' }}><span>I agree to the <a href="{{ url('/terms-conditions') }}" target="_blank">Terms &amp; Conditions</a></span></label></div>
+                            <div class="organization-form-group full"><label class="organization-terms"><input type="checkbox" name="terms" style="margin-right: 10px;" value="1" {{ old('terms') ? 'checked' : '' }}><span> I agree to the <a href="{{ url('/terms-conditions') }}" target="_blank">Terms &amp; Conditions</a></span></label></div>
                         </div>
                     </div>
 

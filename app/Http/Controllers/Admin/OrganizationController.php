@@ -168,8 +168,17 @@ public function list(Request $request){
             'organization_email'  => ['required', 'email', Rule::unique('users', 'email')],
             'subscription_plan'   => 'required|exists:subscription_plans,id',
             'password'            => 'required|min:6',
+            'organization_logo' => [
+                    'nullable',
+                    'image',
+                    'mimes:jpg,jpeg,png',
+                    'max:2048',
+                    'dimensions:min_width=200,max_width=320,min_height=45,max_height=90',
+                ],
         ], [
             'organization_email.unique' => 'This email is already registered. Please use a different email address.',
+            'organization_logo.dimensions' =>
+                'Logo dimensions should be approximately 260 × 60 pixels (allowed range: 200–320 × 45–90 pixels).',
         ]);
 
         DB::beginTransaction();
@@ -500,7 +509,17 @@ public function updateOrganization(Request $request, $id)
         'organization_name'  => 'required|string|max:255',
         'mobile_number'      => 'nullable|numeric|digits_between:10,14',
         'password'           => 'nullable|min:6',
-    ]);
+         'organization_logo' => [
+                    'nullable',
+                    'image',
+                    'mimes:jpg,jpeg,png',
+                    'max:2048',
+                    'dimensions:min_width=200,max_width=320,min_height=45,max_height=90',
+                ],
+    ], [
+              'organization_logo.dimensions' =>
+                'Logo dimensions should be approximately 260 × 60 pixels (allowed range: 200–320 × 45–90 pixels).',
+        ]);
 
     // \Log::info("[$traceId] Validation passed", [
     //     'subscription_plan_raw' => $request->subscription_plan,

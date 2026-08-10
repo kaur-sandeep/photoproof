@@ -1,8 +1,21 @@
 <aside class="app-sidebar bg-dark text-white shadow">
+   @php
+    $organization = \App\Models\Organization::find(Auth::user()->organization_id);
+    @endphp
 
     <div class="sidebar-brand p-3 text-center">
-        <img src="/user/images/logo-white.png" width="200" height="" alt="header-logo">
+        <img
+            src="{{ !empty($organization?->organization_logo)
+                ? asset('storage/' . $organization->organization_logo)
+                : asset('user/images/logo-white.png') }}"
+            width="200"
+            alt="Organization Logo"
+            style="max-height: 60px; object-fit: contain;"
+        >
     </div>
+    <!-- <div class="sidebar-brand p-3 text-center">
+        <img src="/user/images/logo-white.png" width="200" height="" alt="header-logo">
+    </div> -->
 
     <div class="sidebar-wrapper px-2">
 
