@@ -52,6 +52,21 @@ class FcmService
         $payload = [
             'message' => [
                 'token' => $token,
+                  // Android
+                    'android' => [
+                        'notification' => [
+                            'sound' => 'default',
+                        ],
+                    ],
+
+                    // iPhone / iOS
+                    'apns' => [
+                        'payload' => [
+                            'aps' => [
+                                'sound' => 'default',
+                            ],
+                        ],
+                    ],
 
                 'notification' => [
                     'title' => $title,

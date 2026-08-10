@@ -135,8 +135,17 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
-        if ($request->user()) {
-            $request->user()->tokens()->delete();
+        $user = $request->user();
+
+        if ($user) {
+
+            // Delete FCM token
+            $user->update([
+                'fcm_token' => null,
+            ]);
+
+            // Delete Sanctum login tokens
+            $user->tokens()->delete();
         }
 
         return response()->json([
