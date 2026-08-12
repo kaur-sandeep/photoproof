@@ -40,7 +40,7 @@
                   </div>
                   
                    <div class="form-group col-md-4 mb-4">
-                    <label for="number">Phone Number <span class="text-danger">*</span></label>
+                    <label for="number">Phone Number</label>
                     <input type="text" name ="phone_number" class="form-control" id="number" placeholder="Enter Phone Number" value="{{ old('phone_number') }}">
                   </div>
                 </div>

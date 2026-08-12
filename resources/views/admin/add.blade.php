@@ -1,12 +1,12 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Add organization User')
+@section('title', 'Add Company')
 
 @section('content')
 
 <div class="container-fluid">
     <div class="admin-page-header">
-        <h3 class="card-title"><b>Add organization User </b></h3>
+        <h3 class="card-title"><b>Add Company </b></h3>
     </div>
     <div class="row">
   @if(session('success'))

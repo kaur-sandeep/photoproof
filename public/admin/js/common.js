@@ -455,7 +455,8 @@ const uploadIsp = matchedTrack?.isp ?? '';
     //             <b>ISP:</b> ${rowData.isp ?? ''}<br>
     //     <hr>
      var html = `
-       ${rowData.random_id ? `<b>Random Id:</b> ${rowData.random_id}<br>` : ''}
+                ${rowData.name ? `<b>Name:</b> ${rowData.name}<br>` : ''}
+                ${rowData.random_id ? `<b>Random Id:</b> ${rowData.random_id}<br>` : ''}
                 ${rowData.word_api_date_time ? `<b>Date & Time:</b> ${rowData.word_api_date_time}<br>` : ''}
                 ${rowData.location ? `<b>Location:</b> ${rowData.location}<br>` : ''}
                 ${rowData.latitude ? `<b>Latitude:</b> ${rowData.latitude}<br>` : ''}

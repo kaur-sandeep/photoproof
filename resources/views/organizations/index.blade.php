@@ -72,7 +72,7 @@
 							<ol class="breadcrumb-list">
 								<li><a href="/">Home</a></li>
 								
-								<li>Create Organization </li>
+								<li>Create Corporate Account </li>
 							</ol>
 						</nav>
 					</div>
@@ -100,7 +100,7 @@
             <div class="organization-card">
                 <div class="organization-card-header">
                     <span class="organization-card-icon"><i class="bi bi-buildings"></i></span>
-                    <h2>Create Organization</h2>
+                    <h2>Create Corporate Account</h2>
                     <p>Fill in the details below to register your organization with PhotoProof.</p>
                 </div>
 
@@ -155,7 +155,7 @@
                                     <label class="form-check-label" for="terms">
                                         I agree to the
                                         <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#organizationTermsModal">
-                                            Create Organization Terms &amp; Conditions
+                                            Create Corporate Account Terms &amp; Conditions
                                         </a>
                                     </label>
 
@@ -167,7 +167,7 @@
                     <input type="hidden" name="submitted_from" id="submitted_from">
                     <div class="organization-actions">
                         <!-- <button type="button" class="organization-button organization-button-cancel" onclick="window.history.back()">Cancel</button> -->
-                        <button type="submit" class="organization-button organization-button-submit">Create Organization <i class="bi bi-arrow-right"></i></button>
+                        <button type="submit" class="organization-button organization-button-submit">Create Corporate Account <i class="bi bi-arrow-right"></i></button>
                     </div>
                 </form>
             </div>
@@ -191,7 +191,7 @@
 
                 <div class="modal-header">
                     <h5 class="modal-title" id="organizationTermsModalLabel">
-                        Create Organization Terms &amp; Conditions
+                        Create Corporate Account Terms &amp; Conditions
                     </h5>
 
                     <button type="button"

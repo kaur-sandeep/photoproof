@@ -197,7 +197,7 @@ return DataTables::of($notifications)
             $createOrganizationButton = '
                 <a href="'.url('/admin/organization/create').'?name='.urlencode($notifications->name).'&email='.urlencode($notifications->email).'"
                 class="btn btn-success btn-sm ms-1">
-                    Create Organization
+                    Create Corporate Account
                 </a>';
         }
             $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();

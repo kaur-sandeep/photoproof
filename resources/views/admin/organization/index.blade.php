@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Organizations List')
+@section('title', 'Corporate Accounts List')
 
 @section('content')
 <style>
@@ -22,8 +22,8 @@
 <div class="container-fluid">
     <div class="admin-page-header">
 
-<h3 class="card-title"><b>Organizations List </b></h3>
-             <a href="{{ route('admin.organization.create') }}" class="btn btn-primary mb-3" style="float:right">Add Organization</a>
+<h3 class="card-title"><b>Corporate Accounts List </b></h3>
+             <a href="{{ route('admin.organization.create') }}" class="btn btn-primary mb-3" style="float:right">Add Corporate Account</a>
 
     </div>
     <div class="card">
@@ -33,7 +33,7 @@
                 <thead>
                     <tr>
                         <!-- <th>#</th> -->
-                        <th>Organization Name</th>
+                        <th>Company Name</th>
                         <th>Email</th>
                         <th>Plan Name</th>
                          <th>Monthly Photo Limit</th>
@@ -58,7 +58,7 @@
         <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Organization Details</h5>
+                <h5 class="modal-title">Company Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
@@ -67,7 +67,7 @@
                 <table class="table table-bordered">
 
                     <tr>
-                        <th>Organization Name</th>
+                        <th>Company Name</th>
                         <td id="m_name"></td>
                     </tr>
 

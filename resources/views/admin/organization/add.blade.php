@@ -1,12 +1,12 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Add Organization')
+@section('title', 'Add Company')
 
 @section('content')
 
 <div class="container-fluid">
     <div class="admin-page-header">
-        <h3 class="card-title"><b>Add Organization</b></h3>
+        <h3 class="card-title"><b>Add Company</b></h3>
     </div>
     <div class="row">
           @if(session('success'))
@@ -31,7 +31,7 @@
                     @csrf
                  <div class="card-body row">
                   <div class="form-group col-md-4 mb-4">
-                    <label for="organization_name">Organization Name <span class="text-danger">*</span></label>
+                    <label for="organization_name">Company Name <span class="text-danger">*</span></label>
                     <input type="text" name="organization_name" class="form-control" id="organization_name" placeholder="Enter Organization Name" value="{{ old('organization_name', request('name')) }}">
                   </div>
                   <div class="form-group col-md-4 mb-4">
