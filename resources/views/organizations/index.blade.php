@@ -144,7 +144,22 @@
                         <div class="organization-form-grid">
                             <div class="organization-form-group full"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell us anything that will help us support your team" rows="4">{{ old('message') }}</textarea></div>
                             <div class="organization-form-group full organization-captcha"><div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div></div>
-                            <div class="organization-form-group full"><label class="organization-terms"><input type="checkbox" name="terms" style="margin-right: 10px;" value="1" {{ old('terms') ? 'checked' : '' }}><span> I agree to the <a href="{{ url('/terms-conditions') }}" target="_blank">Terms &amp; Conditions</a></span></label></div>
+                            <div class="organization-form-group full form-check">
+                                <!-- <label class="organization-terms">
+                                    <input type="checkbox" name="terms" style="margin-right: 10px;" value="1" {{ old('terms') ? 'checked' : '' }}>
+                                    <span> I agree to the <a href="{{ url('/terms-conditions') }}" target="_blank">Terms &amp; Conditions</a></span>
+                                </label> -->
+                          
+                                    <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
+
+                                    <label class="form-check-label" for="terms">
+                                        I agree to the
+                                        <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#organizationTermsModal">
+                                            Create Organization Terms &amp; Conditions
+                                        </a>
+                                    </label>
+
+                            </div>
                         </div>
                     </div>
 
@@ -166,6 +181,98 @@
                 <article class="organization-step"><span class="organization-step-number">03</span><h3>Start capturing photos</h3><p>Employees can capture and upload photos through the PhotoProof app.</p></article>
             </div>
         </section>
+    </div>
+        <!-- Create Organization Terms & Conditions Modal -->
+    <div class="modal fade" id="organizationTermsModal" tabindex="-1"
+        aria-labelledby="organizationTermsModalLabel" aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-scrollable">
+            <div class="modal-content">
+
+                <div class="modal-header">
+                    <h5 class="modal-title" id="organizationTermsModalLabel">
+                        Create Organization Terms &amp; Conditions
+                    </h5>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Close">
+                    </button>
+                </div>
+
+                <div class="modal-body" style="color:black">
+
+                    <h6>1. Organization Account</h6>
+                    <p>
+                        By creating an organization account, you confirm that the
+                        information provided during registration is accurate and complete.
+                    </p>
+
+                    <h6>2. Organization Administrator</h6>
+                    <p>
+                        The organization owner or administrator is responsible for
+                        managing employees, organization information, and account access.
+                    </p>
+
+                    <h6>3. Employee Accounts</h6>
+                    <p>
+                        The organization administrator may invite employees to use the
+                        PhotoProof application. The administrator is responsible for
+                        ensuring that invited employees are authorized to use the service.
+                    </p>
+
+                    <h6>4. Photo Uploads</h6>
+                    <p>
+                        Uploaded photos must comply with applicable laws and must not
+                        contain prohibited, illegal, or unauthorized content.
+                    </p>
+
+                    <h6>5. Subscription Plan</h6>
+                    <p>
+                        Organization features and photo upload limits are determined by
+                        the selected subscription plan. Usage beyond the applicable plan
+                        limits may be restricted.
+                    </p>
+
+                    <h6>6. Account Security</h6>
+                    <p>
+                        You are responsible for maintaining the confidentiality of your
+                        login credentials and for all activities performed through your
+                        organization account.
+                    </p>
+
+                    <h6>7. Suspension or Deactivation</h6>
+                    <p>
+                        We reserve the right to suspend or deactivate an organization
+                        account if these terms are violated or if the account is used
+                        for unlawful activities.
+                    </p>
+
+                    <h6>8. Acceptance</h6>
+                    <p>
+                        By checking the "I agree" checkbox and creating an organization
+                        account, you confirm that you have read, understood, and agreed
+                        to these Terms &amp; Conditions.
+                    </p>
+
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        Close
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-primary"
+                            data-bs-dismiss="modal"
+                            onclick="document.getElementById('terms').checked = true;">
+                        I Agree
+                    </button>
+                </div>
+
+            </div>
+        </div>
     </div>
 </section>
 

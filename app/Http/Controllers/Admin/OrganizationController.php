@@ -237,15 +237,15 @@ public function list(Request $request){
             <p>Welcome! Your organization has been created successfully.</p>
             <hr>
             <h3>Login Details</h3>';
-
+        $adminUrl = url('/admin/login');
         if (!empty($user->email)) {
-            $slot .= '
+            $slot .= ' <p> <strong>Login URL:</strong> ' . e($adminUrl) . ' </p> 
             <p><strong>Username / Email:</strong> ' . $user->email . '</p>';
         }
 
         if (!empty($request->password)) {
             $slot .= '
-            <p><strong>Temporary Password:</strong> ' . $request->password . '</p>';
+            <p><strong>Password:</strong> ' . $request->password . '</p>';
         }
 
         if (!empty($organization->organization_name)) {
@@ -268,16 +268,21 @@ public function list(Request $request){
                 <h3>Next Steps</h3>
                 <ul>
                     <li>Log in using the credentials above.</li>
-                    <li>Change your password after your first login.</li>
                     <li>Invite your employees from the dashboard.</li>
-                    <li>Assign roles and permissions to your employees.</li>
-                </ul>';
+                </ul> <hr>
+
+                <h3>Download the Mobile App</h3>
+
+                <p>If you haven\'t already, download the Photo Proof mobile app:</p>
+                 <p><a href="'.config('app.app_urls.android', '#').'">Download for Android</a> | <a href="'.config('app.app_urls.ios', '#').'">Download for iOS</a></p>
+
+                <hr>';
 
             $adminSlot = ' <p>Dear Admin,</p> 
             <p>A new organization has been registered on the platform.</p>  <hr> <h3>Organization Details</h3> '; 
             if (!empty($organization->organization_name)) { 
                 $adminSlot .= ' <p><strong>Organization Name:</strong> ' . $organization->organization_name . '</p>';
-             } 
+            } 
             if (!empty($user->phone_number)) {
                 $adminSlot .= '
                 <p><strong>Phone Number:</strong> ' . $user->phone_number . '</p>';
@@ -290,7 +295,7 @@ public function list(Request $request){
                 $adminSlot .= ' <p><strong>Contact Person Email:</strong> ' . $user->email . '</p>'; 
             } 
             if (!empty($request->password)) { 
-                $adminSlot .= ' <p><strong>Temporary Password:</strong> ' . $request->password . '</p>'; 
+                $adminSlot .= ' <p><strong>Password:</strong> ' . $request->password . '</p>'; 
             } 
             if (!empty($getPlanDataById->name)) {
                  $adminSlot .= ' <p><strong>Subscription Plan:</strong> ' . $getPlanDataById->name . '</p>'; 
@@ -775,22 +780,26 @@ public function updateOrganization(Request $request, $id)
                 if ($organization->subscription && $organization->subscription->plan) { 
                 $planName = $organization->subscription->plan->name; 
                 } 
-            $slot = ' <p>Dear ' . e($user->name ?? 'User') . ',</p> <p> Welcome! Your organization has been activated successfully. You can now log in to your account and start using the portal. </p> <h3>Account Details</h3> <p> <strong>Username / Email:</strong> ' . e($user->email) . ' </p> <p> <strong>Organization Name:</strong> ' . e($organization->organization_name) . ' </p>'; 
-            if (!empty($user->phone_number)) { 
-                $slot .= ' <p> <strong>Phone Number:</strong> ' . e($user->phone_number) . ' </p>';
-            }
-            if (!empty($planName)) { 
-                $slot .= ' <p> <strong>Subscription Plan:</strong> ' . e($planName) . ' </p>'; 
-            } 
-                $slot .= '<hr> <h3>Next Steps</h3> <ul> <li>Log in using your registered email address.</li>  <li>Invite your employees from the dashboard.</li> </ul> <p> Thank you for choosing our platform. </p>'; 
-            try { 
-                Notification::route('mail', $user->email) ->notify( new CommonMailNotification( 'Your Organization Account Has Been Activated', $slot ) );
-              
-            } catch (\Exception $e) { 
-            // Email failure should not stop status update 
-              
-                \Log::error( 'Organization activation email failed: ' . $e->getMessage() ); 
-            } 
+                $adminUrl = url('/admin/login');
+                $slot = ' <p>Dear ' . e($user->name ?? 'User') . ',</p> <p> Welcome! Your organization has been activated successfully. You can now log in to your account and start using the portal. </p> <h3>Account Details</h3> 
+                <p> <strong>Login URL:</strong> ' . e($adminUrl) . ' </p> 
+                <p> <strong>Username / Email:</strong> ' . e($user->email) . ' </p> 
+                <p> <strong>Organization Name:</strong> ' . e($organization->organization_name) . ' </p>'; 
+                if (!empty($user->phone_number)) { 
+                    $slot .= ' <p> <strong>Phone Number:</strong> ' . e($user->phone_number) . ' </p>';
+                }
+                if (!empty($planName)) { 
+                    $slot .= ' <p> <strong>Subscription Plan:</strong> ' . e($planName) . ' </p>'; 
+                } 
+                    $slot .= '<hr> <h3>Next Steps</h3> <ul> <li>Log in using your registered email address.</li>  <li>Invite your employees from the dashboard.</li> </ul> <p> Thank you for choosing our platform. </p>'; 
+                try { 
+                    Notification::route('mail', $user->email) ->notify( new CommonMailNotification( 'Your Organization Account Has Been Activated', $slot ) );
+                
+                } catch (\Exception $e) { 
+                // Email failure should not stop status update 
+                
+                    \Log::error( 'Organization activation email failed: ' . $e->getMessage() ); 
+                } 
         } 
     }
 

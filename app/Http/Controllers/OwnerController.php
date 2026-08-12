@@ -404,7 +404,7 @@ if ($remainingForChart > 0) {
             <h3>Download the Mobile App</h3>
 
             <p>If you haven\'t already, download the Photo Proof mobile app:</p>
-            <p><a href="'.config('app.android_app_url', '#').'">Download for Android</a> | <a href="'.config('app.ios_app_url', '#').'">Download for iOS</a></p>
+             <p><a href="'.config('app.app_urls.android', '#').'">Download for Android</a> | <a href="'.config('app.app_urls.ios', '#').'">Download for iOS</a></p>
 
             <hr>';
 
@@ -429,31 +429,33 @@ if ($remainingForChart > 0) {
 
     public function activateEmployee(Request $request, $id)
     {
-        $user = User::find($id);
+        $employee = User::find($id);
 
-        if (!$user) {
+        if (!$employee) {
             return view('employee.activation-failed', [
                 'message' => 'Invalid activation link.'
             ]);
         }
 
-        if ($user->state == 1) {
+        if ($employee->state == 1) {
             return view('owner.employee.activation-email', [
+                'employee' => $employee,
                 'message' => 'Your account is already active.',
                 'success' => true
             ]);
         }
 
-        $user->state = 1; // ✅ Pending → Active
-        $user->save();
+        $employee->state = 1;
+        $employee->save();
 
         ActivityLogger::log(
             'Update',
             'Employee',
-            'Employee activated account: ' . $user->email
+            'Employee activated account: ' . $employee->email
         );
 
         return view('owner.employee.activation-email', [
+            'employee' => $employee,
             'message' => 'Your account has been activated successfully!',
             'success' => true
         ]);

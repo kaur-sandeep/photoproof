@@ -38,7 +38,7 @@
                         <th>Plan Name</th>
                          <th>Monthly Photo Limit</th>
                         <!-- <th>Organization Code</th> -->
-                        <th>Total Employee</th>
+                        <th>Total Employees</th>
                         <th>Total Photos</th>
                         <!-- <th>Message</th> -->
                         <th>Created at</th>

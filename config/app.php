@@ -122,5 +122,9 @@ return [
         'driver' => env('APP_MAINTENANCE_DRIVER', 'file'),
         'store' => env('APP_MAINTENANCE_STORE', 'database'),
     ],
+    'app_urls' => [
+        'ios' => env('IOS_APP_URL'),
+        'android' => env('ANDROID_APP_URL'),
+    ],
 
 ];

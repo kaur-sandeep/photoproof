@@ -1242,6 +1242,8 @@ $(document).ready(function() {
                     alert("Failed. Check console.");
                 }
             });
+        }else{
+              $('#loader').hide();
         }
     });
 

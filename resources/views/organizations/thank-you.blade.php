@@ -30,8 +30,11 @@
 <section class="organization-thank-you">
     <div class="organization-thank-you-card">
         <div class="organization-thank-you-icon"><i class="bi bi-check2"></i></div>
-        <h1>Registration Submitted</h1>
-        <p>Your organization registration request has been submitted successfully. It is currently pending approval. Our administrator will contact you shortly.</p>
+       <h1>Thank You! Your Registration Has Been Submitted</h1>
+        <p>
+            Your organization registration request has been submitted successfully and is currently under review.
+            Our administrator will review your request and contact you shortly once your organization has been approved.
+        </p>
         <p class="organization-thank-you-note">Thank you for choosing PhotoProof.</p>
         <a href="{{ url('/') }}">Return to Home</a>
     </div>
