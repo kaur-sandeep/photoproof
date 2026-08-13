@@ -740,7 +740,7 @@ public function forgotPassword(Request $request)
         }
 
         // 7. Generate OTP
-        $otp = random_int(100000, 999999);
+        $otp = random_int(1000, 9999);
         EmployeeOtp::where('user_id', $user->id)
             ->whereNull('verified_at')
             ->delete();

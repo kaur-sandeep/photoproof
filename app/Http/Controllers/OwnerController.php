@@ -18,6 +18,7 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 use App\Models\Notifications;
+use App\Models\EmployeeOtp;
 class OwnerController extends Controller
 {
 public function index()
@@ -373,40 +374,100 @@ if ($remainingForChart > 0) {
             ['id' => $user->id]
         );
 
-        $slot = '
-            <p>Dear <strong>'.$user->name.'</strong>,</p>
+       $slot = '
+    <p>Dear <strong>'.$user->name.'</strong>,</p>
 
-            <p>You have been invited to join <strong>'.$organization->organization_name.'</strong> on Photo Proof.</p>
+    <p>
+        You have been invited to join
+        <strong>'.$organization->organization_name.'</strong>
+        on Photo Proof.
+    </p>
 
-            <hr>
 
-            <h3>Account Details</h3>
+    <h3>Account Details</h3>
 
-            <p><strong>Organization Name:</strong> '.$organization->organization_name.'</p>
-            <p><strong>Employee Email:</strong> '.$user->email.'</p>
+    <p>
+        <strong>Organization Name:</strong>
+        '.$organization->organization_name.'
+    </p>
 
-            <hr>
+    <p>
+        <strong>Email:</strong>
+        '.$user->email.'
+    </p>
 
-            <h3>Activate Your Account</h3>
+    <h3>How to Get Started</h3>
 
-            <p>Please click the button below to activate your account:</p>
+    <p>
+        <strong>Step 1: Activate Your Account</strong><br>
+        Click the <strong>Activate My Account</strong> button above
+        and complete your account activation.
+    </p>
 
-            <p>
-                <a href="'.$activationUrl.'" style="background:#2563eb;color:#fff;padding:10px 20px;text-decoration:none;border-radius:5px;">
-                    Activate My Account
-                </a>
-            </p>
+    <p>
+        <strong>Step 2: Download the App</strong><br>
+        Download Photo Proof from the App Store or Google Play using
+        the links below.
+    </p>
+    <p>
+        <a href="'.config('app.app_urls.android', '#').'"
+           style="color:#2563eb;">
+            Download for Android
+        </a>
+        &nbsp;|&nbsp;
+        <a href="'.config('app.app_urls.ios', '#').'"
+           style="color:#2563eb;">
+            Download for iOS
+        </a>
+    </p>
 
-            <p>Or copy this link into your browser:<br>'.$activationUrl.'</p>
+    <p>
+        <strong>Step 3: Login as Corporate Login</strong><br>
+        Open the Photo Proof app and select
+        <strong>Login as Corporate Login</strong>.
+        Enter your registered email address.
+    </p>
 
-            <hr>
+    <p> <strong>Step 4: Use Your First Login OTP</strong><br> 
+    After activating your account, a unique first-login OTP will be displayed on the account activation page. Use that OTP in the Photo Proof app to complete your first login. <strong>This OTP is valid for 20 minutes.</strong> </p>
 
-            <h3>Download the Mobile App</h3>
+    <p>
+        <strong>Step 5: Start Using Photo Proof</strong><br>
+        Once logged in, you can capture and upload photos through the
+        Photo Proof app. Your photos will automatically be linked to
+        your company account.
+    </p>
 
-            <p>If you haven\'t already, download the Photo Proof mobile app:</p>
-             <p><a href="'.config('app.app_urls.android', '#').'">Download for Android</a> | <a href="'.config('app.app_urls.ios', '#').'">Download for iOS</a></p>
 
-            <hr>';
+
+    <h3>Activate Your Account</h3>
+
+    <p>
+        Please click the button below to activate your account:
+    </p>
+
+    <p>
+        <a href="'.$activationUrl.'"
+           style="background:#2563eb;color:#fff;padding:10px 20px;
+                  text-decoration:none;border-radius:5px;">
+            Activate My Account
+        </a>
+    </p>
+
+    <p>
+        Or copy this link into your browser:<br>
+        <a href="'.$activationUrl.'"
+           style="color:#2563eb;">
+            '.$activationUrl.'
+        </a>
+    </p>
+
+
+    <p>
+        If you did not expect this invitation, please contact your
+        company administrator.
+    </p>
+';
 
         try {
             Notification::route('mail', $user->email)
@@ -426,8 +487,59 @@ if ($remainingForChart > 0) {
 
         return redirect()->back()->with('success', 'Employee invited successfully!');
     }
-
     public function activateEmployee(Request $request, $id)
+    {
+        $employee = User::find($id);
+
+        if (!$employee) {
+            return view('employee.activation-failed', [
+                'message' => 'Invalid activation link.'
+            ]);
+        }
+
+        // Already active
+        if ($employee->state == 1) {
+            return view('owner.employee.activation-email', [
+                'employee' => $employee,
+                'message' => 'Your account is already active.',
+                'success' => true,
+                'first_login_otp' => null,
+            ]);
+        }
+
+        // Activate account
+        $employee->state = 1;
+        $employee->save();
+
+        // Generate first-login OTP
+        $otp = random_int(1000, 9999);
+
+        // Remove any previous unused OTP
+        EmployeeOtp::where('user_id', $employee->id)
+            ->whereNull('verified_at')
+            ->delete();
+
+        // Save new OTP
+        EmployeeOtp::create([
+            'user_id'    => $employee->id,
+            'otp'        => $otp,
+            'expires_at' => now()->addMinutes(20),
+        ]);
+
+        ActivityLogger::log(
+            'Update',
+            'Employee',
+            'Employee activated account: ' . $employee->email
+        );
+
+        return view('owner.employee.activation-email', [
+            'employee' => $employee,
+            'message' => 'Your account has been activated successfully!',
+            'success' => true,
+            'first_login_otp' => $otp,
+        ]);
+    }
+    public function activateEmployeebk(Request $request, $id)
     {
         $employee = User::find($id);
 
@@ -447,6 +559,8 @@ if ($remainingForChart > 0) {
 
         $employee->state = 1;
         $employee->save();
+
+
 
         ActivityLogger::log(
             'Update',

@@ -213,6 +213,98 @@
             width: 100%;
         }
     }
+
+    .first-login-section {
+    margin-top: 30px;
+    padding: 28px 24px;
+    border-radius: 14px;
+    background: #0c1525;
+    border: 1px solid #2d405c;
+    text-align: center;
+}
+
+.first-login-icon {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(37, 99, 235, 0.12);
+    border: 1px solid rgba(37, 99, 235, 0.35);
+    color: #60a5fa;
+}
+
+.first-login-icon svg {
+    width: 22px;
+    height: 22px;
+}
+
+.first-login-title {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.first-login-description {
+    max-width: 600px;
+    margin: 0 auto 20px;
+    color: #8f9bad;
+    font-size: 14px;
+    line-height: 1.7;
+}
+
+.otp-box {
+    display: inline-block;
+    min-width: 180px;
+    padding: 14px 25px;
+    margin: 5px 0 10px;
+    border-radius: 10px;
+    background: #050a13;
+    border: 1px solid #3b82f6;
+    color: #fff;
+    font-size: 34px;
+    font-weight: 700;
+    letter-spacing: 8px;
+}
+
+.otp-expiry {
+    color: #8f9bad;
+    font-size: 12px;
+    margin: 5px 0 16px;
+}
+
+.otp-expiry strong {
+    color: #fbbf24;
+}
+
+.otp-instruction {
+    padding: 12px 15px;
+    border-radius: 8px;
+    background: #111a2c;
+    color: #8f9bad;
+    font-size: 13px;
+    line-height: 1.6;
+}
+
+.otp-instruction strong {
+    color: #fff;
+}
+
+@media (max-width: 767px) {
+
+    .first-login-section {
+        padding: 24px 18px;
+    }
+
+    .otp-box {
+        min-width: 160px;
+        font-size: 28px;
+        letter-spacing: 6px;
+    }
+}
 </style>
 
 
@@ -273,8 +365,52 @@
                     </span>,
                     your PhotoProof account has been successfully activated.
                     You can now download the PhotoProof mobile application
-                    and start using your organization account.
+                    and start using your corporate account.
                 </p>
+
+                @if(!empty($first_login_otp))
+
+                    <div class="first-login-section">
+
+                        <div class="first-login-icon">
+                            <svg xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <rect x="3" y="11" width="18" height="10" rx="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                        </div>
+
+                        <div class="first-login-title">
+                            Your First Login OTP
+                        </div>
+
+                        <p class="first-login-description">
+                            Use the OTP below to complete your first login in the
+                            PhotoProof mobile application.
+                        </p>
+
+                        <div class="otp-box">
+                            {{ $first_login_otp }}
+                        </div>
+
+                        <p class="otp-expiry">
+                            This OTP is valid for <strong>20 minutes</strong>.
+                        </p>
+
+                        <div class="otp-instruction">
+                            Open the PhotoProof app, select
+                            <strong>Login as Corporate Account</strong>,
+                            enter your registered email address and use this OTP.
+                        </div>
+
+                    </div>
+
+                @endif
 
 
                 {{-- Download App --}}
@@ -341,10 +477,10 @@
                         <div class="step-number">2</div>
 
                         <div class="step-content">
-                            <h4>Login as Organization</h4>
+                            <h4>Login as Corporate Account</h4>
                             <p>
                                 Open the PhotoProof app, select
-                                <strong>Login as Organization</strong>,
+                                <strong>Login as Corporate Account</strong>,
                                 enter your registered email address and
                                 complete OTP verification.
                             </p>
@@ -360,7 +496,7 @@
                                 Once logged in, you can capture and upload
                                 photos through the PhotoProof app. Your
                                 photos will automatically be linked to
-                                your organization account.
+                                your Company account.
                             </p>
                         </div>
                     </div>

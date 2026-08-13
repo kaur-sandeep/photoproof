@@ -235,7 +235,6 @@ public function list(Request $request){
         $slot = '
             <p>Dear <strong>' . ($user->name ?? 'User') . '</strong>,</p>
             <p>Welcome! Your organization has been created successfully.</p>
-            <hr>
             <h3>Login Details</h3>';
         $adminUrl = url('/admin/login');
         if (!empty($user->email)) {
@@ -245,7 +244,7 @@ public function list(Request $request){
 
         if (!empty($request->password)) {
             $slot .= '
-            <p><strong>Password:</strong> ' . $request->password . '</p>';
+            <p><strong>Temporary Password:</strong> ' . $request->password . '</p>';
         }
 
         if (!empty($organization->organization_name)) {
@@ -268,6 +267,7 @@ public function list(Request $request){
                 <h3>Next Steps</h3>
                 <ul>
                     <li>Log in using the credentials above.</li>
+                     <li>Change your password after your first login.</li>
                     <li>Invite your employees from the dashboard.</li>
                 </ul> <hr>
 

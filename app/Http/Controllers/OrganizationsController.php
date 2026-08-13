@@ -98,7 +98,6 @@ class OrganizationsController extends Controller
        $slot = '
             <p>Dear <strong>' . ($user->name ?? 'User') . '</strong>,</p>
             <p>Welcome! Your organization has been created successfully.</p>
-            <hr>
             <h3>Login Details</h3>';
         $adminUrl = url('/admin/login');
         if (!empty($user->email)) {

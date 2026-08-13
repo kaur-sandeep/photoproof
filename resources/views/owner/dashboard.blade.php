@@ -209,18 +209,35 @@
        Empty State
     ============================== */
 
-    .dashboard-empty {
-        text-align: center;
-        padding: 45px 20px;
-        color: #999;
-    }
+.stat-employees {
+    position: relative;
+}
 
-    .dashboard-empty i {
-        font-size: 35px;
-        margin-bottom: 10px;
-        color: #ccc;
-    }
+.stat-employees .dashboard-stat-body {
+    padding-right: 150px; /* space for button */
+}
 
+.btn-add-employee {
+    position: absolute;
+    top: 12px;
+    right: 15px;
+
+    background: #f59e0b;
+    border: 1px solid #f59e0b;
+    color: #fff !important;
+
+    font-weight: 600;
+    border-radius: 6px;
+    padding: 7px 14px;
+
+    z-index: 2;
+}
+
+.btn-add-employee:hover {
+    background: #d97706;
+    border-color: #d97706;
+    color: #fff !important;
+}
 </style>
 
 
@@ -233,28 +250,34 @@
     <div class="row g-3 mb-4">
 
         {{-- Total Employees --}}
-        <div class="col-lg-4 col-md-6">
-            <div class="dashboard-stat-card stat-employees">
+<div class="col-lg-4 col-md-6">
+    <div class="dashboard-stat-card stat-employees">
 
-                <a href="{{ route('owner.employee') }}">
+        <a href="{{ route('owner.employee') }}"
+           class="text-decoration-none">
 
-                    <div class="dashboard-stat-body">
+            <div class="dashboard-stat-body">
 
-                        <div class="dashboard-stat-title">
-                            Total Employees
-                        </div>
+                <div class="dashboard-stat-title">
+                    Total Employees
+                </div>
 
-                        <h3 class="dashboard-stat-number">
-                            {{ $total_employees }}
-                        </h3>
-
-                    </div>
-
-                </a>
+                <h3 class="dashboard-stat-number">
+                    {{ $total_employees }}
+                </h3>
 
             </div>
-        </div>
 
+        </a>
+
+        <a href="{{ url('/owner/employees/create') }}"
+           class="btn btn-add-employee btn-sm">
+            <i class="fas fa-plus"></i>
+            Add Employee
+        </a>
+
+    </div>
+</div>
 
         {{-- Total Photos --}}
         <div class="col-lg-4 col-md-6">
