@@ -119,6 +119,23 @@
                         <div class="organization-form-grid">
                             <div class="organization-form-group"><label for="organization_name">Organization Name <span class="organization-required">*</span></label><input id="organization_name" type="text" name="organization_name" placeholder="Enter organization name" value="{{ old('organization_name') }}"></div>
                             <div class="organization-form-group"><label for="business_type">Business Type</label><input id="business_type" type="text" name="business_type" placeholder="e.g. Delivery, logistics" value="{{ old('business_type') }}"></div>
+                            @if($selectedPlan)
+                            <input type="hidden" name="subscription_plan" value="{{ $selectedPlan->id }}">
+                            <div class="organization-form-group"><label>Selected Plan</label><div class="form-control bg-light">{{ $selectedPlan->name }} — ₹{{ number_format($selectedPlan->price, 2) }} — {{ $selectedPlan->monthly_photo_limit }} photos / {{ $selectedPlan->duration_days }} days</div></div>
+                            @else
+                            <div class="organization-form-group">
+                                <label for="subscription_plan">Choose Plan <span class="organization-required">*</span></label>
+                                <select id="subscription_plan" name="subscription_plan" required>
+                                    <option value="">Select a plan</option>
+                                    @foreach($plans as $plan)
+                                        <option value="{{ $plan->id }}" @selected(old('subscription_plan') == $plan->id)>
+                                            {{ $plan->name }} — ₹{{ number_format($plan->price, 2) }} — {{ $plan->monthly_photo_limit }} photos / {{ $plan->duration_days }} days
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('subscription_plan') <small class="text-danger">{{ $message }}</small> @enderror
+                            </div>
+                            @endif
                         </div>
                     </div>
 

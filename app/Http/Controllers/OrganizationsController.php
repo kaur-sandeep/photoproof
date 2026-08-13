@@ -12,11 +12,16 @@ use Illuminate\Support\Facades\Notification;
 use App\Helpers\ActivityLogger;
 use App\Models\Setting;
 use Illuminate\Support\Facades\Http;
+use App\Models\Subscriptionplans;
+use App\Services\OrderService;
+use App\Services\PaymentService;
 class OrganizationsController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('organizations.index');
+        $plans = Subscriptionplans::active()->orderBy('price')->get();
+        $selectedPlan = $request->filled('plan') ? $plans->firstWhere('id', $request->integer('plan')) : null;
+        return view('organizations.index', compact('plans', 'selectedPlan'));
     }
 
     public function thankYou()
@@ -25,7 +30,7 @@ class OrganizationsController extends Controller
     }
 
 
-        public function store(Request $request)
+        public function store(Request $request, OrderService $orders, PaymentService $payments)
     {
         $request->validate([
             'organization_name'   => 'required|string|max:255',
@@ -39,6 +44,7 @@ class OrganizationsController extends Controller
                 ],
              'g-recaptcha-response' => 'required',
              'terms'              => 'required|accepted',
+             'subscription_plan'  => 'required|integer|exists:subscription_plans,id',
         ],
             [
                 'g-recaptcha-response.required' => 'Google captcha field is required.',
@@ -64,11 +70,12 @@ class OrganizationsController extends Controller
 
         DB::beginTransaction();
         try {
+            $plan = Subscriptionplans::active()->findOrFail($request->integer('subscription_plan'));
             $organization = Organization::create([
                 'organization_name' => $request->organization_name,
                 'business_type'     => $request->business_type,
                 'organization_code' => '',
-                'subscription_plan' => '',
+                'subscription_plan' => $plan->id,
                 'message'           => $request->message,
                 'created_by'        => null,
             ]);
@@ -86,12 +93,15 @@ class OrganizationsController extends Controller
             ]);
             
             $user->assignRole(['owner', 'employee']);
+            $order = $orders->createSubscriptionOrder($organization, $plan->id);
+            if ((float) $plan->price === 0.0) {
+                $payments->approveOffline($order, ['notes' => 'Automatically approved free organization plan.']);
+            }
             
             DB::commit();
 
         } catch (\Exception $e) {
             DB::rollBack();
-            dd($e->getMessage()); 
             return redirect()->back()->with('error', 'Something went wrong: ' . $e->getMessage());
         }
 
@@ -120,9 +130,9 @@ class OrganizationsController extends Controller
             <p><strong>Phone Number:</strong> ' . $user->phone_number . '</p>';
         }
 
-        if (!empty($getPlanDataById->name)) {
+        if (!empty($plan->name)) {
             $slot .= '
-            <p><strong>Subscription Plan:</strong> ' . $getPlanDataById->name . '</p>';
+            <p><strong>Subscription Plan:</strong> ' . $plan->name . '</p>';
         }
 
             $slot .= '
@@ -160,8 +170,8 @@ class OrganizationsController extends Controller
             if (!empty($request->password)) { 
                 $adminSlot .= ' <p><strong>Password:</strong> ' . $request->password . '</p>'; 
             } 
-            if (!empty($getPlanDataById->name)) {
-                 $adminSlot .= ' <p><strong>Subscription Plan:</strong> ' . $getPlanDataById->name . '</p>'; 
+            if (!empty($plan->name)) {
+                 $adminSlot .= ' <p><strong>Subscription Plan:</strong> ' . $plan->name . '</p>';
              } 
              if (!empty($request->message)) {
                  $adminSlot .= ' <p><strong>Message:</strong> ' . $request->message . '</p>'; 
@@ -220,7 +230,9 @@ class OrganizationsController extends Controller
             'Created new organization: ' . $request->organization_name
         );
 
-        return redirect()->route('organization.thank-you');
+        return redirect()->route('organization.thank-you')->with('success', (float) $plan->price === 0.0
+            ? 'Your free plan is active.'
+            : "Your organization was created. Order {$order->order_number} is awaiting offline-payment approval.");
     }
 
 }

@@ -25,6 +25,8 @@ use Illuminate\Support\Facades\Storage;
 use Intervention\Image\ImageManager;
 use Intervention\Image\Drivers\Gd\Driver;
 use App\Models\OrganizationSubscriptions;
+use App\Services\OrganizationPhotoLimitService;
+use Illuminate\Support\Facades\DB;
 class AuthController extends Controller
 {
     // Register API
@@ -514,7 +516,7 @@ class AuthController extends Controller
             ->where('organization_id', $user->organization_id)
             ->where('state', 1)
             ->where('starts_at', '<=', now())
-            ->where('expires_at', '>=', now())
+            ->whereDate('expires_at', '>=', today())
             ->first();
       
 
@@ -728,7 +730,7 @@ public function forgotPassword(Request $request)
             )
             ->where('state',1)
             ->where('starts_at','<=',now())
-            ->where('expires_at','>=',now())
+            ->whereDate('expires_at','>=',today())
             ->first();
 
         if (!$subscription){
@@ -905,7 +907,7 @@ public function forgotPassword(Request $request)
             ->where('organization_id', $organization->id)
             ->where('state', 1)
             ->where('starts_at', '<=', now())
-            ->where('expires_at', '>=', now())
+            ->whereDate('expires_at', '>=', today())
             ->first();
          
             if (!$subscription){
@@ -959,6 +961,9 @@ public function forgotPassword(Request $request)
                     'plan_name' => optional($subscription->plan)->name,
                     'photo_limit' => $subscription->monthly_photo_limit,
                     'photo_used' => $subscription->monthly_photo_used,
+                    'topup_limit' => $subscription->topup_photo_limit,
+                    'topup_used' => $subscription->topup_photo_used,
+                    'remaining_photos' => max(0, $subscription->monthly_photo_limit - $subscription->monthly_photo_used) + max(0, $subscription->topup_photo_limit - $subscription->topup_photo_used),
                     'expires_at' => $subscription->expires_at,
                     'sub_type'=>'Monthly'
                 ]
@@ -1010,7 +1015,7 @@ public function forgotPassword(Request $request)
             )
             ->where('state',1)
             ->where('starts_at','<=',now())
-            ->where('expires_at','>=',now())
+            ->whereDate('expires_at','>=',today())
             ->first();
 
         if (!$subscription){
@@ -1018,15 +1023,6 @@ public function forgotPassword(Request $request)
             return response()->json([
                 'message'=>'Organization subscription expired.'
             ],403);
-
-        }
-
-        if ($subscription->monthly_photo_used >= $subscription-> monthly_photo_limit ) {
-
-            return response()->json([
-                'status' => false,
-                'message' => 'Monthly organization photo limit reached.'
-            ], 403);
 
         }
 
@@ -1063,7 +1059,11 @@ public function forgotPassword(Request $request)
        
        
        
-        // Create record
+        // Keep the existing image-storage process intact; the database record and
+        // shared organization balance are committed together under a row lock.
+        $photo = null;
+        try {
+        DB::transaction(function () use (&$photo, $request, $user, $path, $thumbnailPath) {
         $photo = PhotoDetail::create([
             //'random_id' => Str::uuid(), // generate unique random id
             'random_id' =>$request->id, // generate unique random id
@@ -1100,17 +1100,12 @@ public function forgotPassword(Request $request)
             'meta_data'=>json_decode($request->meta_data)
             
         ]);
-        \Log::info('Photo upload increment', [
-            'user_id' => $user->id,
-            'subscription_id' => $subscription->id,
-            'before' => $subscription->monthly_photo_used,
-        ]);
-        $subscription->increment('monthly_photo_used', 1);
-        $subscription->refresh();
-
-        \Log::info('Photo upload incremented', [
-            'after' => $subscription->monthly_photo_used,
-        ]);
+        app(OrganizationPhotoLimitService::class)->consume($user, $photo);
+        });
+        } catch (\RuntimeException $exception) {
+            Storage::disk('public')->delete([$path, $thumbnailPath]);
+            return response()->json(['status' => false, 'message' => $exception->getMessage()], 403);
+        }
         $ip = $request->ip();
         // $ip ='202.164.57.197';
         // $ip ='192.168.0.90';
@@ -1255,7 +1250,7 @@ public function forgotPassword(Request $request)
             ->where('organization_id', $organization->id)
             ->where('state', 1)
             ->where('starts_at', '<=', now())
-            ->where('expires_at', '>=', now())
+            ->whereDate('expires_at', '>=', today())
             ->first();
         return response()->json([
             'status' => true,
@@ -1265,6 +1260,9 @@ public function forgotPassword(Request $request)
                     'plan_name' => optional($subscription->plan)->name,
                     'photo_limit' => $subscription->monthly_photo_limit,
                     'photo_used' => $subscription->monthly_photo_used,
+                    'topup_limit' => $subscription->topup_photo_limit,
+                    'topup_used' => $subscription->topup_photo_used,
+                    'remaining_photos' => max(0, $subscription->monthly_photo_limit - $subscription->monthly_photo_used) + max(0, $subscription->topup_photo_limit - $subscription->topup_photo_used),
                     'expires_at' => $subscription->expires_at,
                     'sub_type'=>'Monthly'
                 ]
@@ -1326,7 +1324,7 @@ public function forgotPassword(Request $request)
                     ->where('organization_id', $organization->id)
                     ->where('state', 1)
                     ->where('starts_at', '<=', now())
-                    ->where('expires_at', '>=', now())
+                    ->whereDate('expires_at', '>=', today())
                     ->first();
             }
 

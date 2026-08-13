@@ -1,0 +1,5 @@
+@extends('admin.layouts.master')
+@section('title', 'Subscriptions')
+@section('content')
+<div class="container-fluid"><h3>Subscription History</h3><div class="card"><div class="table-responsive"><table class="table"><thead><tr><th>Organization</th><th>Plan</th><th>Start</th><th>Expiry</th><th>Monthly</th><th>Top-up</th><th>Status</th></tr></thead><tbody>@foreach($subscriptions as $subscription)<tr><td>{{ $subscription->organization->organization_name }}</td><td>{{ $subscription->plan->name }}</td><td>{{ $subscription->starts_at->format('d M Y') }}</td><td>{{ $subscription->expires_at->format('d M Y') }}</td><td>{{ $subscription->monthly_photo_used }}/{{ $subscription->monthly_photo_limit }}</td><td>{{ $subscription->topup_photo_used }}/{{ $subscription->topup_photo_limit }}</td><td>@if($subscription->starts_at->isFuture())<span class="badge bg-info">Renewal scheduled</span>@elseif($subscription->expires_at->isPast())<span class="badge bg-secondary">Expired</span>@else<span class="badge bg-success">Active</span>@endif</td></tr>@endforeach</tbody></table></div></div>{{ $subscriptions->links() }}</div>
+@endsection

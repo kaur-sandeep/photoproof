@@ -12,15 +12,18 @@ use App\Http\Controllers\Admin\ActivityController;
 use App\Http\Controllers\Admin\PhotoNotificationController;
 use Illuminate\Support\Facades\Storage;
 use App\Http\Controllers\Api\PlanController;
+use App\Http\Controllers\Admin\BillingController;
+use App\Http\Controllers\Owner\SubscriptionController as OwnerSubscriptionController;
 use Illuminate\Support\Facades\URL;
+use App\Models\Subscriptionplans;
 
 Route::get('/', function () {
     return redirect()->route('photo.search.form');
 });
 
-Route::get('/plans', function () {
-    return redirect()->route('plans');
-});
+Route::get('/pricing', function () {
+    return view('user.pricing', ['plans' => Subscriptionplans::active()->orderBy('price')->get()]);
+})->name('pricing');
  Route::get('/owner/employee/activate/{id}', [OwnerController::class, 'activateEmployee'])
     ->middleware('signed')
     ->name('owner.employee.activate');
@@ -30,6 +33,20 @@ Route::prefix('admin')->group(function () {
 
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('admin.dashboard');
+        Route::get('/billing/plans', [BillingController::class, 'plans'])->name('admin.billing.plans');
+        Route::post('/billing/plans', [BillingController::class, 'storePlan'])->name('admin.billing.plans.store');
+        Route::put('/billing/plans/{plan}', [BillingController::class, 'updatePlan'])->name('admin.billing.plans.update');
+        Route::put('/billing/individual-plans/{plan}', [BillingController::class, 'updateIndividual'])->name('admin.billing.individual.update');
+        Route::post('/billing/individual-plans/{plan}/state/{state}', [BillingController::class, 'setIndividualState'])->whereNumber('state')->name('admin.billing.individual.state');
+        Route::post('/billing/organization-plans/{plan}/state/{state}', [BillingController::class, 'setOrganizationState'])->whereNumber('state')->name('admin.billing.organization.state');
+        Route::get('/billing/topups', [BillingController::class, 'topups'])->name('admin.billing.topups');
+        Route::post('/billing/topups', [BillingController::class, 'storeTopup'])->name('admin.billing.topups.store');
+        Route::put('/billing/topups/{topup}', [BillingController::class, 'updateTopup'])->name('admin.billing.topups.update');
+        Route::post('/billing/topups/{topup}/state/{state}', [BillingController::class, 'setTopupState'])->whereNumber('state')->name('admin.billing.topups.state');
+        Route::get('/billing/orders', [BillingController::class, 'orders'])->name('admin.billing.orders');
+        Route::post('/billing/orders/{order}/approve', [BillingController::class, 'approve'])->name('admin.billing.orders.approve');
+        Route::post('/billing/orders/{order}/cancel', [BillingController::class, 'cancel'])->name('admin.billing.orders.cancel');
+        Route::get('/billing/subscriptions', [BillingController::class, 'subscriptions'])->name('admin.billing.subscriptions');
         Route::get('/profile', [LoginController::class, 'profile'])->name('admin.profile');
         Route::post('/profile/update', [LoginController::class, 'profileUpdate'])->name('admin.profile.update');
         
@@ -155,6 +172,12 @@ Route::prefix('admin')->group(function () {
 
 Route::middleware(['auth:web', 'role:owner'])->prefix('owner')->name('owner.')->group(function () {
     Route::get('/dashboard', [OwnerController::class, 'index'])->name('dashboard');
+    Route::get('/subscription', [OwnerSubscriptionController::class, 'index'])->name('subscription');
+    Route::get('/orders', [OwnerSubscriptionController::class, 'orders'])->name('orders');
+    Route::get('/renew', [OwnerSubscriptionController::class, 'createRenewal'])->name('renew');
+    Route::post('/renew', [OwnerSubscriptionController::class, 'renew'])->name('renew.store');
+    Route::get('/topup', [OwnerSubscriptionController::class, 'createTopup'])->name('topup');
+    Route::post('/topup', [OwnerSubscriptionController::class, 'topup'])->name('topup.store');
     Route::post('/logout', [OwnerController::class, 'ownerLogout'])->name('logout');
     Route::get('/login', [LoginController::class, 'showLogin'])->name('admin.login');
     Route::get('/profile', [OwnerController::class, 'profile'])->name('profile');

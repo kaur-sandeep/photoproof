@@ -4,18 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Subscriptionplans extends Model
+class TopupPlan extends Model
 {
-    protected $table = 'subscription_plans';
-    protected $fillable = [
-        'name',
-        'code',
-        'monthly_photo_limit',
-        'price',
-        'duration_days',
-        'state',
-    ];
-
+    protected $fillable = ['name', 'code', 'photo_quantity', 'price', 'state'];
     protected $casts = ['price' => 'decimal:2', 'state' => 'boolean'];
 
     public function scopeActive($query)

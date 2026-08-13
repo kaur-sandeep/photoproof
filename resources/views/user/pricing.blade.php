@@ -1,0 +1,5 @@
+@extends('user.layouts.master')
+@section('title', 'Corporate Pricing')
+@section('content')
+<section class="py-5" style="padding-top:150px!important;min-height:75vh"><div class="container"><div class="text-center mb-5"><h1>Corporate Plans</h1><p class="lead">Choose a shared photo capacity plan for your organization.</p></div><div class="row justify-content-center">@forelse($plans as $plan)<div class="col-md-4 mb-4"><div class="card h-100 shadow-sm"><div class="card-body text-center d-flex flex-column"><h3>{{ $plan->name }}</h3><h2 class="my-3">₹{{ number_format($plan->price, 2) }}</h2><p>{{ number_format($plan->monthly_photo_limit) }} photos per month</p><p>{{ $plan->duration_days }} days</p><a class="btn btn-primary mt-auto" href="{{ route('organization', ['plan' => $plan->id]) }}">Choose {{ $plan->name }}</a></div></div></div>@empty<div class="col-12"><div class="alert alert-info">Corporate plans are not available yet. Please contact us.</div></div>@endforelse</div></div></section>
+@endsection

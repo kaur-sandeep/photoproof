@@ -35,6 +35,8 @@ class Organization extends Model
     {
         return $this->hasOne(OrganizationSubscriptions::class, 'organization_id', 'id');
     }
+    public function subscriptions() { return $this->hasMany(OrganizationSubscriptions::class); }
+    public function orders() { return $this->hasMany(Order::class); }
 public function photoDetails(): HasManyThrough
 {
     return $this->hasManyThrough(
