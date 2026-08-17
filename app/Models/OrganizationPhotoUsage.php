@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class OrganizationPhotoUsage extends Model
 {
+    protected $table = 'organization_photo_usage';
     protected $fillable = ['organization_id', 'subscription_id', 'user_id', 'photo_id', 'usage_type', 'usage_date', 'photo_count'];
     protected $casts = ['usage_date' => 'date'];
     public function organization() { return $this->belongsTo(Organization::class); }

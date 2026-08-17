@@ -20,7 +20,9 @@ class OrganizationsController extends Controller
     public function index(Request $request)
     {
         $plans = Subscriptionplans::active()->orderBy('price')->get();
-        $selectedPlan = $request->filled('plan') ? $plans->firstWhere('id', $request->integer('plan')) : null;
+        $selectedPlan = $request->filled('plan')
+            ? $plans->firstWhere('id', $request->integer('plan'))
+            : $plans->first();
         return view('organizations.index', compact('plans', 'selectedPlan'));
     }
 
@@ -107,7 +109,7 @@ class OrganizationsController extends Controller
 
        $slot = '
             <p>Dear <strong>' . ($user->name ?? 'User') . '</strong>,</p>
-            <p>Welcome! Your organization has been created successfully.</p>
+            <p>Welcome! Your account has been created successfully.</p>
             <h3>Login Details</h3>';
         $adminUrl = url('/admin/login');
         if (!empty($user->email)) {
@@ -122,7 +124,7 @@ class OrganizationsController extends Controller
 
         if (!empty($organization->organization_name)) {
             $slot .= '
-            <p><strong>Organization Name:</strong> ' . $organization->organization_name . '</p>';
+            <p><strong>Company Name:</strong> ' . $organization->organization_name . '</p>';
         }
 
          if (!empty($user->phone_number)) {
@@ -152,9 +154,9 @@ class OrganizationsController extends Controller
                 <hr>';
 
             $adminSlot = ' <p>Dear Admin,</p> 
-            <p>A new organization has been registered on the platform.</p>  <hr> <h3>Organization Details</h3> '; 
+            <p>A new company has been registered on the platform.</p>  <hr> <h3>Company Details</h3> '; 
             if (!empty($organization->organization_name)) { 
-                $adminSlot .= ' <p><strong>Organization Name:</strong> ' . $organization->organization_name . '</p>';
+                $adminSlot .= ' <p><strong>Company Name:</strong> ' . $organization->organization_name . '</p>';
              } 
 
              if (!empty($user->name)) { 
@@ -227,12 +229,12 @@ class OrganizationsController extends Controller
         ActivityLogger::log(
             'Create',
             'Organizations',
-            'Created new organization: ' . $request->organization_name
+            'Created new Corporate Account: ' . $request->organization_name
         );
 
         return redirect()->route('organization.thank-you')->with('success', (float) $plan->price === 0.0
             ? 'Your free plan is active.'
-            : "Your organization was created. Order {$order->order_number} is awaiting offline-payment approval.");
+            : "Your company was created. Order {$order->order_number} is awaiting offline-payment approval.");
     }
 
 }

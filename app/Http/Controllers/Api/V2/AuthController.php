@@ -813,7 +813,7 @@ public function forgotPassword(Request $request)
         {
             $request->validate([
                 'email' => 'required|email',
-                'otp'   => 'required|digits:6',
+                'otp'   => 'required|digits:4',
                 'device_id'=>'required',
                   'fcm_token' => 'nullable|string',
             ]);

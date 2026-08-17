@@ -10,6 +10,7 @@ class Subscriptionplans extends Model
     protected $fillable = [
         'name',
         'code',
+        'description',
         'monthly_photo_limit',
         'price',
         'duration_days',

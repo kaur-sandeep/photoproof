@@ -24,9 +24,9 @@
             </div>
 
             <div class="stat-content">
-                <div class="stat-title">Monthly Limit</div>
-                <div class="stat-number">{{ $monthlyPhotoLimit }}</div>
-                <div class="stat-subtitle">Photos allowed this month</div>
+                <div class="stat-title">Photo Capacity</div>
+                <div class="stat-number">{{ $totalPhotoLimit }}</div>
+                <div class="stat-subtitle">{{ $monthlyPhotoLimit }} monthly + {{ $topupPhotoLimit }} top-up photos</div>
             </div>
         </div>
     </div>

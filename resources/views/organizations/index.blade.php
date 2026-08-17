@@ -29,6 +29,10 @@
     .organization-alert-danger { border:1px solid #f4c5c5; background:#fff4f4; color:#a53636; }
     .organization-alert ul { margin:0; padding-left:18px; }
     .organization-form-section + .organization-form-section { margin-top:23px; padding-top:23px; border-top:1px solid #edf1f6; }
+    .organization-plan-summary { display:flex; align-items:center; gap:12px; margin:0 0 23px; padding:14px 15px; border:1px solid #cce6d6; border-radius:11px; background:#f1fbf5; color:#245b3b; }
+    .organization-plan-summary i { display:grid; width:34px; height:34px; place-items:center; border-radius:9px; background:#d7f3e1; color:#18834a; font-size:1rem; }
+    .organization-plan-summary small { display:block; color:#578067; font-size:.72rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
+    .organization-plan-summary strong { color:#1d5435; font-size:.9rem; }
     .organization-section-title { display:flex; align-items:center; gap:8px; margin:0 0 15px; color:#34465f; font-size:.82rem; font-weight:700; letter-spacing:.025em; }
     .organization-section-title i { color:#3d7ce2; font-size:.92rem; }
     .organization-form-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
@@ -101,7 +105,7 @@
                 <div class="organization-card-header">
                     <span class="organization-card-icon"><i class="bi bi-buildings"></i></span>
                     <h2>Create Corporate Account</h2>
-                    <p>Fill in the details below to register your organization with PhotoProof.</p>
+                    <p>Fill in the details below to register your company with PhotoProof.</p>
                 </div>
 
                 @if(session('success'))
@@ -114,28 +118,18 @@
 
                 <form method="POST" action="{{ route('organization.store') }}">
                     @csrf
+                    @if($selectedPlan)
+                        <input type="hidden" name="subscription_plan" value="{{ $selectedPlan->id }}">
+                        <div class="organization-plan-summary">
+                            <i class="bi bi-patch-check-fill"></i>
+                            <div><small>Your selected plan</small><strong>{{ $selectedPlan->name }} — ₹{{ number_format($selectedPlan->price, 2) }} — {{ number_format($selectedPlan->monthly_photo_limit) }} photos / {{ $selectedPlan->duration_days }} days</strong></div>
+                        </div>
+                    @endif
                     <div class="organization-form-section">
                         <h3 class="organization-section-title"><i class="bi bi-building"></i> Organization Information</h3>
                         <div class="organization-form-grid">
                             <div class="organization-form-group"><label for="organization_name">Organization Name <span class="organization-required">*</span></label><input id="organization_name" type="text" name="organization_name" placeholder="Enter organization name" value="{{ old('organization_name') }}"></div>
                             <div class="organization-form-group"><label for="business_type">Business Type</label><input id="business_type" type="text" name="business_type" placeholder="e.g. Delivery, logistics" value="{{ old('business_type') }}"></div>
-                            @if($selectedPlan)
-                            <input type="hidden" name="subscription_plan" value="{{ $selectedPlan->id }}">
-                            <div class="organization-form-group"><label>Selected Plan</label><div class="form-control bg-light">{{ $selectedPlan->name }} — ₹{{ number_format($selectedPlan->price, 2) }} — {{ $selectedPlan->monthly_photo_limit }} photos / {{ $selectedPlan->duration_days }} days</div></div>
-                            @else
-                            <div class="organization-form-group">
-                                <label for="subscription_plan">Choose Plan <span class="organization-required">*</span></label>
-                                <select id="subscription_plan" name="subscription_plan" required>
-                                    <option value="">Select a plan</option>
-                                    @foreach($plans as $plan)
-                                        <option value="{{ $plan->id }}" @selected(old('subscription_plan') == $plan->id)>
-                                            {{ $plan->name }} — ₹{{ number_format($plan->price, 2) }} — {{ $plan->monthly_photo_limit }} photos / {{ $plan->duration_days }} days
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('subscription_plan') <small class="text-danger">{{ $message }}</small> @enderror
-                            </div>
-                            @endif
                         </div>
                     </div>
 
@@ -191,9 +185,9 @@
         </div>
 
         <section class="organization-how-it-works" aria-labelledby="how-it-works-title">
-            <div class="organization-how-header"><span>Simple onboarding</span><h2 id="how-it-works-title">How PhotoProof works</h2><p>Set up your organization and start building a clearer record of work in the field.</p></div>
+            <div class="organization-how-header"><span>Simple onboarding</span><h2 id="how-it-works-title">How PhotoProof works</h2><p>Set up your company and start building a clearer record of work in the field.</p></div>
             <div class="organization-steps">
-                <article class="organization-step"><span class="organization-step-number">01</span><h3>Create your organization</h3><p>Register your organization and contact details.</p></article>
+                <article class="organization-step"><span class="organization-step-number">01</span><h3>Create your company</h3><p>Register your company and contact details.</p></article>
                 <article class="organization-step"><span class="organization-step-number">02</span><h3>Invite your employees</h3><p>Add employees and manage your team from the dashboard.</p></article>
                 <article class="organization-step"><span class="organization-step-number">03</span><h3>Start capturing photos</h3><p>Employees can capture and upload photos through the PhotoProof app.</p></article>
             </div>

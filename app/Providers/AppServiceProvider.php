@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use App\Models\Setting;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
 class AppServiceProvider extends ServiceProvider
 {
@@ -20,6 +21,8 @@ class AppServiceProvider extends ServiceProvider
      */
    public function boot(): void
 {
+    Paginator::useBootstrapFive();
+
     $settings = Setting::first();
 
     if ($settings && $settings->smtp_enabled) {

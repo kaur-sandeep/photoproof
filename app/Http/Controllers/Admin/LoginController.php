@@ -18,6 +18,7 @@ use App\Models\User;
 use App\Models\PhotoDetail;
 use App\Helpers\ActivityLogger;
 use App\Models\AppInstall;
+use App\Models\Organization;
 class LoginController extends Controller
 {
     public function showLogin()
@@ -112,6 +113,27 @@ class LoginController extends Controller
                         'error',
                         'Your account is no longer active. Please contact the administrator for assistance.'
                     );
+                }
+
+                   if ($user->hasRole('owner')) {
+
+                    $organization = Organization::find($user->organization_id);
+
+                    // Organization does not exist
+                    if (!$organization) {
+                        return back()->withInput()->with(
+                            'error',
+                            'Your organization could not be found. Please contact the administrator.'
+                        );
+                    }
+
+                    // Organization is inactive
+                    if ($organization->state != 1) {
+                        return back()->withInput()->with(
+                            'error',
+                            'Your organization is currently inactive. Please contact the administrator.'
+                        );
+                    }
                 }
 
             if (!Auth::guard('web')->attempt([

@@ -183,10 +183,12 @@ public function list(Request $request){
 
         DB::beginTransaction();
         try {
-                    if ($request->hasFile('organization_logo')) {
-                        $path = $request->file('organization_logo')
-                                        ->store('organization_logos', 'public');                      
-                    }
+            $path = null;
+
+            if ($request->hasFile('organization_logo')) {
+                $path = $request->file('organization_logo')
+                    ->store('organization_logos', 'public');
+            }
     
             $organization = Organization::create([
                 'organization_name'  => $request->organization_name,
@@ -234,7 +236,7 @@ public function list(Request $request){
         }
         $slot = '
             <p>Dear <strong>' . ($user->name ?? 'User') . '</strong>,</p>
-            <p>Welcome! Your organization has been created successfully.</p>
+            <p>Welcome! Your company has been created successfully.</p>
             <h3>Login Details</h3>';
         $adminUrl = url('/admin/login');
         if (!empty($user->email)) {
@@ -333,7 +335,9 @@ public function list(Request $request){
             'Organizations',
             'Created new organization: ' . $request->organization_name
         );
-       return redirect()->back()->with('success', 'Organization added successfully!');
+       return redirect()
+           ->route('admin.organization.data')
+           ->with('success', 'Organization added successfully!');
     }
 
     public function showOrganization(Request $request,$id)
@@ -781,7 +785,7 @@ public function updateOrganization(Request $request, $id)
                 $planName = $organization->subscription->plan->name; 
                 } 
                 $adminUrl = url('/admin/login');
-                $slot = ' <p>Dear ' . e($user->name ?? 'User') . ',</p> <p> Welcome! Your organization has been activated successfully. You can now log in to your account and start using the portal. </p> <h3>Account Details</h3> 
+                $slot = ' <p>Dear ' . e($user->name ?? 'User') . ',</p> <p> Welcome! Your account has been activated successfully. You can now log in to your account and start using the portal. </p> <h3>Account Details</h3> 
                 <p> <strong>Login URL:</strong> ' . e($adminUrl) . ' </p> 
                 <p> <strong>Username / Email:</strong> ' . e($user->email) . ' </p> 
                 <p> <strong>Organization Name:</strong> ' . e($organization->organization_name) . ' </p>'; 
@@ -793,7 +797,7 @@ public function updateOrganization(Request $request, $id)
                 } 
                     $slot .= '<hr> <h3>Next Steps</h3> <ul> <li>Log in using your registered email address.</li>  <li>Invite your employees from the dashboard.</li> </ul> <p> Thank you for choosing our platform. </p>'; 
                 try { 
-                    Notification::route('mail', $user->email) ->notify( new CommonMailNotification( 'Your Organization Account Has Been Activated', $slot ) );
+                    Notification::route('mail', $user->email) ->notify( new CommonMailNotification( 'Your Account Has Been Activated', $slot ) );
                 
                 } catch (\Exception $e) { 
                 // Email failure should not stop status update 

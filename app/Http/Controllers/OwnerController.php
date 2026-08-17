@@ -76,10 +76,12 @@ public function index()
     $org = Organization::with('subscription')->findOrFail($org_id);
 
     $monthlyPhotoLimit = $org->subscription->monthly_photo_limit ?? 0;
+    $topupPhotoLimit = $org->subscription->topup_photo_limit ?? 0;
+    $totalPhotoLimit = $monthlyPhotoLimit + $topupPhotoLimit;
 
     $remainingPhotos = max(
         0,
-        $monthlyPhotoLimit - $monthlyPhotos
+        $totalPhotoLimit - $monthlyPhotos
     );
 
 
@@ -173,7 +175,7 @@ $chartData = $photoUploadsByUser
 
 $remainingForChart = max(
     0,
-    $monthlyPhotoLimit - $monthlyPhotos
+    $totalPhotoLimit - $monthlyPhotos
 );
 
 if ($remainingForChart > 0) {
@@ -188,6 +190,8 @@ if ($remainingForChart > 0) {
         'total_employees',
         'totalPhotos',
         'monthlyPhotoLimit',
+        'topupPhotoLimit',
+        'totalPhotoLimit',
         'remainingPhotos',
         'monthlyPhotos',
         'latestUsers',
@@ -321,6 +325,8 @@ if ($remainingForChart > 0) {
         $org = Organization::with('subscription')->findOrFail($orgId);
 
         $monthlyPhotoLimit = $org->subscription->monthly_photo_limit ?? 0;
+        $topupPhotoLimit = $org->subscription->topup_photo_limit ?? 0;
+        $totalPhotoLimit = $monthlyPhotoLimit + $topupPhotoLimit;
 
         // Photos uploaded THIS MONTH
         $usedPhotos = PhotoDetail::whereHas('user', function ($query) use ($orgId) {
@@ -330,10 +336,12 @@ if ($remainingForChart > 0) {
             ->whereYear('created_at', Carbon::now()->year)
             ->count();
 
-        $remainingPhotos = max(0, $monthlyPhotoLimit - $usedPhotos);
+        $remainingPhotos = max(0, $totalPhotoLimit - $usedPhotos);
 
         return view('owner.index', compact(
             'monthlyPhotoLimit',
+            'topupPhotoLimit',
+            'totalPhotoLimit',
             'usedPhotos',
             'remainingPhotos'
         ));

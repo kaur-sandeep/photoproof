@@ -16,10 +16,10 @@ class OrganizationPhotoLimitService
     {
         DB::transaction(function () use ($user, $photo) {
             $subscription = $this->subscriptions->activeForOrganization($user->organization_id, true);
-            if (!$subscription) throw new RuntimeException('Your organization subscription has expired. Please renew your plan.');
+            if (!$subscription) throw new RuntimeException('Your account subscription has expired. Please renew your plan.');
             $type = $subscription->monthly_photo_used < $subscription->monthly_photo_limit ? 'monthly' :
                 ($subscription->topup_photo_used < $subscription->topup_photo_limit ? 'topup' : null);
-            if (!$type) throw new RuntimeException('Organization photo capacity has been reached. Please renew or purchase a top-up.');
+            if (!$type) throw new RuntimeException('Account photo capacity has been reached. Please renew or purchase a top-up.');
             $subscription->increment($type === 'monthly' ? 'monthly_photo_used' : 'topup_photo_used');
             OrganizationPhotoUsage::create([
                 'organization_id' => $user->organization_id, 'subscription_id' => $subscription->id,

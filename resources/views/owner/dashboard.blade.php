@@ -303,7 +303,7 @@
         </div>
 
 
-        {{-- Monthly Usage --}}
+        {{-- Photo Capacity --}}
         <div class="col-lg-4 col-md-6">
             <div class="dashboard-stat-card stat-monthly">
 
@@ -311,13 +311,15 @@
 
                     <div class="dashboard-stat-body">
 
-                        <div class="dashboard-stat-title">
-                            Monthly Photo Usage
-                        </div>
+                        <div class="dashboard-stat-title">Photo Capacity</div>
 
                         <h3 class="dashboard-stat-number">
-                            {{ $monthlyPhotos }} / {{ $monthlyPhotoLimit }}
+                            {{ $monthlyPhotos }} / {{ $totalPhotoLimit }}
                         </h3>
+
+                        @if ($topupPhotoLimit > 0)
+                            <small>{{ $monthlyPhotoLimit }} monthly + {{ $topupPhotoLimit }} top-up photos</small>
+                        @endif
 
                     </div>
 

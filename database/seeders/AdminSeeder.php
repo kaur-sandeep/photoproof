@@ -10,10 +10,13 @@ class AdminSeeder extends Seeder
 {
     public function run(): void
     {
-        Admin::create([
-            'name' => 'Super Admin',
+        $admin = Admin::firstOrCreate([
             'email' => 'sandeep@mailinator.com',
+        ], [
+            'name' => 'Super Admin',
             'password' => Hash::make('123456'),
         ]);
+
+        $admin->syncRoles(['super-admin']);
     }
 }

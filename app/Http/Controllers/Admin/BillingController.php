@@ -27,13 +27,13 @@ class BillingController extends Controller
             $data['state'] = $request->boolean('state'); TopupPlan::create($data);
             return back()->with('success', 'Top-up plan created.');
         }
-        $data = $request->validate(['name'=>'required|string|max:255','code'=>'required|string|max:50|unique:subscription_plans,code','monthly_photo_limit'=>'required|integer|min:1','price'=>'required|numeric|min:0','duration_days'=>'required|integer|min:1','state'=>'nullable|boolean']);
+        $data = $request->validate(['name'=>'required|string|max:255','code'=>'required|string|max:50|unique:subscription_plans,code','description'=>'nullable|string|max:5000','monthly_photo_limit'=>'required|integer|min:1','price'=>'required|numeric|min:0','duration_days'=>'required|integer|min:1','state'=>'nullable|boolean']);
         $data['state'] = $request->boolean('state'); Subscriptionplans::create($data);
         return back()->with('success', 'Plan created.');
     }
     public function updatePlan(Request $request, Subscriptionplans $plan)
     {
-        $data = $request->validate(['name'=>'required|string|max:255','code'=>['required','string','max:50',Rule::unique('subscription_plans','code')->ignore($plan)],'monthly_photo_limit'=>'required|integer|min:1','price'=>'required|numeric|min:0','duration_days'=>'required|integer|min:1','state'=>'required|in:0,1']);
+        $data = $request->validate(['name'=>'required|string|max:255','code'=>['required','string','max:50',Rule::unique('subscription_plans','code')->ignore($plan)],'description'=>'nullable|string|max:5000','monthly_photo_limit'=>'required|integer|min:1','price'=>'required|numeric|min:0','duration_days'=>'required|integer|min:1','state'=>'required|in:0,1']);
         $plan->update($data);
         return back()->with('success', 'Plan updated.');
     }

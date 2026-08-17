@@ -284,34 +284,34 @@ class UserController extends Controller
 //     //     ]);
 //     // }
 
-//     public function updateStatus(Request $request)
-//     {
-//         $request->validate([
-//             'id' => 'required',
-//             'status' => 'required|in:-1,0,1'
-//         ]);
+    public function updateStatus(Request $request)
+    {
+        $request->validate([
+            'id' => 'required',
+            'status' => 'required|in:-1,0,1'
+        ]);
 
-//         $User = User::findOrFail($request->id);
+        $User = User::findOrFail($request->id);
 
-//         // ✅ Get old status before update
-//         $oldStatus = $User->state;
+        // ✅ Get old status before update
+        $oldStatus = $User->state;
 
-//         // ✅ Update status
-//         $User->state = $request->status;
-//         $User->save();
+        // ✅ Update status
+        $User->state = $request->status;
+        $User->save();
 
-//         // ✅ Convert status to readable text
-//         $statusText = [
-//             -1 => 'Deleted',
-//             0  => 'Inactive',
-//             1  => 'Active',
-//         ];
+        // ✅ Convert status to readable text
+        $statusText = [
+            -1 => 'Deleted',
+            0  => 'Inactive',
+            1  => 'Active',
+        ];
 
-//         return response()->json([
-//             'success' => true,
-//             'message' => 'User status updated successfully'
-//         ]);
-//     }
+        return response()->json([
+            'success' => true,
+            'message' => 'User status updated successfully'
+        ]);
+    }
 
 
   
@@ -619,9 +619,9 @@ public function list(Request $request){
         })
         ->addColumn('status', function ($user) {
             if ($user->state == 1) {
-                return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$user->id.'" data-status="-1">Active</button>';
+                return '<button class="btn btn-sm btn-success toggle-status" data-id="'.$user->id.'" data-status="0">Active</button>';
             }
-            if ($user->state == -1) {
+            if ($user->state == 0) {
                 return '<button class="btn btn-sm btn-warning toggle-status" data-id="'.$user->id.'" data-status="1">Inactive</button>';
             }
             return '<button class="btn btn-sm btn-warning">Pending</button>';
