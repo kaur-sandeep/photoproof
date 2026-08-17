@@ -10,6 +10,7 @@ use App\Models\TopupPlan;
 use App\Services\OrderService;
 use App\Services\SubscriptionService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class SubscriptionController extends Controller
 {
@@ -44,8 +45,11 @@ class SubscriptionController extends Controller
 
     public function renew(Request $request, OrderService $orders)
     {
-        $request->validate(['subscription_plan_id' => 'required|integer']);
-        $order = $orders->createSubscriptionOrder($this->organization($request), $request->integer('subscription_plan_id'), 'renewal');
+        $request->validate([
+            'subscription_plan_id' => 'required|integer',
+            'billing_cycle' => ['required', Rule::in(Subscriptionplans::BILLING_CYCLES)],
+        ]);
+        $order = $orders->createSubscriptionOrder($this->organization($request), $request->integer('subscription_plan_id'), 'renewal', $request->string('billing_cycle')->toString());
         return redirect()->route('owner.orders')->with('success', "Renewal order {$order->order_number} is pending offline-payment approval.");
     }
 

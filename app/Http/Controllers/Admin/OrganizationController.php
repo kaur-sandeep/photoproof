@@ -218,10 +218,12 @@ public function list(Request $request){
             $id = $request->subscription_plan;
             $getPlanDataById = Subscriptionplans::find($id);
             $startDate = Carbon::now();
-            $expiresDate = $startDate->copy()->addDays($getPlanDataById->duration_days);
+            $expiresDate = \App\Services\BillingCycleService::expiry($startDate, $getPlanDataById->billing_cycle);
             $OrganizationSubscriptions = OrganizationSubscriptions::create([
                 'organization_id'      => $organization->id,
                 'subscription_plan_id' => $request->subscription_plan,
+                'billing_cycle'         => $getPlanDataById->billing_cycle,
+                'price'                 => $getPlanDataById->price,
                 'starts_at'             => $startDate,
                 'expires_at'            => $expiresDate,
                 'monthly_photo_limit'   => $getPlanDataById->monthly_photo_limit,
@@ -612,7 +614,7 @@ public function updateOrganization(Request $request, $id)
         if ($plan) {
 
             $startDate = Carbon::now();
-            $expiresDate = $startDate->copy()->addDays($plan->duration_days);
+            $expiresDate = \App\Services\BillingCycleService::expiry($startDate, $plan->billing_cycle);
 
             // \Log::info("[$traceId] Subscription dates calculated", [
             //     'starts_at' => $startDate->toDateTimeString(),
@@ -627,6 +629,8 @@ public function updateOrganization(Request $request, $id)
 
             $subscriptionData = [
                 'subscription_plan_id' => $plan->id,
+                'billing_cycle'         => $plan->billing_cycle,
+                'price'                 => $plan->price,
                 'starts_at'            => $startDate,
                 'expires_at'           => $expiresDate,
                 'monthly_photo_limit'  => $plan->monthly_photo_limit,

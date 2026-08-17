@@ -13,12 +13,17 @@ use Illuminate\Support\Facades\Notification;
 use App\Notifications\CommonMailNotification;
 use App\Models\Notifications;
 use App\Models\Contact;
-
+use App\Models\Subscriptionplans;
 class PhotoController extends Controller
 {
    public function searchForm()
     {
-        return view('user.search');
+        $freeOrganizationPlan = Subscriptionplans::where('state', 1)
+        ->orderBy('price', 'asc')
+        ->first();
+
+    return view('user.search', compact('freeOrganizationPlan'));
+        //return view('user.search');
     }
 
     public function search(Request $request)

@@ -43,12 +43,12 @@
                         <div class="pricing-card__top">
                             <h2 class="pricing-card__name">{{ $plan->name }}</h2>
                             <div class="pricing-card__price"><small>₹</small>{{ number_format($plan->price, 2) }}</div>
-                            <p class="pricing-card__price-note">per {{ $plan->duration_days }}-day subscription</p>
+                            <p class="pricing-card__price-note">per month</p>
                         </div>
                         <div class="pricing-card__body">
                             <div class="pricing-card__limits">
                                 <div class="pricing-limit"><strong>{{ number_format($plan->monthly_photo_limit) }}</strong><span>photos per month</span></div>
-                                <div class="pricing-limit"><strong>{{ $plan->duration_days }}</strong><span>days validity</span></div>
+                                @if($plan->yearly_price !== null)<div class="pricing-limit"><strong>₹{{ number_format($plan->yearly_price, 2) }}</strong><span>per year</span></div>@endif
                             </div>
 
                             @if($features)
@@ -59,7 +59,8 @@
                                 </ul>
                             @endif
 
-                            <a class="pricing-action" href="{{ route('organization', ['plan' => $plan->id]) }}">Choose {{ $plan->name }} <i class="bi bi-arrow-right ms-1"></i></a>
+                            <a class="pricing-action" href="{{ route('organization', ['plan' => $plan->id, 'billing_cycle' => 'monthly']) }}">Choose monthly <i class="bi bi-arrow-right ms-1"></i></a>
+                            @if($plan->yearly_price !== null)<a class="pricing-action mt-2" href="{{ route('organization', ['plan' => $plan->id, 'billing_cycle' => 'yearly']) }}">Choose yearly</a>@endif
                         </div>
                     </article>
                 </div>

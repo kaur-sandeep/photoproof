@@ -122,8 +122,9 @@
                         <input type="hidden" name="subscription_plan" value="{{ $selectedPlan->id }}">
                         <div class="organization-plan-summary">
                             <i class="bi bi-patch-check-fill"></i>
-                            <div><small>Your selected plan</small><strong>{{ $selectedPlan->name }} — ₹{{ number_format($selectedPlan->price, 2) }} — {{ number_format($selectedPlan->monthly_photo_limit) }} photos / {{ $selectedPlan->duration_days }} days</strong></div>
+                            <div><small>Your selected plan</small><strong>{{ $selectedPlan->name }} — ₹{{ number_format($billingCycle === 'yearly' ? $selectedPlan->yearly_price : $selectedPlan->price, 2) }} / {{ $billingCycle === 'yearly' ? 'year' : 'month' }} — {{ number_format($selectedPlan->monthly_photo_limit) }} photos / month</strong></div>
                         </div>
+                        <div class="organization-form-section"><h3 class="organization-section-title"><i class="bi bi-calendar3"></i> Billing cycle</h3><label class="me-3"><input type="radio" name="billing_cycle" value="monthly" @checked($billingCycle === 'monthly')> Monthly</label><label><input type="radio" name="billing_cycle" value="yearly" @checked($billingCycle === 'yearly') @disabled($selectedPlan->yearly_price === null)> Yearly</label></div>
                     @endif
                     <div class="organization-form-section">
                         <h3 class="organization-section-title"><i class="bi bi-building"></i> Organization Information</h3>

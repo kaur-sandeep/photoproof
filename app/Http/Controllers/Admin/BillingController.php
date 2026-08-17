@@ -11,29 +11,27 @@ use App\Models\TopupPlan;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Str;
 
 class BillingController extends Controller
 {
-    public function plans() { return view('admin.billing.plans', ['organizationPlans' => Subscriptionplans::latest()->get(), 'individualPlans' => Plan::latest()->get(), 'topupPlans' => TopupPlan::latest()->get()]); }
+    public function plans() { return view('admin.billing.plans', ['organizationPlans' => Subscriptionplans::withCount(['orders as purchasers_count' => fn ($query) => $query->where('payment_status', 'paid')])->latest()->get(), 'topupPlans' => TopupPlan::latest()->get()]); }
     public function storePlan(Request $request)
     {
-        if ($request->input('type') === 'individual') {
-            $data = $request->validate(['name'=>'required|string|max:255','photo_limit'=>'required|integer|min:1','price'=>'required|numeric|min:0','state'=>'nullable|boolean']);
-            $data['state'] = $request->boolean('state'); Plan::create($data);
-            return back()->with('success', 'Individual plan created.');
-        }
         if ($request->input('type') === 'topup') {
-            $data = $request->validate(['name'=>'required|string|max:255','code'=>'required|string|max:50|unique:topup_plans,code','photo_quantity'=>'required|integer|min:1','price'=>'required|numeric|min:0','state'=>'nullable|boolean']);
+            $data = $request->validate(['name'=>'required|string|max:255','photo_quantity'=>'required|integer|min:1','price'=>'required|numeric|min:0','state'=>'nullable|boolean']);
+            $data['code'] = $this->planCode($data['name']);
             $data['state'] = $request->boolean('state'); TopupPlan::create($data);
             return back()->with('success', 'Top-up plan created.');
         }
-        $data = $request->validate(['name'=>'required|string|max:255','code'=>'required|string|max:50|unique:subscription_plans,code','description'=>'nullable|string|max:5000','monthly_photo_limit'=>'required|integer|min:1','price'=>'required|numeric|min:0','duration_days'=>'required|integer|min:1','state'=>'nullable|boolean']);
+        $data = $request->validate(['name'=>'required|string|max:255','description'=>'nullable|string|max:5000','monthly_photo_limit'=>'required|integer|min:1','price'=>'required|numeric|min:0','yearly_price'=>'required|numeric|min:0','billing_cycle'=>['required', Rule::in(Subscriptionplans::BILLING_CYCLES)],'state'=>'nullable|boolean']);
+        $data['code'] = $this->planCode($data['name']);
         $data['state'] = $request->boolean('state'); Subscriptionplans::create($data);
         return back()->with('success', 'Plan created.');
     }
     public function updatePlan(Request $request, Subscriptionplans $plan)
     {
-        $data = $request->validate(['name'=>'required|string|max:255','code'=>['required','string','max:50',Rule::unique('subscription_plans','code')->ignore($plan)],'description'=>'nullable|string|max:5000','monthly_photo_limit'=>'required|integer|min:1','price'=>'required|numeric|min:0','duration_days'=>'required|integer|min:1','state'=>'required|in:0,1']);
+        $data = $request->validate(['name'=>'required|string|max:255','description'=>'nullable|string|max:5000','monthly_photo_limit'=>'required|integer|min:1','price'=>'required|numeric|min:0','yearly_price'=>'required|numeric|min:0','billing_cycle'=>['required', Rule::in(Subscriptionplans::BILLING_CYCLES)],'state'=>'required|in:0,1']);
         $plan->update($data);
         return back()->with('success', 'Plan updated.');
     }
@@ -64,7 +62,7 @@ class BillingController extends Controller
     }
     public function updateTopup(Request $request, TopupPlan $topup)
     {
-        $data = $request->validate(['name'=>'required|string|max:255','code'=>['required','string','max:50',Rule::unique('topup_plans','code')->ignore($topup)],'photo_quantity'=>'required|integer|min:1','price'=>'required|numeric|min:0','state'=>'required|in:0,1']);
+        $data = $request->validate(['name'=>'required|string|max:255','photo_quantity'=>'required|integer|min:1','price'=>'required|numeric|min:0','state'=>'required|in:0,1']);
         $topup->update($data);
         return back()->with('success', 'Top-up plan updated.');
     }
@@ -74,8 +72,34 @@ class BillingController extends Controller
         $topup->update(['state' => $state]);
         return back()->with('success', $state ? 'Top-up plan activated successfully.' : 'Top-up plan inactivated successfully.');
     }
-    public function orders() { return view('admin.billing.orders', ['orders' => Order::with(['organization','subscriptionPlan','topupPlan','payment'])->latest()->paginate(30)]); }
-    public function subscriptions() { return view('admin.billing.subscriptions', ['subscriptions' => OrganizationSubscriptions::with(['organization','plan'])->latest()->paginate(30)]); }
+    public function orders(Request $request)
+    {
+        $search = trim((string) $request->input('search'));
+        $orders = Order::with(['organization.users:id,organization_id,email','subscriptionPlan','topupPlan','payment'])
+            ->when($request->filled('plan'), fn ($query) => $query->where('subscription_plan_id', $request->integer('plan')))
+            ->when($search !== '', function ($query) use ($search) {
+                $query->where('order_number', 'like', "%{$search}%")
+                    ->orWhereHas('organization', function ($organization) use ($search) {
+                        $organization->where('organization_name', 'like', "%{$search}%")
+                            ->orWhereHas('users', fn ($user) => $user->where('email', 'like', "%{$search}%"));
+                    });
+            })
+            ->latest()->paginate(30)->withQueryString();
+        return view('admin.billing.orders', compact('orders', 'search'));
+    }
+    public function subscriptions(Request $request)
+    {
+        $search = trim((string) $request->input('search'));
+        $subscriptions = OrganizationSubscriptions::with(['organization.users:id,organization_id,email','plan'])
+            ->when($search !== '', function ($query) use ($search) {
+                $query->whereHas('organization', function ($organization) use ($search) {
+                    $organization->where('organization_name', 'like', "%{$search}%")
+                        ->orWhereHas('users', fn ($user) => $user->where('email', 'like', "%{$search}%"));
+                });
+            })
+            ->latest()->paginate(30)->withQueryString();
+        return view('admin.billing.subscriptions', compact('subscriptions', 'search'));
+    }
     public function approve(Request $request, Order $order, PaymentService $payments)
     {
         $data = $request->validate(['transaction_reference'=>'nullable|string|max:255','payment_date'=>'nullable|date','notes'=>'nullable|string|max:2000']);
@@ -86,5 +110,10 @@ class BillingController extends Controller
     {
         if ($order->payment_status !== 'pending') return back()->with('error', 'Only unpaid orders can be cancelled.');
         $order->update(['status' => 'cancelled']); return back()->with('success', 'Order cancelled.');
+    }
+
+    private function planCode(string $name): string
+    {
+        return Str::upper(Str::substr(Str::slug($name), 0, 40) . '-' . Str::random(6));
     }
 }

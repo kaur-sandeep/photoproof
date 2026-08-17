@@ -18,7 +18,12 @@ use Illuminate\Support\Facades\URL;
 use App\Models\Subscriptionplans;
 
 Route::get('/', function () {
-    return redirect()->route('photo.search.form');
+    return view('user.search', [
+        'freeOrganizationPlan' => Subscriptionplans::active()
+            ->where('price', 0.00)
+            ->orderBy('id')
+            ->first(),
+    ]);
 });
 
 Route::get('/pricing', function () {

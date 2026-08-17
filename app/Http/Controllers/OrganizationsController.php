@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Http;
 use App\Models\Subscriptionplans;
 use App\Services\OrderService;
 use App\Services\PaymentService;
+use Illuminate\Validation\Rule;
 class OrganizationsController extends Controller
 {
     public function index(Request $request)
@@ -23,7 +24,9 @@ class OrganizationsController extends Controller
         $selectedPlan = $request->filled('plan')
             ? $plans->firstWhere('id', $request->integer('plan'))
             : $plans->first();
-        return view('organizations.index', compact('plans', 'selectedPlan'));
+        $billingCycle = $request->input('billing_cycle', 'monthly');
+        abort_unless(in_array($billingCycle, Subscriptionplans::BILLING_CYCLES, true), 404);
+        return view('organizations.index', compact('plans', 'selectedPlan', 'billingCycle'));
     }
 
     public function thankYou()
@@ -47,6 +50,7 @@ class OrganizationsController extends Controller
              'g-recaptcha-response' => 'required',
              'terms'              => 'required|accepted',
              'subscription_plan'  => 'required|integer|exists:subscription_plans,id',
+             'billing_cycle'       => ['required', Rule::in(Subscriptionplans::BILLING_CYCLES)],
         ],
             [
                 'g-recaptcha-response.required' => 'Google captcha field is required.',
@@ -95,8 +99,8 @@ class OrganizationsController extends Controller
             ]);
             
             $user->assignRole(['owner', 'employee']);
-            $order = $orders->createSubscriptionOrder($organization, $plan->id);
-            if ((float) $plan->price === 0.0) {
+            $order = $orders->createSubscriptionOrder($organization, $plan->id, 'subscription', $request->input('billing_cycle'));
+            if ((float) $order->amount === 0.0) {
                 $payments->approveOffline($order, ['notes' => 'Automatically approved free organization plan.']);
             }
             

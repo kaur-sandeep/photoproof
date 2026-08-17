@@ -11,6 +11,8 @@ class OrganizationSubscriptions extends Model
     protected $fillable = [
         'organization_id',
         'subscription_plan_id',
+        'billing_cycle',
+        'price',
         'starts_at',
         'expires_at',
         'monthly_photo_limit',

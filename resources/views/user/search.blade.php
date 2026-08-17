@@ -838,4 +838,28 @@
     </div>
   </div>
 </section>
+<section class="wide-60 division" style="background:linear-gradient(135deg, #030c26 0%, #0e1836 100%);">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-lg-7 mb-4 mb-lg-0">
+        <span style="color:#38d762;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;">PhotoProof for teams</span>
+        <h2 class="h2-lg text-white mt-2">Bring trusted photo proof to your entire team.</h2>
+        <p class="p-lg" style="color:rgba(255,255,255,.78);">Create your company account, invite your employees, and manage verified photo records from one secure dashboard.</p>
+        <div class="row mt-4">
+          <div class="col-sm-4 mb-3"><div style="color:#fff;"><i class="bi bi-buildings" style="color:#38d762;font-size:1.4rem;"></i><p class="mb-0 mt-2" style="font-size:.9rem;">One company workspace</p></div></div>
+          <div class="col-sm-4 mb-3"><div style="color:#fff;"><i class="bi bi-people" style="color:#38d762;font-size:1.4rem;"></i><p class="mb-0 mt-2" style="font-size:.9rem;">Invite field teams</p></div></div>
+          <div class="col-sm-4 mb-3"><div style="color:#fff;"><i class="bi bi-shield-check" style="color:#38d762;font-size:1.4rem;"></i><p class="mb-0 mt-2" style="font-size:.9rem;">Verified records</p></div></div>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div style="background:#fff;border-radius:14px;padding:34px;box-shadow:0 15px 35px rgba(0,0,0,.25);">
+          <span style="display:inline-block;background:#e7f9ee;color:#168146;border-radius:20px;padding:5px 11px;font-size:.75rem;font-weight:700;">GET STARTED FREE</span>
+          <h3 class="mt-3" style="color:#14243b;font-weight:700;">Create your company account</h3>
+          <p style="color:#617087;line-height:1.6;">Set up your corporate account in minutes and start managing secure, location-verified photos.</p>
+          <a class="btn btn-lightgreen mt-2" href="{{ route('organization', ['plan' => 1]) }}">Create Corporate Account <i class="bi bi-arrow-right ms-1"></i></a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
  @endsection
