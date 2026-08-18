@@ -68,6 +68,20 @@
                   </div>
 
                   <div class="form-group col-md-4 mb-4">
+                    <label>Billing Cycle <span class="text-danger">*</span></label>
+                    <div class="pt-2">
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="billing_cycle" id="billing_cycle_monthly" value="monthly" @checked(old('billing_cycle', 'monthly') === 'monthly')>
+                        <label class="form-check-label" for="billing_cycle_monthly">Monthly</label>
+                      </div>
+                      <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="radio" name="billing_cycle" id="billing_cycle_yearly" value="yearly" @checked(old('billing_cycle') === 'yearly')>
+                        <label class="form-check-label" for="billing_cycle_yearly">Yearly</label>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="form-group col-md-4 mb-4">
                     <label for="organization_logo">
                         Organization Logo
                     </label>
@@ -95,7 +109,19 @@
                             style="max-height:120px;display:none;border:1px solid #ddd;padding:5px;border-radius:8px;">
                     </div>
 
-                </div>
+                  </div>
+
+                  <div class="form-group col-md-12 mb-4">
+                    <label for="message">Message</label>
+                    <textarea name="message" class="form-control" id="message" rows="4" placeholder="Add a message or note">{{ old('message') }}</textarea>
+                  </div>
+
+                  <div class="form-group col-md-12 mb-4">
+                    <div class="form-check">
+                      <input class="form-check-input" type="checkbox" name="state" id="state" value="1" @checked(old('state', true))>
+                      <label class="form-check-label" for="state">Active</label>
+                    </div>
+                  </div>
 
                   <div class="form-group col-md-4 mb-4">
                       <label for="email_enabled"></label>

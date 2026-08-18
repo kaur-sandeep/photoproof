@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\URL;
 use Carbon\Carbon;
 use App\Models\Notifications;
 use App\Models\EmployeeOtp;
+use App\Services\SubscriptionService;
 class OwnerController extends Controller
 {
 public function index()
@@ -238,11 +239,17 @@ if ($remainingForChart > 0) {
         return redirect()->route('admin.login');
     }
 
-    public function profile()
+    public function profile(SubscriptionService $subscriptions)
     {
         $user = auth()->user();
-        
-        return view('owner.profile', compact('user'));
+        $organization = Organization::with('subscription')->find($user->organization_id);
+         $subscription = $subscriptions->activeForOrganization($user->organization_id);
+        $scheduledRenewal = $subscription
+            ? $organization->subscriptions()->with('plan')
+                ->where('starts_at', '>', $subscription->expires_at)
+                ->orderBy('starts_at')->first()
+            : null;
+        return view('owner.profile', compact('user','organization', 'subscription', 'scheduledRenewal'));
     }
 
      public function profileUpdate(Request $request)

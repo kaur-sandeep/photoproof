@@ -48,7 +48,10 @@ Route::prefix('admin')->group(function () {
         Route::post('/billing/individual-plans/{plan}/state/{state}', [BillingController::class, 'setIndividualState'])->whereNumber('state')->name('admin.billing.individual.state');
         Route::post('/billing/organization-plans/{plan}/state/{state}', [BillingController::class, 'setOrganizationState'])->whereNumber('state')->name('admin.billing.organization.state');
         Route::get('/billing/topups', [BillingController::class, 'topups'])->name('admin.billing.topups');
+        Route::get('/billing/topups/data', [BillingController::class, 'topupsData'])->name('admin.billing.topups.data');
+        Route::get('/billing/topups/create', [BillingController::class, 'createTopup'])->name('admin.billing.topups.create');
         Route::post('/billing/topups', [BillingController::class, 'storeTopup'])->name('admin.billing.topups.store');
+        Route::get('/billing/topups/{topup}/edit', [BillingController::class, 'editTopup'])->name('admin.billing.topups.edit');
         Route::put('/billing/topups/{topup}', [BillingController::class, 'updateTopup'])->name('admin.billing.topups.update');
         Route::post('/billing/topups/{topup}/state/{state}', [BillingController::class, 'setTopupState'])->whereNumber('state')->name('admin.billing.topups.state');
         Route::get('/billing/orders', [BillingController::class, 'orders'])->name('admin.billing.orders');

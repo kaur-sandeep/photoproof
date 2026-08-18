@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\DB;
 use App\Models\User;
 use Carbon\Carbon;
 use App\Models\Setting;
+use App\Services\OrderService;
+use App\Services\PaymentService;
 use Illuminate\Validation\Rule;
 class OrganizationController extends Controller
 {
@@ -157,16 +159,18 @@ public function list(Request $request){
     // }
 
     public function create(){
-        $allPlans = Subscriptionplans::all();
+        $allPlans = Subscriptionplans::active()->get();
         return view('admin.organization.add',compact('allPlans'));
     }
 
-    public function addOrganization(Request $request)
+    public function addOrganization(Request $request, OrderService $orders, PaymentService $payments)
     {
         $request->validate([
             'organization_name'   => 'required|string|max:255',
             'organization_email'  => ['required', 'email', Rule::unique('users', 'email')],
             'subscription_plan'   => 'required|exists:subscription_plans,id',
+            'billing_cycle'       => ['required', Rule::in(Subscriptionplans::BILLING_CYCLES)],
+            'state'               => 'nullable|boolean',
             'password'            => 'required|min:6',
             'organization_logo' => [
                     'nullable',
@@ -199,7 +203,7 @@ public function list(Request $request){
                 'enable_photo_email' => $request->boolean('email_enabled'),
                 'created_by'         => Auth::user()->id,
                 'organization_logo' =>$path,
-                'state'              => 1
+                'state'              => $request->boolean('state')
             ]);
 
             $organization->organization_code = 'ORG_' . $organization->id;
@@ -215,20 +219,24 @@ public function list(Request $request){
             ]);
 
             $user->assignRole(['owner', 'employee']);
-            $id = $request->subscription_plan;
-            $getPlanDataById = Subscriptionplans::find($id);
-            $billingCycle = 'monthly';
-            $startDate = Carbon::now();
-            $expiresDate = \App\Services\BillingCycleService::expiry($startDate, $billingCycle);
-            $OrganizationSubscriptions = OrganizationSubscriptions::create([
-                'organization_id'      => $organization->id,
-                'subscription_plan_id' => $request->subscription_plan,
-                'billing_cycle'         => $billingCycle,
-                'price'                 => $getPlanDataById->monthly_price,
-                'starts_at'             => $startDate,
-                'expires_at'            => $expiresDate,
-                'monthly_photo_limit'   => $getPlanDataById->monthly_photo_limit,
-                'monthly_photo_used'    => 0,
+            $getPlanDataById = Subscriptionplans::active()->findOrFail($request->subscription_plan);
+            $order = $orders->createSubscriptionOrder($organization, $getPlanDataById->id, 'subscription', $request->billing_cycle);
+            $payments->approveOffline($order, [
+                'notes' => 'Automatically approved: corporate account created by an administrator.',
+            ]);
+
+            Notifications::create([
+                'photo_random_id' => $organization->organization_code,
+                'name' => $organization->organization_name,
+                'email' => $user->email,
+                'type' => 'Corporate Account',
+                'organization_id' => $organization->id,
+                'data' => json_encode([
+                    'message' => 'A corporate account was created by an administrator.',
+                    'plan' => $getPlanDataById->name,
+                    'billing_cycle' => $request->billing_cycle,
+                    'order_number' => $order->order_number,
+                ]),
             ]);
 
             DB::commit();

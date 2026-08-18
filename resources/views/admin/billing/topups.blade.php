@@ -1,7 +1,12 @@
 @extends('admin.layouts.master')
 @section('title', 'Top-up Plans')
 @section('content')
-<div class="container-fluid"><h3>Top-up Plans</h3>@if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
-<div class="card mb-3"><div class="card-body"><form class="row g-2" method="post" action="{{ route('admin.billing.topups.store') }}">@csrf <div class="col-md-3"><input class="form-control" name="name" placeholder="Name" required></div><div class="col-md-2"><input class="form-control" name="code" placeholder="Code" required></div><div class="col-md-2"><input class="form-control" type="number" min="1" name="photo_quantity" placeholder="Photos" required></div><div class="col-md-2"><input class="form-control" type="number" min="0" step=".01" name="price" placeholder="Price" required></div><div class="col-md-2 form-check mt-2"><input class="form-check-input" type="checkbox" name="state" value="1" checked> Active</div><div class="col-md-1"><button class="btn btn-primary">Add</button></div></form></div></div>
-<div class="card"><div class="table-responsive"><table class="table"><thead><tr><th>Name</th><th>Code</th><th>Photos</th><th>Price</th><th>Active</th><th></th></tr></thead><tbody>@foreach($topups as $topup)<tr><form method="post" action="{{ route('admin.billing.topups.update',$topup) }}">@csrf @method('PUT')<td><input class="form-control" name="name" value="{{ $topup->name }}"></td><td><input class="form-control" name="code" value="{{ $topup->code }}"></td><td><input class="form-control" name="photo_quantity" value="{{ $topup->photo_quantity }}"></td><td><input class="form-control" name="price" value="{{ $topup->price }}"></td><td><input type="checkbox" name="state" value="1" @checked($topup->state)></td><td><button class="btn btn-sm btn-outline-primary">Save</button></td></form></tr>@endforeach</tbody></table></div></div></div>
+<div class="container-fluid">
+     <div class="admin-page-header">
+        <h3 class="card-title"><b>Top-up Plans</b></h3>
+        <a class="btn btn-primary" href="{{ route('admin.billing.topups.create') }}">+ Add Top-up</a>
+    </div>
+  @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
+<div class="card"><div class="card-body"><div class="table-responsive"><table id="topups-table" class="table table-bordered table-striped align-middle w-100"><thead><tr><th>Name</th><th>Photos</th><th>Price</th><th>State</th><th>Actions</th></tr></thead></table></div></div></div></div>
+<script>document.addEventListener('DOMContentLoaded',function(){window.jQuery('#topups-table').DataTable({processing:true,serverSide:true,ajax:'{{ route('admin.billing.topups.data') }}',columns:[{data:'name',name:'name'},{data:'photo_quantity',name:'photo_quantity'},{data:'price',name:'price'},{data:'state',name:'state',orderable:false,searchable:false},{data:'actions',name:'actions',orderable:false,searchable:false}]});});</script>
 @endsection

@@ -2,7 +2,9 @@
 @section('title', 'Subscription History')
 @section('content')
 <div class="container-fluid">
-    <h3>Subscription History</h3>
+       <div class="admin-page-header">
+        <h3 class="card-title"><b>Subscription History</b></h3>
+    </div>
     <div class="card"><div class="card-body"><div class="table-responsive">
         <table id="subscriptions-table" class="table table-bordered table-striped align-middle w-100">
             <thead><tr><th>Organization</th><th>Email</th><th>Plan</th><th>Start</th><th>Expiry</th><th>Monthly</th><th>Top-up</th><th>Status</th></tr></thead>

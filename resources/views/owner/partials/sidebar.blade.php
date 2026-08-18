@@ -57,9 +57,9 @@
 
             </ul>
              <ul class="nav flex-column">
-                <li class="nav-item"><a href="{{ route('owner.subscription') }}" class="nav-link text-white"><i class="bi bi-credit-card me-2"></i>My Subscription</a></li>
+                <!-- <li class="nav-item"><a href="{{ route('owner.subscription') }}" class="nav-link text-white"><i class="bi bi-credit-card me-2"></i>My Subscription</a></li> -->
                 <li class="nav-item"><a href="{{ route('owner.orders') }}" class="nav-link text-white"><i class="bi bi-receipt me-2"></i>Orders</a></li>
-                <li class="nav-item"><a href="{{ route('owner.topup') }}" class="nav-link text-white"><i class="bi bi-plus-circle me-2"></i>Top Up Photos</a></li>
+                <!-- <li class="nav-item"><a href="{{ route('owner.topup') }}" class="nav-link text-white"><i class="bi bi-plus-circle me-2"></i>Top Up Photos</a></li> -->
             </ul>
         <ul class="nav flex-column">
             <li class="nav-item">

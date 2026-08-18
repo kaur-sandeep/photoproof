@@ -108,6 +108,7 @@
                 @if(auth()->check() && auth()->user()->getRoleNames()->contains('super-admin'))
                     <ul class="nav flex-column">
                         <li class="nav-item"><a href="{{ route('admin.billing.plans') }}" class="nav-link text-white"><i class="bi bi-card-list me-2"></i>Plan Management</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.billing.topups') }}" class="nav-link text-white"><i class="bi bi-plus-circle me-2"></i>Top-up Plans</a></li>
                         <li class="nav-item"><a href="{{ route('admin.billing.orders') }}" class="nav-link text-white"><i class="bi bi-receipt me-2"></i>Orders & Payments</a></li>
                         <li class="nav-item"><a href="{{ route('admin.billing.subscriptions') }}" class="nav-link text-white"><i class="bi bi-calendar-check me-2"></i>Subscriptions</a></li>
                     </ul>

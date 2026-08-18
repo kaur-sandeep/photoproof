@@ -856,7 +856,7 @@
           <span style="display:inline-block;background:#e7f9ee;color:#168146;border-radius:20px;padding:5px 11px;font-size:.75rem;font-weight:700;">GET STARTED FREE</span>
           <h3 class="mt-3" style="color:#14243b;font-weight:700;">Create your company account</h3>
           <p style="color:#617087;line-height:1.6;">Set up your corporate account in minutes and start managing secure, location-verified photos.</p>
-          <a class="btn btn-lightgreen mt-2" href="{{ route('organization', ['plan' => 1]) }}">Create Corporate Account <i class="bi bi-arrow-right ms-1"></i></a>
+          <a class="btn btn-lightgreen mt-2" href="{{ route('organization', ['plan' => 1, 'billing_cycle' => 'monthly']) }}">Create Corporate Account <i class="bi bi-arrow-right ms-1"></i></a>
         </div>
       </div>
     </div>

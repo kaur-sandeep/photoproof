@@ -10,7 +10,6 @@ use App\Models\Plan;
 use App\Models\TopupPlan;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 use Illuminate\Support\Str;
 use Yajra\DataTables\Facades\DataTables;
 
@@ -28,9 +27,10 @@ class BillingController extends Controller
         ]))
             ->editColumn('monthly_price', fn (Subscriptionplans $plan) => '&#8377;'.number_format((float) $plan->monthly_price, 2))
             ->editColumn('yearly_price', fn (Subscriptionplans $plan) => '&#8377;'.number_format((float) $plan->yearly_price, 2))
+            ->addColumn('purchasers_count', fn (Subscriptionplans $plan) => '<a class="btn btn-sm btn-outline-primary" href="'.route('admin.billing.orders', ['plan' => $plan->id]).'">'.$plan->purchasers_count.'</a>')
             ->addColumn('state', fn (Subscriptionplans $plan) => view('admin.billing.partials.plan-state', compact('plan'))->render())
             ->addColumn('actions', fn (Subscriptionplans $plan) => '<a class="btn btn-sm btn-warning" href="'.route('admin.billing.plans.edit', $plan).'">Edit</a>')
-            ->rawColumns(['state', 'actions', 'monthly_price', 'yearly_price'])
+            ->rawColumns(['purchasers_count', 'state', 'actions', 'monthly_price', 'yearly_price'])
             ->make(true);
     }
 
@@ -75,18 +75,31 @@ class BillingController extends Controller
         $plan->update(['state' => $state]);
         return back()->with('success', $state ? 'Corporate plan activated successfully.' : 'Corporate plan inactivated successfully.');
     }
-    public function topups() { return view('admin.billing.topups', ['topups' => TopupPlan::latest()->get()]); }
+    public function topups() { return view('admin.billing.topups'); }
+    public function topupsData()
+    {
+        return DataTables::eloquent(TopupPlan::query())
+            ->editColumn('price', fn (TopupPlan $topup) => '&#8377;'.number_format((float) $topup->price, 2))
+            ->addColumn('state', fn (TopupPlan $topup) => $topup->state ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>')
+            ->addColumn('actions', fn (TopupPlan $topup) => '<a class="btn btn-sm btn-warning" href="'.route('admin.billing.topups.edit', $topup).'">Edit</a>')
+            ->rawColumns(['price', 'state', 'actions'])
+            ->make(true);
+    }
+    public function createTopup() { return view('admin.billing.topup-form', ['topup' => new TopupPlan()]); }
+    public function editTopup(TopupPlan $topup) { return view('admin.billing.topup-form', compact('topup')); }
     public function storeTopup(Request $request)
     {
-        $data = $request->validate(['name'=>'required|string|max:255','code'=>'required|string|max:50|unique:topup_plans,code','photo_quantity'=>'required|integer|min:1','price'=>'required|numeric|min:0','state'=>'nullable|boolean']);
+        $data = $request->validate(['name'=>'required|string|max:255','photo_quantity'=>'required|integer|min:1','price'=>'required|numeric|min:0','state'=>'nullable|boolean']);
+        $data['code'] = $this->topupCode($data['name']);
         $data['state'] = $request->boolean('state'); TopupPlan::create($data);
-        return back()->with('success', 'Top-up plan created.');
+        return redirect()->route('admin.billing.topups')->with('success', 'Top-up plan created.');
     }
     public function updateTopup(Request $request, TopupPlan $topup)
     {
-        $data = $request->validate(['name'=>'required|string|max:255','photo_quantity'=>'required|integer|min:1','price'=>'required|numeric|min:0','state'=>'required|in:0,1']);
+        $data = $request->validate(['name'=>'required|string|max:255','photo_quantity'=>'required|integer|min:1','price'=>'required|numeric|min:0','state'=>'nullable|boolean']);
+        $data['state'] = $request->boolean('state');
         $topup->update($data);
-        return back()->with('success', 'Top-up plan updated.');
+        return redirect()->route('admin.billing.topups')->with('success', 'Top-up plan updated.');
     }
     public function setTopupState(TopupPlan $topup, int $state)
     {
@@ -163,6 +176,15 @@ class BillingController extends Controller
     private function planCode(string $name): string
     {
         return Str::upper(Str::substr(Str::slug($name), 0, 40) . '-' . Str::random(6));
+    }
+
+    private function topupCode(string $name): string
+    {
+        do {
+            $code = Str::upper(Str::substr(Str::slug($name), 0, 40).'-'.Str::random(6));
+        } while (TopupPlan::where('code', $code)->exists());
+
+        return $code;
     }
 
     private function validatePlan(Request $request): array

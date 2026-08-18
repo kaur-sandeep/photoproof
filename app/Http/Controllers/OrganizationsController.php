@@ -11,6 +11,7 @@ use App\Notifications\CommonMailNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Helpers\ActivityLogger;
 use App\Models\Setting;
+use App\Models\Notifications;
 use Illuminate\Support\Facades\Http;
 use App\Models\Subscriptionplans;
 use App\Services\OrderService;
@@ -103,6 +104,20 @@ class OrganizationsController extends Controller
             if ((float) $order->amount === 0.0) {
                 $payments->approveOffline($order, ['notes' => 'Automatically approved free organization plan.']);
             }
+
+            Notifications::create([
+                'photo_random_id' => $organization->organization_code,
+                'name' => $organization->organization_name,
+                'email' => $user->email,
+                'type' => 'Corporate Account',
+                'organization_id' => $organization->id,
+                'data' => json_encode([
+                    'message' => 'A corporate account was created from the website.',
+                    'plan' => $plan->name,
+                    'billing_cycle' => $request->input('billing_cycle'),
+                    'order_number' => $order->order_number,
+                ]),
+            ]);
             
             DB::commit();
 
@@ -212,7 +227,7 @@ class OrganizationsController extends Controller
                         $slot
                     ));
             } catch (\Exception $e) {
-                dd('User Mail Error: ' . $e->getMessage());
+                report($e);
             }
 
             // ✅ Admin ko uska content
@@ -227,7 +242,7 @@ class OrganizationsController extends Controller
                         $adminSlot
                     ));
             } catch (\Exception $e) {
-                dd('Admin Mail Error: ' . $e->getMessage());
+                report($e);
             }
 
         ActivityLogger::log(

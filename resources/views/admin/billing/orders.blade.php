@@ -2,7 +2,9 @@
 @section('title', 'Orders and Payments')
 @section('content')
 <div class="container-fluid">
-    <h3>Orders &amp; Payments</h3>
+     <div class="admin-page-header">
+        <h3 class="card-title"><b>Orders &amp; Payments</b></h3>
+    </div>
     @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
     @if(session('error'))<div class="alert alert-danger">{{ session('error') }}</div>@endif
     <div class="card"><div class="card-body"><div class="table-responsive">
