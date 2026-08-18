@@ -8,5 +8,5 @@
     </div>
   @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
 <div class="card"><div class="card-body"><div class="table-responsive"><table id="topups-table" class="table table-bordered table-striped align-middle w-100"><thead><tr><th>Name</th><th>Photos</th><th>Price</th><th>State</th><th>Actions</th></tr></thead></table></div></div></div></div>
-<script>document.addEventListener('DOMContentLoaded',function(){window.jQuery('#topups-table').DataTable({processing:true,serverSide:true,ajax:'{{ route('admin.billing.topups.data') }}',columns:[{data:'name',name:'name'},{data:'photo_quantity',name:'photo_quantity'},{data:'price',name:'price'},{data:'state',name:'state',orderable:false,searchable:false},{data:'actions',name:'actions',orderable:false,searchable:false}]});});</script>
+<script>document.addEventListener('DOMContentLoaded',function(){window.jQuery('#topups-table').DataTable({processing:true,serverSide:true,ajax:'{{ route('admin.billing.topups.data') }}',columns:[{data:'name',name:'name'},{data:'photo_quantity',name:'photo_quantity'},{data:'price',name:'price'},{data:'state',name:'state',searchable:false},{data:'actions',name:'actions',orderable:false,searchable:false}]});});</script>
 @endsection

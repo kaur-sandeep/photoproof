@@ -20,8 +20,8 @@ document.addEventListener('DOMContentLoaded', function () {
         serverSide: true,
         ajax: { url: '{{ route('admin.billing.orders.data') }}', data: { plan: '{{ request('plan') }}' } },
         columns: [
-            { data: 'order_number', name: 'order_number' }, { data: 'organization_name', name: 'organization_name', orderable: false },
-            { data: 'email', name: 'email', orderable: false }, { data: 'item', name: 'item', orderable: false }, { data: 'amount', name: 'amount' },
+            { data: 'order_number', name: 'order_number' }, { data: 'organization_name', name: 'organization_name' },
+            { data: 'email', name: 'email' }, { data: 'item', name: 'item' }, { data: 'amount', name: 'amount' },
             { data: 'created_at', name: 'created_at' }, { data: 'status', name: 'status' },
             { data: 'payment_status', name: 'payment_status' }, { data: 'actions', orderable: false, searchable: false },
         ],

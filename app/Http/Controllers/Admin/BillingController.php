@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\Organization;
 use App\Models\OrganizationSubscriptions;
 use App\Models\Subscriptionplans;
 use App\Models\Plan;
 use App\Models\TopupPlan;
+use App\Models\User;
 use App\Services\PaymentService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -30,6 +32,7 @@ class BillingController extends Controller
             ->addColumn('purchasers_count', fn (Subscriptionplans $plan) => '<a class="btn btn-sm btn-outline-primary" href="'.route('admin.billing.orders', ['plan' => $plan->id]).'">'.$plan->purchasers_count.'</a>')
             ->addColumn('state', fn (Subscriptionplans $plan) => view('admin.billing.partials.plan-state', compact('plan'))->render())
             ->addColumn('actions', fn (Subscriptionplans $plan) => '<a class="btn btn-sm btn-warning" href="'.route('admin.billing.plans.edit', $plan).'">Edit</a>')
+            ->orderColumn('state', 'state $1')
             ->rawColumns(['purchasers_count', 'state', 'actions', 'monthly_price', 'yearly_price'])
             ->make(true);
     }
@@ -47,6 +50,7 @@ class BillingController extends Controller
     public function storePlan(Request $request)
     {
         $data = $this->validatePlan($request);
+        $data['state'] = $request->boolean('state');
         $data['code'] = $this->planCode($data['name']);
         Subscriptionplans::create($data);
         return redirect()->route('admin.billing.plans')->with('success', 'Plan created.');
@@ -54,6 +58,7 @@ class BillingController extends Controller
     public function updatePlan(Request $request, Subscriptionplans $plan)
     {
         $data = $this->validatePlan($request);
+        $data['state'] = $request->boolean('state');
         $plan->update($data);
         return redirect()->route('admin.billing.plans')->with('success', 'Plan updated.');
     }
@@ -82,6 +87,7 @@ class BillingController extends Controller
             ->editColumn('price', fn (TopupPlan $topup) => '&#8377;'.number_format((float) $topup->price, 2))
             ->addColumn('state', fn (TopupPlan $topup) => $topup->state ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>')
             ->addColumn('actions', fn (TopupPlan $topup) => '<a class="btn btn-sm btn-warning" href="'.route('admin.billing.topups.edit', $topup).'">Edit</a>')
+            ->orderColumn('state', 'state $1')
             ->rawColumns(['price', 'state', 'actions'])
             ->make(true);
     }
@@ -132,6 +138,9 @@ class BillingController extends Controller
             ->filterColumn('organization_name', fn ($query, $keyword) => $query->whereHas('organization', fn ($organization) => $organization->where('organization_name', 'like', "%{$keyword}%")))
             ->filterColumn('email', fn ($query, $keyword) => $query->whereHas('organization.users', fn ($user) => $user->where('email', 'like', "%{$keyword}%")))
             ->filterColumn('item', fn ($query, $keyword) => $query->where(fn ($plans) => $plans->whereHas('subscriptionPlan', fn ($plan) => $plan->where('name', 'like', "%{$keyword}%"))->orWhereHas('topupPlan', fn ($plan) => $plan->where('name', 'like', "%{$keyword}%"))))
+            ->orderColumn('organization_name', fn ($query, $direction) => $query->orderBy(Organization::select('organization_name')->whereColumn('organizations.id', 'orders.organization_id'), $direction))
+            ->orderColumn('email', fn ($query, $direction) => $query->orderBy(User::select('email')->whereColumn('users.organization_id', 'orders.organization_id')->orderBy('created_at')->limit(1), $direction))
+            ->orderColumn('item', fn ($query, $direction) => $query->orderByRaw("COALESCE((SELECT name FROM subscription_plans WHERE subscription_plans.id = orders.subscription_plan_id), (SELECT name FROM topup_plans WHERE topup_plans.id = orders.topup_plan_id)) {$direction}"))
             ->rawColumns(['amount', 'status', 'payment_status', 'actions'])
             ->toJson();
     }
@@ -158,6 +167,12 @@ class BillingController extends Controller
             ->filterColumn('organization_name', fn ($query, $keyword) => $query->whereHas('organization', fn ($organization) => $organization->where('organization_name', 'like', "%{$keyword}%")))
             ->filterColumn('email', fn ($query, $keyword) => $query->whereHas('organization.users', fn ($user) => $user->where('email', 'like', "%{$keyword}%")))
             ->filterColumn('plan_name', fn ($query, $keyword) => $query->whereHas('plan', fn ($plan) => $plan->where('name', 'like', "%{$keyword}%")))
+            ->orderColumn('organization_name', fn ($query, $direction) => $query->orderBy(Organization::select('organization_name')->whereColumn('organizations.id', 'organization_subscriptions.organization_id'), $direction))
+            ->orderColumn('email', fn ($query, $direction) => $query->orderBy(User::select('email')->whereColumn('users.organization_id', 'organization_subscriptions.organization_id')->orderBy('created_at')->limit(1), $direction))
+            ->orderColumn('plan_name', fn ($query, $direction) => $query->orderBy(Subscriptionplans::select('name')->whereColumn('subscription_plans.id', 'organization_subscriptions.subscription_plan_id'), $direction))
+            ->orderColumn('monthly_usage', 'monthly_photo_used $1')
+            ->orderColumn('topup_usage', 'topup_photo_used $1')
+            ->orderColumn('subscription_status', 'expires_at $1')
             ->rawColumns(['subscription_status'])
             ->toJson();
     }
@@ -195,7 +210,7 @@ class BillingController extends Controller
             'monthly_photo_limit' => ['required', 'integer', 'min:1'],
             'monthly_price' => ['required', 'numeric', 'min:0'],
             'yearly_price' => ['required', 'numeric', 'min:0'],
-            'state' => ['required', 'in:0,1'],
+            'state' => ['nullable', 'boolean'],
         ]);
     }
 }

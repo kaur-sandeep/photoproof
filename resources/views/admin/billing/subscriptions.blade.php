@@ -18,10 +18,10 @@ document.addEventListener('DOMContentLoaded', function () {
         serverSide: true,
         ajax: '{{ route('admin.billing.subscriptions.data') }}',
         columns: [
-            { data: 'organization_name', name: 'organization_name', orderable: false }, { data: 'email', name: 'email', orderable: false },
-            { data: 'plan_name', name: 'plan_name', orderable: false }, { data: 'starts_at', name: 'starts_at' },
-            { data: 'expires_at', name: 'expires_at' }, { data: 'monthly_usage', orderable: false, searchable: false },
-            { data: 'topup_usage', orderable: false, searchable: false }, { data: 'subscription_status', orderable: false, searchable: false },
+            { data: 'organization_name', name: 'organization_name' }, { data: 'email', name: 'email' },
+            { data: 'plan_name', name: 'plan_name' }, { data: 'starts_at', name: 'starts_at' },
+            { data: 'expires_at', name: 'expires_at' }, { data: 'monthly_usage', name: 'monthly_usage', searchable: false },
+            { data: 'topup_usage', name: 'topup_usage', searchable: false }, { data: 'subscription_status', name: 'subscription_status', searchable: false },
         ],
     });
 });

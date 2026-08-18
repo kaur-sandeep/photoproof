@@ -14,7 +14,7 @@
             { data: 'name', name: 'name' }, { data: 'description', name: 'description', defaultContent: '' },
             { data: 'monthly_price', name: 'monthly_price' }, { data: 'yearly_price', name: 'yearly_price' },
             { data: 'monthly_photo_limit', name: 'monthly_photo_limit' }, { data: 'purchasers_count', name: 'purchasers_count', searchable: false },
-            { data: 'state', name: 'state', orderable: false, searchable: false }, { data: 'actions', name: 'actions', orderable: false, searchable: false },
+            { data: 'state', name: 'state', searchable: false }, { data: 'actions', name: 'actions', orderable: false, searchable: false },
         ] });
     });
 </script>

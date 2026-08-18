@@ -187,6 +187,7 @@ Route::middleware(['auth:web', 'role:owner'])->prefix('owner')->name('owner.')->
     Route::get('/dashboard', [OwnerController::class, 'index'])->name('dashboard');
     Route::get('/subscription', [OwnerSubscriptionController::class, 'index'])->name('subscription');
     Route::get('/orders', [OwnerSubscriptionController::class, 'orders'])->name('orders');
+    Route::get('/orders/data', [OwnerSubscriptionController::class, 'ordersData'])->name('orders.data');
     Route::get('/renew', [OwnerSubscriptionController::class, 'createRenewal'])->name('renew');
     Route::post('/renew', [OwnerSubscriptionController::class, 'renew'])->name('renew.store');
     Route::get('/topup', [OwnerSubscriptionController::class, 'createTopup'])->name('topup');
