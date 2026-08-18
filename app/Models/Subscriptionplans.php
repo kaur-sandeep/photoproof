@@ -14,14 +14,12 @@ class Subscriptionplans extends Model
         'code',
         'description',
         'monthly_photo_limit',
-        'price',
+        'monthly_price',
         'yearly_price',
-        'duration_days',
-        'billing_cycle',
         'state',
     ];
 
-    protected $casts = ['price' => 'decimal:2', 'yearly_price' => 'decimal:2', 'state' => 'boolean'];
+    protected $casts = ['monthly_price' => 'decimal:2', 'yearly_price' => 'decimal:2', 'state' => 'boolean'];
 
     public function scopeActive($query)
     {

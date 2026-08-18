@@ -217,13 +217,14 @@ public function list(Request $request){
             $user->assignRole(['owner', 'employee']);
             $id = $request->subscription_plan;
             $getPlanDataById = Subscriptionplans::find($id);
+            $billingCycle = 'monthly';
             $startDate = Carbon::now();
-            $expiresDate = \App\Services\BillingCycleService::expiry($startDate, $getPlanDataById->billing_cycle);
+            $expiresDate = \App\Services\BillingCycleService::expiry($startDate, $billingCycle);
             $OrganizationSubscriptions = OrganizationSubscriptions::create([
                 'organization_id'      => $organization->id,
                 'subscription_plan_id' => $request->subscription_plan,
-                'billing_cycle'         => $getPlanDataById->billing_cycle,
-                'price'                 => $getPlanDataById->price,
+                'billing_cycle'         => $billingCycle,
+                'price'                 => $getPlanDataById->monthly_price,
                 'starts_at'             => $startDate,
                 'expires_at'            => $expiresDate,
                 'monthly_photo_limit'   => $getPlanDataById->monthly_photo_limit,
@@ -613,8 +614,9 @@ public function updateOrganization(Request $request, $id)
 
         if ($plan) {
 
+            $billingCycle = $organization->subscriptions()->latest('starts_at')->value('billing_cycle') ?? 'monthly';
             $startDate = Carbon::now();
-            $expiresDate = \App\Services\BillingCycleService::expiry($startDate, $plan->billing_cycle);
+            $expiresDate = \App\Services\BillingCycleService::expiry($startDate, $billingCycle);
 
             // \Log::info("[$traceId] Subscription dates calculated", [
             //     'starts_at' => $startDate->toDateTimeString(),
@@ -629,8 +631,8 @@ public function updateOrganization(Request $request, $id)
 
             $subscriptionData = [
                 'subscription_plan_id' => $plan->id,
-                'billing_cycle'         => $plan->billing_cycle,
-                'price'                 => $plan->price,
+                'billing_cycle'         => $billingCycle,
+                'price'                 => $billingCycle === 'yearly' ? $plan->yearly_price : $plan->monthly_price,
                 'starts_at'            => $startDate,
                 'expires_at'           => $expiresDate,
                 'monthly_photo_limit'  => $plan->monthly_photo_limit,

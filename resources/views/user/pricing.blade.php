@@ -7,6 +7,10 @@
     .pricing-eyebrow { color: #37d67a; font-size: .75rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
     .pricing-heading h1 { color: #fff; font-size: clamp(2rem, 4vw, 3.1rem); font-weight: 700; margin: 12px 0; }
     .pricing-heading p { color: rgba(255,255,255,.75); font-size: 1.1rem; margin: 0; }
+    .billing-toggle { align-items: center; background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.28); border-radius: 999px; display: inline-flex; gap: 4px; margin-top: 24px; padding: 4px; }
+    .billing-toggle__option { background: transparent; border: 0; border-radius: 999px; color: rgba(255,255,255,.78); cursor: pointer; font-size: .9rem; font-weight: 700; padding: 9px 18px; transition: background .2s ease, color .2s ease; }
+    .billing-toggle__option.is-active { background: #fff; color: #14243b; }
+    .billing-toggle__badge { background: #37d67a; border-radius: 999px; color: #0d4026; font-size: .68rem; font-weight: 800; margin-left: 5px; padding: 3px 6px; text-transform: uppercase; }
     .pricing-card { background: #fff; border: 1px solid rgba(255,255,255,.6); border-radius: 16px; box-shadow: 0 20px 45px rgba(0,0,0,.24); color: #1d2a3b; height: 100%; overflow: hidden; transition: transform .2s ease, box-shadow .2s ease; }
     .pricing-card:hover { box-shadow: 0 28px 60px rgba(0,0,0,.34); transform: translateY(-6px); }
     .pricing-card__top { background: linear-gradient(135deg, #f7fbf9, #eef8f3); border-bottom: 1px solid #e3eee8; padding: 30px 30px 24px; text-align: center; }
@@ -33,22 +37,26 @@
             <div class="pricing-eyebrow">Simple, transparent pricing</div>
             <h1>Plans that scale with your team</h1>
             <p>Choose a shared photo capacity plan for your company.</p>
+            <div class="billing-toggle" role="group" aria-label="Billing cycle">
+                <button class="billing-toggle__option is-active" type="button" data-billing-cycle="monthly" aria-pressed="true">Monthly</button>
+                <button class="billing-toggle__option" type="button" data-billing-cycle="yearly" aria-pressed="false">Yearly <span class="billing-toggle__badge">Save</span></button>
+            </div>
         </div>
 
         <div class="row justify-content-center">
             @forelse($plans as $plan)
                 @php($features = array_values(array_filter(preg_split('/\r\n|\r|\n/', (string) $plan->description), fn ($feature) => trim($feature) !== '')))
                 <div class="col-md-6 col-lg-4 mb-4">
-                    <article class="pricing-card">
+                    <article class="pricing-card" data-monthly-price="{{ number_format((float) $plan->monthly_price, 2, '.', '') }}" data-yearly-price="{{ number_format((float) $plan->yearly_price, 2, '.', '') }}">
                         <div class="pricing-card__top">
                             <h2 class="pricing-card__name">{{ $plan->name }}</h2>
-                            <div class="pricing-card__price"><small>₹</small>{{ number_format($plan->price, 2) }}</div>
-                            <p class="pricing-card__price-note">per month</p>
+                            <div class="pricing-card__price"><small>&#8377;</small><span data-price>{{ number_format($plan->monthly_price, 2) }}</span></div>
+                            <p class="pricing-card__price-note" data-price-note>per month</p>
                         </div>
                         <div class="pricing-card__body">
                             <div class="pricing-card__limits">
                                 <div class="pricing-limit"><strong>{{ number_format($plan->monthly_photo_limit) }}</strong><span>photos per month</span></div>
-                                @if($plan->yearly_price !== null)<div class="pricing-limit"><strong>₹{{ number_format($plan->yearly_price, 2) }}</strong><span>per year</span></div>@endif
+                                <div class="pricing-limit"><strong>&#8377;{{ number_format($plan->yearly_price, 2) }}</strong><span>per year</span></div>
                             </div>
 
                             @if($features)
@@ -59,8 +67,7 @@
                                 </ul>
                             @endif
 
-                            <a class="pricing-action" href="{{ route('organization', ['plan' => $plan->id, 'billing_cycle' => 'monthly']) }}">Choose monthly <i class="bi bi-arrow-right ms-1"></i></a>
-                            @if($plan->yearly_price !== null)<a class="pricing-action mt-2" href="{{ route('organization', ['plan' => $plan->id, 'billing_cycle' => 'yearly']) }}">Choose yearly</a>@endif
+                            <a class="pricing-action" data-plan-action data-monthly-url="{{ route('organization', ['plan' => $plan->id, 'billing_cycle' => 'monthly']) }}" data-yearly-url="{{ route('organization', ['plan' => $plan->id, 'billing_cycle' => 'yearly']) }}" href="{{ route('organization', ['plan' => $plan->id, 'billing_cycle' => 'monthly']) }}">Choose monthly <i class="bi bi-arrow-right ms-1"></i></a>
                         </div>
                     </article>
                 </div>
@@ -70,4 +77,30 @@
         </div>
     </div>
 </section>
+<script>
+    (() => {
+        const toggleOptions = document.querySelectorAll('[data-billing-cycle]');
+        const pricingCards = document.querySelectorAll('.pricing-card');
+        const formatPrice = (price) => Number(price).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+        const setBillingCycle = (cycle) => {
+            toggleOptions.forEach((option) => {
+                const active = option.dataset.billingCycle === cycle;
+                option.classList.toggle('is-active', active);
+                option.setAttribute('aria-pressed', active ? 'true' : 'false');
+            });
+            pricingCards.forEach((card) => {
+                const yearlyPrice = card.dataset.yearlyPrice;
+                const useYearly = cycle === 'yearly' && yearlyPrice !== '';
+                const price = useYearly ? Number(yearlyPrice) / 12 : Number(card.dataset.monthlyPrice);
+                const action = card.querySelector('[data-plan-action]');
+                card.querySelector('[data-price]').textContent = formatPrice(price);
+                card.querySelector('[data-price-note]').textContent = useYearly ? `per month — billed ₹${formatPrice(yearlyPrice)} yearly` : 'per month';
+                action.href = useYearly ? action.dataset.yearlyUrl : action.dataset.monthlyUrl;
+                action.innerHTML = useYearly ? 'Choose yearly <i class="bi bi-arrow-right ms-1"></i>' : 'Choose monthly <i class="bi bi-arrow-right ms-1"></i>';
+            });
+        };
+        toggleOptions.forEach((option) => option.addEventListener('click', () => setBillingCycle(option.dataset.billingCycle)));
+    })();
+</script>
 @endsection

@@ -19,7 +19,7 @@ class PhotoController extends Controller
    public function searchForm()
     {
         $freeOrganizationPlan = Subscriptionplans::where('state', 1)
-        ->orderBy('price', 'asc')
+        ->orderBy('monthly_price', 'asc')
         ->first();
 
     return view('user.search', compact('freeOrganizationPlan'));

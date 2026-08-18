@@ -1,8 +1,29 @@
 @extends('admin.layouts.master')
 @section('title', 'Orders and Payments')
 @section('content')
-<div class="container-fluid"><h3>Orders &amp; Payments</h3>
-@if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif @if(session('error'))<div class="alert alert-danger">{{ session('error') }}</div>@endif
-<form class="mb-3" method="get"><div class="input-group" style="max-width:420px"><input class="form-control" name="search" value="{{ $search }}" placeholder="Search order, company, or email"><button class="btn btn-primary">Search</button></div></form>
-<div class="card"><div class="table-responsive"><table class="table"><thead><tr><th>Order</th><th>Organization</th><th>Email</th><th>Item</th><th>Amount</th><th>Created at</th><th>Status</th><th>Payment</th><th>Action</th></tr></thead><tbody>@forelse($orders as $order)<tr><td>{{ $order->order_number }}</td><td>{{ $order->organization->organization_name }}</td><td>{{ $order->organization->users->sortBy('created_at')->first()?->email ?? '--' }}</td><td>{{ ucfirst($order->order_type) }}: {{ $order->subscriptionPlan?->name ?? $order->topupPlan?->name }}</td><td>₹{{ $order->amount }}</td><td>{{ $order->created_at->format('d M Y, h:i A') }}</td><td>{{ $order->status }}</td><td>{{ $order->payment_status }}</td><td>@if($order->payment_status === 'pending' && in_array($order->status,['pending','processing']))<form method="post" action="{{ route('admin.billing.orders.approve',$order) }}">@csrf<button class="btn btn-sm btn-success">Approve</button></form>@endif</td></tr>@empty<tr><td colspan="9">No orders found.</td></tr>@endforelse</tbody></table></div></div>{{ $orders->links() }}</div>
+<div class="container-fluid">
+    <h3>Orders &amp; Payments</h3>
+    @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
+    @if(session('error'))<div class="alert alert-danger">{{ session('error') }}</div>@endif
+    <div class="card"><div class="card-body"><div class="table-responsive">
+        <table id="orders-table" class="table table-bordered table-striped align-middle w-100">
+            <thead><tr><th>Order</th><th>Organization</th><th>Email</th><th>Item</th><th>Amount</th><th>Created at</th><th>Status</th><th>Payment</th><th>Action</th></tr></thead>
+        </table>
+    </div></div></div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    window.jQuery('#orders-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: { url: '{{ route('admin.billing.orders.data') }}', data: { plan: '{{ request('plan') }}' } },
+        columns: [
+            { data: 'order_number', name: 'order_number' }, { data: 'organization_name', name: 'organization_name', orderable: false },
+            { data: 'email', name: 'email', orderable: false }, { data: 'item', name: 'item', orderable: false }, { data: 'amount', name: 'amount' },
+            { data: 'created_at', name: 'created_at' }, { data: 'status', name: 'status' },
+            { data: 'payment_status', name: 'payment_status' }, { data: 'actions', orderable: false, searchable: false },
+        ],
+    });
+});
+</script>
 @endsection

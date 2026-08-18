@@ -20,7 +20,7 @@ class OrganizationsController extends Controller
 {
     public function index(Request $request)
     {
-        $plans = Subscriptionplans::active()->orderBy('price')->get();
+        $plans = Subscriptionplans::active()->orderBy('monthly_price')->get();
         $selectedPlan = $request->filled('plan')
             ? $plans->firstWhere('id', $request->integer('plan'))
             : $plans->first();
@@ -236,7 +236,7 @@ class OrganizationsController extends Controller
             'Created new Corporate Account: ' . $request->organization_name
         );
 
-        return redirect()->route('organization.thank-you')->with('success', (float) $plan->price === 0.0
+        return redirect()->route('organization.thank-you')->with('success', (float) $order->amount === 0.0
             ? 'Your free plan is active.'
             : "Your company was created. Order {$order->order_number} is awaiting offline-payment approval.");
     }

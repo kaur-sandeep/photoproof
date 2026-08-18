@@ -43,7 +43,7 @@ class OrderService
                 'topup_plan_id' => $topup?->id,
                 'order_type' => $type,
                 'billing_cycle' => $plan ? $billingCycle : null,
-                'amount' => $plan ? ($billingCycle === 'yearly' ? $plan->yearly_price : $plan->price) : $topup->price,
+                'amount' => $plan ? ($billingCycle === 'yearly' ? $plan->yearly_price : $plan->monthly_price) : $topup->price,
                 'status' => 'pending',
                 'payment_status' => 'pending',
             ]);

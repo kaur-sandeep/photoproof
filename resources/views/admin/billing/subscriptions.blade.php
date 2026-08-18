@@ -1,7 +1,27 @@
 @extends('admin.layouts.master')
 @section('title', 'Subscription History')
 @section('content')
-<div class="container-fluid"><h3>Subscription History</h3>
-<form class="mb-3" method="get"><div class="input-group" style="max-width:420px"><input class="form-control" name="search" value="{{ $search }}" placeholder="Search company or email"><button class="btn btn-primary">Search</button></div></form>
-<div class="card"><div class="table-responsive"><table class="table"><thead><tr><th>Organization</th><th>Email</th><th>Plan</th><th>Start</th><th>Expiry</th><th>Monthly</th><th>Top-up</th><th>Status</th></tr></thead><tbody>@forelse($subscriptions as $subscription)<tr><td>{{ $subscription->organization->organization_name }}</td><td>{{ $subscription->organization->users->sortBy('created_at')->first()?->email ?? '--' }}</td><td>{{ $subscription->plan->name }}</td><td>{{ $subscription->starts_at->format('d M Y') }}</td><td>{{ $subscription->expires_at->format('d M Y') }}</td><td>{{ $subscription->monthly_photo_used }}/{{ $subscription->monthly_photo_limit }}</td><td>{{ $subscription->topup_photo_used }}/{{ $subscription->topup_photo_limit }}</td><td>@if($subscription->starts_at->isFuture())<span class="badge bg-info">Renewal scheduled</span>@elseif($subscription->expires_at->isPast())<span class="badge bg-secondary">Expired</span>@else<span class="badge bg-success">Active</span>@endif</td></tr>@empty<tr><td colspan="8">No subscriptions found.</td></tr>@endforelse</tbody></table></div></div>{{ $subscriptions->links() }}</div>
+<div class="container-fluid">
+    <h3>Subscription History</h3>
+    <div class="card"><div class="card-body"><div class="table-responsive">
+        <table id="subscriptions-table" class="table table-bordered table-striped align-middle w-100">
+            <thead><tr><th>Organization</th><th>Email</th><th>Plan</th><th>Start</th><th>Expiry</th><th>Monthly</th><th>Top-up</th><th>Status</th></tr></thead>
+        </table>
+    </div></div></div>
+</div>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    window.jQuery('#subscriptions-table').DataTable({
+        processing: true,
+        serverSide: true,
+        ajax: '{{ route('admin.billing.subscriptions.data') }}',
+        columns: [
+            { data: 'organization_name', name: 'organization_name', orderable: false }, { data: 'email', name: 'email', orderable: false },
+            { data: 'plan_name', name: 'plan_name', orderable: false }, { data: 'starts_at', name: 'starts_at' },
+            { data: 'expires_at', name: 'expires_at' }, { data: 'monthly_usage', orderable: false, searchable: false },
+            { data: 'topup_usage', orderable: false, searchable: false }, { data: 'subscription_status', orderable: false, searchable: false },
+        ],
+    });
+});
+</script>
 @endsection

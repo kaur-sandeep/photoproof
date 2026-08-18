@@ -20,14 +20,14 @@ use App\Models\Subscriptionplans;
 Route::get('/', function () {
     return view('user.search', [
         'freeOrganizationPlan' => Subscriptionplans::active()
-            ->where('price', 0.00)
+            ->where('monthly_price', 0.00)
             ->orderBy('id')
             ->first(),
     ]);
 });
 
 Route::get('/pricing', function () {
-    return view('user.pricing', ['plans' => Subscriptionplans::active()->orderBy('price')->get()]);
+    return view('user.pricing', ['plans' => Subscriptionplans::active()->orderBy('monthly_price')->get()]);
 })->name('pricing');
  Route::get('/owner/employee/activate/{id}', [OwnerController::class, 'activateEmployee'])
     ->middleware('signed')
@@ -39,7 +39,10 @@ Route::prefix('admin')->group(function () {
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/billing/plans', [BillingController::class, 'plans'])->name('admin.billing.plans');
+        Route::get('/billing/plans/data', [BillingController::class, 'plansData'])->name('admin.billing.plans.data');
+        Route::get('/billing/plans/create', [BillingController::class, 'createPlan'])->name('admin.billing.plans.create');
         Route::post('/billing/plans', [BillingController::class, 'storePlan'])->name('admin.billing.plans.store');
+        Route::get('/billing/plans/{plan}/edit', [BillingController::class, 'editPlan'])->name('admin.billing.plans.edit');
         Route::put('/billing/plans/{plan}', [BillingController::class, 'updatePlan'])->name('admin.billing.plans.update');
         Route::put('/billing/individual-plans/{plan}', [BillingController::class, 'updateIndividual'])->name('admin.billing.individual.update');
         Route::post('/billing/individual-plans/{plan}/state/{state}', [BillingController::class, 'setIndividualState'])->whereNumber('state')->name('admin.billing.individual.state');
@@ -49,9 +52,11 @@ Route::prefix('admin')->group(function () {
         Route::put('/billing/topups/{topup}', [BillingController::class, 'updateTopup'])->name('admin.billing.topups.update');
         Route::post('/billing/topups/{topup}/state/{state}', [BillingController::class, 'setTopupState'])->whereNumber('state')->name('admin.billing.topups.state');
         Route::get('/billing/orders', [BillingController::class, 'orders'])->name('admin.billing.orders');
+        Route::get('/billing/orders/data', [BillingController::class, 'ordersData'])->name('admin.billing.orders.data');
         Route::post('/billing/orders/{order}/approve', [BillingController::class, 'approve'])->name('admin.billing.orders.approve');
         Route::post('/billing/orders/{order}/cancel', [BillingController::class, 'cancel'])->name('admin.billing.orders.cancel');
         Route::get('/billing/subscriptions', [BillingController::class, 'subscriptions'])->name('admin.billing.subscriptions');
+        Route::get('/billing/subscriptions/data', [BillingController::class, 'subscriptionsData'])->name('admin.billing.subscriptions.data');
         Route::get('/profile', [LoginController::class, 'profile'])->name('admin.profile');
         Route::post('/profile/update', [LoginController::class, 'profileUpdate'])->name('admin.profile.update');
         

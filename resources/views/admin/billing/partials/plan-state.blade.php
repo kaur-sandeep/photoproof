@@ -1,0 +1,1 @@
+<form method="post" action="{{ route('admin.billing.organization.state', [$plan, $plan->state ? 0 : 1]) }}">@csrf<button class="btn btn-sm {{ $plan->state ? 'btn-success' : 'btn-secondary' }}">{{ $plan->state ? 'Active' : 'Inactive' }}</button></form>

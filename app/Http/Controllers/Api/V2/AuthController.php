@@ -527,10 +527,10 @@ class AuthController extends Controller
                 'plan_name' => optional($subscription->plan)->name,
                 'photo_limit' => $subscription->monthly_photo_limit,
                 'photo_used' => $subscription->monthly_photo_used,
-                'billing_cycle' => $subscription->billing_cycle ?? $subscription->plan?->billing_cycle ?? 'monthly',
+                'billing_cycle' => $subscription->billing_cycle ?? 'monthly',
                 'starts_at' => $subscription->starts_at,
                 'expires_at' => $subscription->expires_at,
-                'sub_type' => ucfirst($subscription->billing_cycle ?? $subscription->plan?->billing_cycle ?? 'monthly')
+                'sub_type' => ucfirst($subscription->billing_cycle ?? 'monthly')
             ]
         ]);
     }
@@ -966,10 +966,10 @@ public function forgotPassword(Request $request)
                     'topup_limit' => $subscription->topup_photo_limit,
                     'topup_used' => $subscription->topup_photo_used,
                     'remaining_photos' => max(0, $subscription->monthly_photo_limit - $subscription->monthly_photo_used) + max(0, $subscription->topup_photo_limit - $subscription->topup_photo_used),
-                    'billing_cycle' => $subscription->billing_cycle ?? $subscription->plan?->billing_cycle ?? 'monthly',
+                    'billing_cycle' => $subscription->billing_cycle ?? 'monthly',
                     'starts_at' => $subscription->starts_at,
                     'expires_at' => $subscription->expires_at,
-                    'sub_type' => ucfirst($subscription->billing_cycle ?? $subscription->plan?->billing_cycle ?? 'monthly')
+                    'sub_type' => ucfirst($subscription->billing_cycle ?? 'monthly')
                 ]
             ]);
         }
@@ -1267,10 +1267,10 @@ public function forgotPassword(Request $request)
                     'topup_limit' => $subscription->topup_photo_limit,
                     'topup_used' => $subscription->topup_photo_used,
                     'remaining_photos' => max(0, $subscription->monthly_photo_limit - $subscription->monthly_photo_used) + max(0, $subscription->topup_photo_limit - $subscription->topup_photo_used),
-                    'billing_cycle' => $subscription->billing_cycle ?? $subscription->plan?->billing_cycle ?? 'monthly',
+                    'billing_cycle' => $subscription->billing_cycle ?? 'monthly',
                     'starts_at' => $subscription->starts_at,
                     'expires_at' => $subscription->expires_at,
-                    'sub_type' => ucfirst($subscription->billing_cycle ?? $subscription->plan?->billing_cycle ?? 'monthly')
+                    'sub_type' => ucfirst($subscription->billing_cycle ?? 'monthly')
                 ]
         ]);
     }
@@ -1360,10 +1360,10 @@ public function forgotPassword(Request $request)
                     'plan_name' => optional($subscription->plan)->name,
                     'photo_limit' => $subscription->monthly_photo_limit,
                     'photo_used' => $subscription->monthly_photo_used,
-                    'billing_cycle' => $subscription->billing_cycle ?? $subscription->plan?->billing_cycle ?? 'monthly',
+                    'billing_cycle' => $subscription->billing_cycle ?? 'monthly',
                     'starts_at' => $subscription->starts_at,
                     'expires_at' => $subscription->expires_at,
-                    'sub_type' => ucfirst($subscription->billing_cycle ?? $subscription->plan?->billing_cycle ?? 'monthly')
+                    'sub_type' => ucfirst($subscription->billing_cycle ?? 'monthly')
                 ] : null,
             ]);
         }

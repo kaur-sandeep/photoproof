@@ -122,9 +122,9 @@
                         <input type="hidden" name="subscription_plan" value="{{ $selectedPlan->id }}">
                         <div class="organization-plan-summary">
                             <i class="bi bi-patch-check-fill"></i>
-                            <div><small>Your selected plan</small><strong>{{ $selectedPlan->name }} — ₹{{ number_format($billingCycle === 'yearly' ? $selectedPlan->yearly_price : $selectedPlan->price, 2) }} / {{ $billingCycle === 'yearly' ? 'year' : 'month' }} — {{ number_format($selectedPlan->monthly_photo_limit) }} photos / month</strong></div>
+                            <div><small>Selected plan <span class="organization-required">*</span></small><strong>{{ $selectedPlan->name }} — ₹{{ number_format($billingCycle === 'yearly' ? $selectedPlan->yearly_price : $selectedPlan->monthly_price, 2) }} / {{ $billingCycle === 'yearly' ? 'year' : 'month' }} — {{ number_format($selectedPlan->monthly_photo_limit) }} photos / month</strong></div>
                         </div>
-                        <div class="organization-form-section"><h3 class="organization-section-title"><i class="bi bi-calendar3"></i> Billing cycle</h3><label class="me-3"><input type="radio" name="billing_cycle" value="monthly" @checked($billingCycle === 'monthly')> Monthly</label><label><input type="radio" name="billing_cycle" value="yearly" @checked($billingCycle === 'yearly') @disabled($selectedPlan->yearly_price === null)> Yearly</label></div>
+                        <input type="hidden" name="billing_cycle" value="{{ $billingCycle }}">
                     @endif
                     <div class="organization-form-section">
                         <h3 class="organization-section-title"><i class="bi bi-building"></i> Organization Information</h3>
@@ -155,7 +155,7 @@
                         <h3 class="organization-section-title"><i class="bi bi-chat-left-text"></i> Additional Information</h3>
                         <div class="organization-form-grid">
                             <div class="organization-form-group full"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell us anything that will help us support your team" rows="4">{{ old('message') }}</textarea></div>
-                            <div class="organization-form-group full organization-captcha"><div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div></div>
+                            <div class="organization-form-group full organization-captcha"><label>Security verification <span class="organization-required">*</span></label><div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div></div>
                             <div class="organization-form-group full form-check">
                                 <!-- <label class="organization-terms">
                                     <input type="checkbox" name="terms" style="margin-right: 10px;" value="1" {{ old('terms') ? 'checked' : '' }}>
@@ -165,7 +165,7 @@
                                     <input type="checkbox" class="form-check-input" id="terms" name="terms" required>
 
                                     <label class="form-check-label" for="terms">
-                                        I agree to the
+                                        I agree to the <span class="organization-required">*</span>
                                         <a href="javascript:void(0);" data-bs-toggle="modal" data-bs-target="#organizationTermsModal">
                                             Create Corporate Account Terms &amp; Conditions
                                         </a>
