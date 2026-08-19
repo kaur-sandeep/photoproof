@@ -600,6 +600,12 @@ if ($remainingForChart > 0) {
         $users = User::where('state', '!=', -1)->withCount('photos')->where('organization_id',$org_id)->orderBy('created_at', 'desc')->get();
         return DataTables::of($users)
         ->addIndexColumn()
+        ->addColumn('profile_image', function ($user) {
+                $default = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+                return '<img src="' . ($user->profile_image
+                    ? asset('storage/' . $user->profile_image)
+                    : $default) . '" width="40" height="40" class="rounded-circle">';
+            })
         ->addColumn('name', function ($users) {
             return $users->name ?? '--'; // if device is null, show --
         })
@@ -660,7 +666,7 @@ if ($remainingForChart > 0) {
                }
             
         }) 
-        ->rawColumns(['role','status','photo_count', 'actions'])
+        ->rawColumns(['profile_image', 'role', 'status', 'photo_count', 'actions'])
         ->make(true);
         
     }

@@ -79,6 +79,10 @@
             <div class="modal-body">
 
                 <table class="table table-bordered">
+                    <tr>
+                        <th>Company Logo</th>
+                        <td><img id="m_logo" src="" alt="Company Logo" style="max-width: 100px; max-height: 100px;"></td>
+                    </tr>
 
                     <tr>
                         <th>Company Name</th>

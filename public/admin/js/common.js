@@ -1132,7 +1132,7 @@ $(document).ready(function() {
 
         // Get complete row data from DataTable
         let data = table.row($(this).closest('tr')).data();
-       
+       console.log('Data::', data);
         $('#m_name').html(data.organization_name);
         $('#m_email').html(data.organization_email);
         $('#m_plan').html(data.plan);
@@ -1142,7 +1142,11 @@ $(document).ready(function() {
         $('#m_message').html(data.message);
         $('#m_created').html(data.organization_created);
         $('#m_status').html(data.status);
-
+          if (data.organization_logo) {
+            $('#m_logo').attr('src', '/storage/' + data.organization_logo);
+        } else {
+            $('#m_logo').attr('src', '/images/default-organization.png');
+        }
         $('#organizationModal').modal('show');
     });
 
@@ -1208,6 +1212,7 @@ $(document).ready(function() {
 
         columns: [
             { data: 'DT_RowIndex', name: 'DT_RowIndex', orderable: false, searchable: false },
+            {data: 'profile_image', name: 'profile_image', searchable: false },
             { data: 'name', name: 'name' },
             { data: 'email', name: 'email' },
             { data: 'phone_number', name: 'phone_number' },

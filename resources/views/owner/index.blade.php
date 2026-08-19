@@ -68,6 +68,7 @@
                 <thead>
                     <tr>
                         <th>#</th>
+                        <th>Profile</th>
                         <th>Name</th>
                         <th>Email</th>
                         <th>Phone</th>
