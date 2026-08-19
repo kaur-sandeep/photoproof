@@ -71,6 +71,17 @@
             </li>
         </ul>
 
+            <ul class="nav flex-column">
+                <li class="nav-item">
+                    <a href="{{ route('owner.profile') }}"
+                       class="nav-link text-white">
+                        <i class="bi bi-person me-2"></i>
+                        My Profile
+                    </a>
+                </li>
+
+            </ul>
+
         </nav>
 
     </div>

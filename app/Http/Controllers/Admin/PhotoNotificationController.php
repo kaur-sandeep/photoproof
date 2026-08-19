@@ -26,6 +26,7 @@ class PhotoNotificationController extends Controller
 {
     // $notifications = PhotoReport::where('is_read', 0)
         $notifications = Notifications::where('state', '!=', -1)
+        ->whereNull('organization_id')
         ->where('is_read', 0)
         ->orderBy('created_at', 'desc')
         // ->take(5)
@@ -101,7 +102,7 @@ class PhotoNotificationController extends Controller
     public function list(Request $request){
 
         
-   $notifications = Notifications::query();
+   $notifications = Notifications::query()->whereNull('organization_id');
    $notificationType = $request->notification_type;
 
     if ($request->filled('notification_type')) {
