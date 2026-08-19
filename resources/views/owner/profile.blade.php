@@ -118,8 +118,12 @@
 <div class="col-md-4">Start: {{ $subscription->starts_at->format('d M Y') }}</div><div class="col-md-4">Expiry: {{ $subscription->expires_at->format('d M Y') }}</div><div class="col-md-4">Monthly: {{ $subscription->monthly_photo_used }} / {{ $subscription->monthly_photo_limit }}</div>
 <div class="col-md-4 mt-2">Monthly remaining: {{ $monthly }}</div><div class="col-md-4 mt-2">Top-up: {{ $subscription->topup_photo_used }} / {{ $subscription->topup_photo_limit }}</div><div class="col-md-4 mt-2">Total remaining: {{ $monthly + $topup }}</div>
 </div><div class="mt-3"><a class="btn btn-primary" href="{{ route('owner.renew') }}">Renew Plan</a> <a class="btn btn-outline-primary" href="{{ route('owner.topup') }}">Top Up Photos</a></div></div></div>
-@if($scheduledRenewal)
+@if($scheduledRenewals->isNotEmpty())
+<div class="alert alert-info mt-3 mb-0"><strong>Scheduled renewals</strong><div class="mt-2">
+@foreach($scheduledRenewals as $scheduledRenewal)
 <div class="alert alert-info mt-3 mb-0"><strong>Renewal scheduled</strong> — {{ $scheduledRenewal->plan->name }} starts {{ $scheduledRenewal->starts_at->format('d M Y') }} and ends {{ $scheduledRenewal->expires_at->format('d M Y') }}.</div>
+@endforeach
+</div></div>
 @endif
 @else <div class="alert alert-warning">No active subscription. Create a renewal order to restore access.</div><a class="btn btn-primary" href="{{ route('owner.renew') }}">Choose a Plan</a>@endif
 </div>

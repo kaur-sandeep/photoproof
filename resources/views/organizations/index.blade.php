@@ -122,7 +122,7 @@
                         <input type="hidden" name="subscription_plan" value="{{ $selectedPlan->id }}">
                         <div class="organization-plan-summary">
                             <i class="bi bi-patch-check-fill"></i>
-                            <div><small>Selected plan <span class="organization-required">*</span></small><strong>{{ $selectedPlan->name }} — ₹{{ number_format($billingCycle === 'yearly' ? $selectedPlan->yearly_price : $selectedPlan->monthly_price, 2) }} / {{ $billingCycle === 'yearly' ? 'year' : 'month' }} — {{ number_format($selectedPlan->monthly_photo_limit) }} photos / month</strong></div>
+                            <div><small>Selected plan <span class="organization-required">*</span></small><strong>{{ $selectedPlan->name }} — ${{ number_format($billingCycle === 'yearly' ? $selectedPlan->yearly_price : $selectedPlan->monthly_price, 2) }} / {{ $billingCycle === 'yearly' ? 'year' : 'month' }} — {{ number_format($selectedPlan->monthly_photo_limit) }} photos / month</strong></div>
                         </div>
                         <input type="hidden" name="billing_cycle" value="{{ $billingCycle }}">
                     @endif

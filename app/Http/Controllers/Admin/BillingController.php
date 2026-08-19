@@ -27,8 +27,8 @@ class BillingController extends Controller
         return DataTables::of(Subscriptionplans::query()->withCount([
             'orders as purchasers_count' => fn ($query) => $query->where('payment_status', 'paid'),
         ]))
-            ->editColumn('monthly_price', fn (Subscriptionplans $plan) => '&#8377;'.number_format((float) $plan->monthly_price, 2))
-            ->editColumn('yearly_price', fn (Subscriptionplans $plan) => '&#8377;'.number_format((float) $plan->yearly_price, 2))
+            ->editColumn('monthly_price', fn (Subscriptionplans $plan) => '$'.number_format((float) $plan->monthly_price, 2))
+            ->editColumn('yearly_price', fn (Subscriptionplans $plan) => '$'.number_format((float) $plan->yearly_price, 2))
             ->addColumn('purchasers_count', fn (Subscriptionplans $plan) => '<a class="btn btn-sm btn-outline-primary" href="'.route('admin.billing.orders', ['plan' => $plan->id]).'">'.$plan->purchasers_count.'</a>')
             ->addColumn('state', fn (Subscriptionplans $plan) => view('admin.billing.partials.plan-state', compact('plan'))->render())
             ->addColumn('actions', fn (Subscriptionplans $plan) => '<a class="btn btn-sm btn-warning" href="'.route('admin.billing.plans.edit', $plan).'">Edit</a>')
@@ -84,7 +84,7 @@ class BillingController extends Controller
     public function topupsData()
     {
         return DataTables::eloquent(TopupPlan::query())
-            ->editColumn('price', fn (TopupPlan $topup) => '&#8377;'.number_format((float) $topup->price, 2))
+            ->editColumn('price', fn (TopupPlan $topup) => '$'.number_format((float) $topup->price, 2))
             ->addColumn('state', fn (TopupPlan $topup) => $topup->state ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>')
             ->addColumn('actions', fn (TopupPlan $topup) => '<a class="btn btn-sm btn-warning" href="'.route('admin.billing.topups.edit', $topup).'">Edit</a>')
             ->orderColumn('state', 'state $1')
@@ -127,7 +127,7 @@ class BillingController extends Controller
             ->addColumn('organization_name', fn (Order $order) => $order->organization?->organization_name ?? '--')
             ->addColumn('email', fn (Order $order) => $order->organization?->users->sortBy('created_at')->first()?->email ?? '--')
             ->addColumn('item', fn (Order $order) => ucfirst($order->order_type).': '.($order->subscriptionPlan?->name ?? $order->topupPlan?->name ?? '--'))
-            ->editColumn('amount', fn (Order $order) => '&#8377;'.number_format((float) $order->amount, 2))
+            ->editColumn('amount', fn (Order $order) => '$'.number_format((float) $order->amount, 2))
             ->editColumn('created_at', fn (Order $order) => $order->created_at->format('d M Y, h:i A'))
             ->editColumn('status', fn (Order $order) => '<span class="badge bg-secondary">'.e(ucfirst($order->status)).'</span>')
             ->editColumn('payment_status', fn (Order $order) => '<span class="badge '.($order->payment_status === 'paid' ? 'bg-success' : 'bg-warning text-dark').'">'.e(ucfirst($order->payment_status)).'</span>')

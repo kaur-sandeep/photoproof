@@ -56,15 +56,15 @@
                             <h2 class="pricing-card__name">{{ $plan->name }}</h2>
                             <div class="pricing-card__period" data-billing-period>1 MONTH</div>
                             <div class="pricing-card__price-row">
-                                <div class="pricing-card__price"><small>&#8377;</small><span data-price>{{ number_format($plan->monthly_price, 2) }}</span></div>
+                                <div class="pricing-card__price"><small>$</small><span data-price>{{ number_format($plan->monthly_price, 2) }}</span></div>
                                 <span class="pricing-card__original-price" data-original-price hidden></span>
                             </div>
-                            <p class="pricing-card__price-note">Actual price &#8377;<span data-actual-price>{{ number_format($plan->monthly_price, 2) }}</span><span data-price-note hidden></span></p>
+                            <p class="pricing-card__price-note">Actual price $<span data-actual-price>{{ number_format($plan->monthly_price, 2) }}</span><span data-price-note hidden></span></p>
                         </div>
                         <div class="pricing-card__body">
                             <div class="pricing-card__limits">
                                 <div class="pricing-limit"><strong>{{ number_format($plan->monthly_photo_limit) }} photos per month</strong></div>
-                                <!-- <div class="pricing-limit"><strong>&#8377;{{ number_format($plan->yearly_price, 2) }}</strong><span>per year</span></div> -->
+                                <!-- <div class="pricing-limit"><strong>${{ number_format($plan->yearly_price, 2) }}</strong><span>per year</span></div> -->
                             </div>
 
                             @if($features)
@@ -108,8 +108,8 @@
                 card.querySelector('[data-billing-period]').textContent = useYearly ? '12 MONTHS' : '1 MONTH';
                 card.querySelector('[data-actual-price]').textContent = formatPrice(actualPrice);
                 originalPrice.hidden = !useYearly;
-                originalPrice.textContent = useYearly ? `₹${formatPrice(actualPrice)}` : '';
-                card.querySelector('[data-price-note]').textContent = useYearly ? `per month — billed ₹${formatPrice(yearlyPrice)} yearly` : 'per month';
+                originalPrice.textContent = useYearly ? `$${formatPrice(actualPrice)}` : '';
+                card.querySelector('[data-price-note]').textContent = useYearly ? `per month — billed $${formatPrice(yearlyPrice)} yearly` : 'per month';
                 action.href = useYearly ? action.dataset.yearlyUrl : action.dataset.monthlyUrl;
                 action.innerHTML = useYearly ? 'Choose yearly <i class="bi bi-arrow-right ms-1"></i>' : 'Choose monthly <i class="bi bi-arrow-right ms-1"></i>';
             });

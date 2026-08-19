@@ -50,7 +50,7 @@ class SubscriptionController extends Controller
         return DataTables::eloquent($orders)
             ->addColumn('item', fn (Order $order) => $order->subscriptionPlan?->name ?? $order->topupPlan?->name ?? '--')
             ->editColumn('order_type', fn (Order $order) => ucfirst($order->order_type))
-            ->editColumn('amount', fn (Order $order) => '&#8377;'.number_format((float) $order->amount, 2))
+            ->editColumn('amount', fn (Order $order) => '$'.number_format((float) $order->amount, 2))
             ->editColumn('status', fn (Order $order) => '<span class="badge bg-secondary">'.e(ucfirst($order->status)).'</span>')
             ->editColumn('payment_status', fn (Order $order) => '<span class="badge '.($order->payment_status === 'paid' ? 'bg-success' : 'bg-warning text-dark').'">'.e(ucfirst($order->payment_status)).'</span>')
             ->editColumn('created_at', fn (Order $order) => $order->created_at->format('d M Y, h:i A'))
@@ -125,7 +125,7 @@ class SubscriptionController extends Controller
                     . '<p><strong>Owner email:</strong> '.e($owner?->email ?? '--').'</p>'
                     . '<p><strong>Order number:</strong> '.e($order->order_number).'</p>'
                     . '<p><strong>Item:</strong> '.e($itemName ?? '--').'</p>'
-                    . '<p><strong>Amount:</strong> &#8377;'.number_format((float) $order->amount, 2).'</p>'
+                    . '<p><strong>Amount:</strong> $'.number_format((float) $order->amount, 2).'</p>'
                     . '<p><strong>Status:</strong> Pending offline-payment approval</p>';
                 Notification::route('mail', $emails)->notify(new CommonMailNotification(
                     "Owner {$actionLabel} - {$organization->organization_name}",
