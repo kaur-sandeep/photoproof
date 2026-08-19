@@ -110,7 +110,9 @@
 
 </div>
 <div class="container-fluid" style="margin-top: 20px;">
-  <!-- <h3>My Subscription</h3> -->
+   <div class="admin-page-header">
+        <h3 class="card-title"><b>Plan Details </b></h3>
+    </div>
 @if($subscription)
 @php($monthly = max(0, $subscription->monthly_photo_limit - $subscription->monthly_photo_used))
 @php($topup = max(0, $subscription->topup_photo_limit - $subscription->topup_photo_used))
