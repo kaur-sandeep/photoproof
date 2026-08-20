@@ -502,7 +502,7 @@ if ($remainingForChart > 0) {
             'Created new employee: ' . $request->email
         );
 
-        return redirect()->back()->with('success', 'Employee invited successfully!');
+        return redirect()->route('owner.employee')->with('success', 'Employee invited successfully!');
     }
     public function activateEmployee(Request $request, $id)
     {
@@ -731,7 +731,7 @@ if ($remainingForChart > 0) {
             );
         }
 
-        return redirect()->back()->with('success', 'Employee Updated Successfully!');
+        return redirect()->route('owner.employee')->with('success', 'Employee updated successfully!');
     }
 
     public function updateStatus(Request $request)

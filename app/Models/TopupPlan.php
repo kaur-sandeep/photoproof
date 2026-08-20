@@ -13,4 +13,9 @@ class TopupPlan extends Model
     {
         return $query->where('state', true);
     }
+
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
 }

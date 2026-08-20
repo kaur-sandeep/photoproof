@@ -83,12 +83,15 @@ class BillingController extends Controller
     public function topups() { return view('admin.billing.topups'); }
     public function topupsData()
     {
-        return DataTables::eloquent(TopupPlan::query())
+        return DataTables::eloquent(TopupPlan::query()->withCount([
+            'orders as purchasers_count' => fn ($query) => $query->where('payment_status', 'paid'),
+        ]))
             ->editColumn('price', fn (TopupPlan $topup) => '$'.number_format((float) $topup->price, 2))
-            ->addColumn('state', fn (TopupPlan $topup) => $topup->state ? '<span class="badge bg-success">Active</span>' : '<span class="badge bg-secondary">Inactive</span>')
+            ->addColumn('purchasers_count', fn (TopupPlan $topup) => '<a class="btn btn-sm btn-outline-primary" href="'.route('admin.billing.orders', ['topup' => $topup->id]).'">'.$topup->purchasers_count.'</a>')
+            ->addColumn('state', fn (TopupPlan $topup) => view('admin.billing.partials.topup-state', compact('topup'))->render())
             ->addColumn('actions', fn (TopupPlan $topup) => '<a class="btn btn-sm btn-warning" href="'.route('admin.billing.topups.edit', $topup).'">Edit</a>')
             ->orderColumn('state', 'state $1')
-            ->rawColumns(['price', 'state', 'actions'])
+            ->rawColumns(['price', 'purchasers_count', 'state', 'actions'])
             ->make(true);
     }
     public function createTopup() { return view('admin.billing.topup-form', ['topup' => new TopupPlan()]); }
@@ -121,7 +124,8 @@ class BillingController extends Controller
     public function ordersData(Request $request)
     {
         $orders = Order::query()->with(['organization.users:id,organization_id,email', 'subscriptionPlan:id,name', 'topupPlan:id,name'])
-            ->when($request->filled('plan'), fn ($query) => $query->where('subscription_plan_id', $request->integer('plan')));
+            ->when($request->filled('plan'), fn ($query) => $query->where('subscription_plan_id', $request->integer('plan')))
+            ->when($request->filled('topup'), fn ($query) => $query->where('topup_plan_id', $request->integer('topup')));
 
         return DataTables::eloquent($orders)
             ->addColumn('organization_name', fn (Order $order) => $order->organization?->organization_name ?? '--')

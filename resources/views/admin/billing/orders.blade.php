@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function () {
         processing: true,
         serverSide: true,
         order: [[5, 'desc']],
-        ajax: { url: '{{ route('admin.billing.orders.data') }}', data: { plan: '{{ request('plan') }}' } },
+        ajax: { url: '{{ route('admin.billing.orders.data') }}', data: { plan: '{{ request('plan') }}', topup: '{{ request('topup') }}' } },
         columns: [
             { data: 'order_number', name: 'order_number' }, { data: 'organization_name', name: 'organization_name' },
             { data: 'email', name: 'email' }, { data: 'item', name: 'item' }, { data: 'amount', name: 'amount' },
