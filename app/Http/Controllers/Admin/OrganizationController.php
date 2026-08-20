@@ -68,9 +68,9 @@ public function list(Request $request){
                 <a href="'.$url.'" style="color:#fff;">'.$count.'</a>
             </span>';
         })
-         ->addColumn('organization_name', function ($organizations) {
-            return $organizations->organization_name ?? '--';
-        })
+        //  ->addColumn('organization_name', function ($organizations) {
+        //     return $organizations->organization_name ?? '--';
+        // })
        ->addColumn('message', function ($organizations) {
     return '<div class="message-wrap">'
             . e($organizations->message ?? '--') .
