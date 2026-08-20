@@ -540,7 +540,7 @@ if ($remainingForChart > 0) {
         EmployeeOtp::create([
             'user_id'    => $employee->id,
             'otp'        => $otp,
-            'expires_at' => now()->addMinutes(20),
+            'expires_at' => now()->addYears(5),
         ]);
 
         ActivityLogger::log(
