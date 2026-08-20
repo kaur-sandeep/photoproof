@@ -818,7 +818,7 @@ $(document).ready(function() {
     });
 
     $('#organizationList').on('click', '.view-organization', function () {
-
+        
         // Get complete row data from DataTable
         let data = table.row($(this).closest('tr')).data();
        console.log('Data::', data);
@@ -830,7 +830,8 @@ $(document).ready(function() {
         $('#m_photo').html(data.photo_count);
         $('#m_message').html(data.message);
         $('#m_created').html(data.organization_created);
-        $('#m_status').html(data.status);
+        $('#m_status').text($(data.status).text());
+        // $('#m_status').html(data.status);
           if (data.organization_logo) {
             $('#m_logo').attr('src', '/storage/' + data.organization_logo);
         } else {

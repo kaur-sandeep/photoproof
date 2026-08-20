@@ -138,8 +138,15 @@ class OrganizationsController extends Controller
             <h3>Login Details</h3>';
         $adminUrl = url('/admin/login');
         if (!empty($user->email)) {
-            $slot .= '<p> <strong>Login URL:</strong> ' . e($adminUrl) . ' </p> 
-            <p><strong>Username / Email:</strong> ' . $user->email . '</p>';
+            $slot .= '<p>
+                <strong>Login URL:</strong>
+                <a href="' . e($adminUrl) . '" target="_blank">
+                     Click here to login to portal
+                </a>
+            </p>
+            <p>
+                <strong>Username / Email:</strong> ' . e($user->email) . '
+            </p>';
         }
 
         if (!empty($request->password)) {

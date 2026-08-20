@@ -615,6 +615,17 @@ if ($remainingForChart > 0) {
         ->addColumn('phone_number', function ($users) {
             return $users->phone_number ?? '--'; // if device is null, show --
         })
+        // ->addColumn('role', function ($user) {
+        //     $roles = $user->getRoleNames();
+
+        //     if ($roles->isEmpty()) {
+        //         return '--';
+        //     }
+
+        //     return $roles->map(function ($role) {
+        //         return '<span class="badge bg-info me-1">' . e(ucfirst($role)) . '</span>';
+        //     })->implode(' ');
+        // })
         ->addColumn('role', function ($user) {
             $roles = $user->getRoleNames();
 
@@ -622,8 +633,14 @@ if ($remainingForChart > 0) {
                 return '--';
             }
 
+            if ($roles->contains('owner')) {
+                return '<span class="badge bg-info me-1">Owner</span>';
+            }
+
             return $roles->map(function ($role) {
-                return '<span class="badge bg-info me-1">' . e(ucfirst($role)) . '</span>';
+                return '<span class="badge bg-info me-1">'
+                    . e(ucfirst($role))
+                    . '</span>';
             })->implode(' ');
         })
         ->rawColumns(['role'])

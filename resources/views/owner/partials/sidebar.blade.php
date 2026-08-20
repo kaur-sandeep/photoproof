@@ -24,7 +24,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('owner.dashboard') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('owner.dashboard') ? 'active' : '' }}">
                         <i class="bi bi-speedometer2 me-2"></i>
                         Dashboard
                     </a>
@@ -37,7 +37,7 @@
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="{{ route('owner.employee') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('owner.employee*', 'owner.employees.*', 'owner.update.employee.*', 'owner.update.employee.status') ? 'active' : '' }}">
                         <i class="bi bi-people me-2"></i>
                         My Employees
                     </a>
@@ -49,7 +49,7 @@
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="{{ route('owner.photos') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('owner.photos*', 'owner.employee.photos.*', 'owner.employee.images.*') ? 'active' : '' }}">
                         <i class="bi bi-images me-2"></i>
                         Photos
                     </a>
@@ -58,13 +58,13 @@
             </ul>
              <ul class="nav flex-column">
                 <!-- <li class="nav-item"><a href="{{ route('owner.subscription') }}" class="nav-link text-white"><i class="bi bi-credit-card me-2"></i>My Subscription</a></li> -->
-                <li class="nav-item"><a href="{{ route('owner.orders') }}" class="nav-link text-white"><i class="bi bi-receipt me-2"></i>Orders</a></li>
+                <li class="nav-item"><a href="{{ route('owner.orders') }}" class="nav-link text-white {{ request()->routeIs('owner.orders*', 'owner.subscription', 'owner.renew*', 'owner.topup*') ? 'active' : '' }}"><i class="bi bi-receipt me-2"></i>Orders</a></li>
                 <!-- <li class="nav-item"><a href="{{ route('owner.topup') }}" class="nav-link text-white"><i class="bi bi-plus-circle me-2"></i>Top Up Photos</a></li> -->
             </ul>
         <ul class="nav flex-column">
             <li class="nav-item">
                 <a href="{{ route('owner.notifications', ['notification_type' => 'upload photo']) }}"
-                class="nav-link text-white">
+                class="nav-link text-white {{ request()->routeIs('owner.notifications*') ? 'active' : '' }}">
                     <i class="bi bi-bell me-2"></i>
                     Notifications
                 </a>
@@ -74,7 +74,7 @@
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="{{ route('owner.profile') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('owner.profile', 'owner.profile.*', 'owner.change.password', 'owner.update.password') ? 'active' : '' }}">
                         <i class="bi bi-person me-2"></i>
                         My Profile
                     </a>

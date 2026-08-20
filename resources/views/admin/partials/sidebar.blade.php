@@ -11,7 +11,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('admin.dashboard') ? 'active' : '' }}">
                         <i class="bi bi-speedometer2 me-2"></i>
                         Dashboard
                     </a>
@@ -23,7 +23,7 @@
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="{{ route('admin.users.data') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('admin.users.data*') ? 'active' : '' }}">
                         <i class="bi bi-people me-2"></i>
                         Admin Users
                     </a>
@@ -34,7 +34,7 @@
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a href="{{ route('admin.organization.data') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('admin.organization.*') ? 'active' : '' }}">
                         <i class="bi bi-buildings me-2"></i>
                         Corporate Accounts
                     </a>
@@ -48,7 +48,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('admin.users') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('admin.users', 'admin.user.*', 'admin.users.edit', 'admin.users.update', 'admin.users.store') ? 'active' : '' }}">
                         <i class="bi bi-people me-2"></i>
                         App Users
                     </a>
@@ -60,7 +60,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('admin.photos') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('admin.photos*') ? 'active' : '' }}">
                         <i class="bi bi-images me-2"></i>
                         Photos
                     </a>
@@ -73,7 +73,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('admin.settings') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('admin.settings', 'admin.setting.*') ? 'active' : '' }}">
                         <i class="bi bi-gear-fill me-2"></i>
                         Settings
                     </a>
@@ -85,7 +85,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('admin.activity') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('admin.activity') ? 'active' : '' }}">
                           <i class="bi bi-clock-history me-2"></i>
                         Activity Logs
                     </a>
@@ -97,7 +97,7 @@
 
                 <li class="nav-item">
                     <a href="{{ route('admin.reported') }}"
-                       class="nav-link text-white">
+                       class="nav-link text-white {{ request()->routeIs('admin.reported') ? 'active' : '' }}">
                           <i class="bi bi-flag me-2"></i>
                         Reported Images
                     </a>
@@ -107,10 +107,10 @@
             @endif
                 @if(auth()->check() && auth()->user()->getRoleNames()->contains('super-admin'))
                     <ul class="nav flex-column">
-                        <li class="nav-item"><a href="{{ route('admin.billing.plans') }}" class="nav-link text-white"><i class="bi bi-card-list me-2"></i>Plan Management</a></li>
-                        <li class="nav-item"><a href="{{ route('admin.billing.topups') }}" class="nav-link text-white"><i class="bi bi-plus-circle me-2"></i>Top-up Plans</a></li>
-                        <li class="nav-item"><a href="{{ route('admin.billing.orders') }}" class="nav-link text-white"><i class="bi bi-receipt me-2"></i>Orders & Payments</a></li>
-                        <li class="nav-item"><a href="{{ route('admin.billing.subscriptions') }}" class="nav-link text-white"><i class="bi bi-calendar-check me-2"></i>Subscriptions</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.billing.plans') }}" class="nav-link text-white {{ request()->routeIs('admin.billing.plans*', 'admin.billing.individual.*', 'admin.billing.organization.*') ? 'active' : '' }}"><i class="bi bi-card-list me-2"></i>Plan Management</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.billing.topups') }}" class="nav-link text-white {{ request()->routeIs('admin.billing.topups*') ? 'active' : '' }}"><i class="bi bi-plus-circle me-2"></i>Top-up Plans</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.billing.orders') }}" class="nav-link text-white {{ request()->routeIs('admin.billing.orders*') ? 'active' : '' }}"><i class="bi bi-receipt me-2"></i>Orders & Payments</a></li>
+                        <li class="nav-item"><a href="{{ route('admin.billing.subscriptions') }}" class="nav-link text-white {{ request()->routeIs('admin.billing.subscriptions*') ? 'active' : '' }}"><i class="bi bi-calendar-check me-2"></i>Subscriptions</a></li>
                     </ul>
                     @endif
             <!-- <ul class="nav flex-column">
@@ -140,14 +140,14 @@
             <ul class="nav flex-column">
 
                     <li class="nav-item">
-                        <a class="nav-link text-white {{ request('notification_type') == '' ? 'active' : '' }}"
+                        <a class="nav-link text-white {{ request()->routeIs('notifications.*') && request('notification_type') == '' ? 'active' : '' }}"
                         href="{{ route('notifications.index') }}">
                              <i class="bi bi-bell me-2"></i>  Notifications
                         </a>
                     </li>
                  
                     <li class="nav-item">
-                        <a class="nav-link text-white {{ request('notification_type') == 'Contact us' ? 'active' : '' }}"
+                        <a class="nav-link text-white {{ request()->routeIs('notifications.*') && request('notification_type') == 'Contact us' ? 'active' : '' }}"
                         href="{{ route('notifications.index', ['notification_type' => 'Contact us']) }}">
                            <i class="bi bi-headset me-2"></i> Contact Us
                         </a>

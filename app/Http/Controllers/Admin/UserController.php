@@ -593,17 +593,23 @@ public function list(Request $request){
         ->addColumn('Org_name', function ($user) {
             return $user->organization ? $user->organization->organization_name : '--';
         })
-->addColumn('role', function ($user) {
-    $roles = $user->getRoleNames();
+    ->addColumn('role', function ($user) {
+        $roles = $user->getRoleNames();
 
-    if ($roles->isEmpty()) {
-        return '--';
-    }
+        if ($roles->isEmpty()) {
+            return '--';
+        }
 
-    return $roles->map(function ($role) {
-        return '<span class="badge bg-info me-1">' . e(ucfirst($role)) . '</span>';
-    })->implode(' ');
-})
+        if ($roles->contains('owner')) {
+            return '<span class="badge bg-info me-1">Owner</span>';
+        }
+
+        return $roles->map(function ($role) {
+            return '<span class="badge bg-info me-1">'
+                . e(ucfirst($role))
+                . '</span>';
+        })->implode(' ');
+    })
 ->rawColumns(['role'])
         ->addColumn('created_at', fn($user) => DateTime::dateFormat($user->created_at) ?? '--')
         ->addColumn('photo_count', function ($user) {

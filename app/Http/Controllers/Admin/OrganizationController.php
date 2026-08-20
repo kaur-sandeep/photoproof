@@ -178,6 +178,7 @@ public function list(Request $request){
                         'unique:users,email',
                         'unique:admins,email',
                     ],
+            'mobile_number'      => 'nullable|numeric|digits_between:10,14',
             'subscription_plan'   => 'required|exists:subscription_plans,id',
             'billing_cycle'       => ['required', Rule::in(Subscriptionplans::BILLING_CYCLES)],
             'state'               => 'nullable|boolean',
@@ -270,8 +271,15 @@ public function list(Request $request){
             <h3>Login Details</h3>';
         $adminUrl = url('/admin/login');
         if (!empty($user->email)) {
-            $slot .= ' <p> <strong>Login URL:</strong> ' . e($adminUrl) . ' </p> 
-            <p><strong>Username / Email:</strong> ' . $user->email . '</p>';
+            $slot .= '<p>
+                <strong>Login URL:</strong>
+                <a href="' . e($adminUrl) . '" target="_blank">
+                   Click here to login to portal
+                </a>
+            </p>
+            <p>
+                <strong>Username / Email:</strong> ' . e($user->email) . '
+            </p>';
         }
 
         if (!empty($request->password)) {
@@ -403,22 +411,17 @@ public function updateOrganization(Request $request, $id)
     // \Log::info("[$traceId] Organization found before update", [
     //     'current_subscription_plan' => $organization->subscription_plan,
     // ]);
-
+     $user = User::where('organization_id', $organization->id)->first();
     $request->validate([
         'organization_name'  => 'required|string|max:255',
-           'organization_email' => [
-                        'required',
-                        'email',
-                        'unique:users,email',
-                        'unique:admins,email',
-                    ],
+       'organization_email' => [
+            'required',
+            'email',
+            Rule::unique('users', 'email')->ignore($user?->id),
+            Rule::unique('admins', 'email'),
+        ],
         'mobile_number'      => 'nullable|numeric|digits_between:10,14',
-           'password' => [
-                    'required',
-                    'min:6',
-                    'confirmed',
-                    'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])\S+$/',
-                ],
+         
          'organization_logo' => [
                     'nullable',
                     'image',
@@ -429,10 +432,7 @@ public function updateOrganization(Request $request, $id)
     ], [
               'organization_logo.dimensions' =>
                 'Logo dimensions should be approximately 260 × 60 pixels (allowed range: 200–320 × 45–90 pixels).',
-                 'password.required' => 'Password is required.',
-                'password.min' => 'Password must be at least 6 characters.',
-                'password.confirmed' => 'Password and Confirm Password must be the same.',
-               'password.regex' => 'Password must contain at least one letter, one number, and one special character.',
+                
         ]);
 
     // \Log::info("[$traceId] Validation passed", [
@@ -586,8 +586,10 @@ public function updateOrganization(Request $request, $id)
         );
 
         // \Log::info("[$traceId] === updateOrganization END (success) ===");
-
-        return redirect()->back()->with('success', 'Organization updated successfully!');
+         return redirect()
+           ->route('admin.organization.data')
+           ->with('success', 'Organization updated successfully!');
+        //return redirect()->back()->with('success', 'Organization updated successfully!');
 
     } catch (\Exception $e) {
 
@@ -693,10 +695,33 @@ public function updateOrganization(Request $request, $id)
                 $planName = $organization->subscription->plan->name; 
                 } 
                 $adminUrl = url('/admin/login');
-                $slot = ' <p>Dear ' . e($user->name ?? 'User') . ',</p> <p> Welcome! Your account has been activated successfully. You can now log in to your account and start using the portal. </p> <h3>Account Details</h3> 
-                <p> <strong>Login URL:</strong> ' . e($adminUrl) . ' </p> 
-                <p> <strong>Username / Email:</strong> ' . e($user->email) . ' </p> 
-                <p> <strong>Organization Name:</strong> ' . e($organization->organization_name) . ' </p>'; 
+                $slot = '
+                <p>Dear ' . e($user->name ?? 'User') . ',</p>
+
+                <p>
+                    Welcome! Your account has been activated successfully.
+                    You can now log in to your account and start using the portal.
+                </p>
+
+                <h3>Account Details</h3>
+
+                <p>
+                    <strong>Login:</strong>
+                    <a href="' . e($adminUrl) . '" target="_blank">
+                        Click here to login to portal
+                    </a>
+                </p>
+
+                <p>
+                    <strong>Username / Email:</strong>
+                    ' . e($user->email) . '
+                </p>
+
+                <p>
+                    <strong>Organization Name:</strong>
+                    ' . e($organization->organization_name) . '
+                </p>
+            ';
                 if (!empty($user->phone_number)) { 
                     $slot .= ' <p> <strong>Phone Number:</strong> ' . e($user->phone_number) . ' </p>';
                 }
