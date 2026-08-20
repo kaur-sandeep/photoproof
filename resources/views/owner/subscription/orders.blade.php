@@ -6,7 +6,7 @@
     @if(session('success'))<div class="alert alert-success">{{ session('success') }}</div>@endif
     <div class="card"><div class="card-body"><div class="table-responsive">
         <table id="owner-orders-table" class="table table-bordered table-striped align-middle w-100">
-            <thead><tr><th>Order</th><th>Item</th><th>Type</th><th>Amount</th><th>Order Status</th><th>Payment</th><th>Date</th></tr></thead>
+            <thead><tr><th>Order</th><th>Item</th><th>Type</th><th>Amount</th><th>Payment</th><th>Date</th></tr></thead>
         </table>
     </div></div></div>
 </div>
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', function () {
             { data: 'item', name: 'item' },
             { data: 'order_type', name: 'order_type' },
             { data: 'amount', name: 'amount' },
-            { data: 'status', name: 'status' },
+            // { data: 'status', name: 'status' },
             { data: 'payment_status', name: 'payment_status' },
             { data: 'created_at', name: 'created_at' },
         ],
