@@ -40,7 +40,13 @@ class OrganizationsController extends Controller
     {
         $request->validate([
             'organization_name'   => 'required|string|max:255',
-            'organization_email'  => 'required|email|unique:users,email',
+            //'organization_email'  => 'required|email|unique:users,email',
+            'organization_email' => [
+                        'required',
+                        'email',
+                        'unique:users,email',
+                        'unique:admins,email',
+                    ],
             // 'mobile_number' => 'numeric|digits_between:10,14',
             'password' => [
                     'required',

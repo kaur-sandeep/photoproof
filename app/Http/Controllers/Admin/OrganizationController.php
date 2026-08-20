@@ -171,11 +171,22 @@ public function list(Request $request){
     {
         $request->validate([
             'organization_name'   => 'required|string|max:255',
-            'organization_email'  => ['required', 'email', Rule::unique('users', 'email')],
+            // 'organization_email'  => ['required', 'email', Rule::unique('users', 'email')],
+               'organization_email' => [
+                        'required',
+                        'email',
+                        'unique:users,email',
+                        'unique:admins,email',
+                    ],
             'subscription_plan'   => 'required|exists:subscription_plans,id',
             'billing_cycle'       => ['required', Rule::in(Subscriptionplans::BILLING_CYCLES)],
             'state'               => 'nullable|boolean',
-            'password'            => 'required|min:6',
+            'password' => [
+                    'required',
+                    'min:6',
+                    'confirmed',
+                    'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])\S+$/',
+                ],
             'organization_logo' => [
                     'nullable',
                     'image',
@@ -187,6 +198,10 @@ public function list(Request $request){
             'organization_email.unique' => 'This email is already registered. Please use a different email address.',
             'organization_logo.dimensions' =>
                 'Logo dimensions should be approximately 260 × 60 pixels (allowed range: 200–320 × 45–90 pixels).',
+                 'password.required' => 'Password is required.',
+                'password.min' => 'Password must be at least 6 characters.',
+                'password.confirmed' => 'Password and Confirm Password must be the same.',
+               'password.regex' => 'Password must contain at least one letter, one number, and one special character.',
         ]);
 
         DB::beginTransaction();
@@ -369,146 +384,6 @@ public function list(Request $request){
         return view('admin.organization.edit', compact('organization','allPlans','user_data'));
     }
 
-    // public function updateOrganization(Request $request, $id)
-    // {
-    //     $organization = Organization::find($id);
-    //     if (!$organization) {
-    //         return redirect()->back()->with('error', 'Organization not found.');
-    //     }
-
-    //     $request->validate([
-    //         'organization_name' => 'required|string|max:255',
-    //         // 'business_type' => 'required|string|max:255',
-    //         // 'owner_name' => 'required|string|max:255',
-    //         'organization_email' => 'required|email|unique:organizations,organization_email,' . $organization->id,
-    //         'mobile_number' => 'numeric|digits_between:10,14',
-    //         // 'subscription_plan' => 'required|string|max:255'
-    //     ]);
-
-    //     $organization->update([
-    //         'organization_name' => $request->organization_name,
-    //         'business_type' => $request->business_type,
-    //         'owner_name' => $request->owner_name,
-    //         'organization_email' => $request->organization_email,
-    //         'mobile_number' => $request->mobile_number,
-    //         'subscription_plan' => $request->subscription_plan
-    //     ]);
-
-    //     ActivityLogger::log(
-    //         'Update',
-    //         'Organizations',
-    //         'Updated organization: ' . $request->organization_name
-    //     );
-
-    //     return redirect()->back()->with('success', 'Organization updated successfully!');
-    // }
-
-// public function updateOrganization(Request $request, $id)
-// {
-
-//     $organization = Organization::find($id);
-
-//     if (!$organization) {
-//         return redirect()->back()->with('error', 'Organization not found.');
-//     }
-//     $request->validate([
-//         'organization_name'  => 'required|string|max:255',
-//         'mobile_number'      => 'nullable|numeric|digits_between:10,14',
-//         'password'           => 'nullable|min:6',
-//     ]);
-
-//     DB::beginTransaction();
-// // dd((int)$request->subscription_plan);
-//     try {
-
-//         // Update Organization
-//         $organization->update([
-//             'business_type'     => $request->business_type,
-//             'subscription_plan' =>  (int)$request->subscription_plan,
-//             'message'           => $request->message,
-//         ]);
-
-//         // Update Owner User
-//         $user = User::where('organization_id', $organization->id)->first();
-
-//         if ($user) {
-
-//             $userData = [
-//                 'name'          => $request->owner_name,
-//                 'email'         => $request->organization_email,
-//                 'phone_number'  => $request->mobile_number,
-//             ];
-
-
-//             if ($request->filled('password')) {
-//                 $userData['password'] = Hash::make($request->password);
-//             }
-
-
-//             $user->update($userData);
-         
-//         }
-
-
-//         // Subscription Plan
-//         $plan = Subscriptionplans::find($request->subscription_plan);
-
-//         if ($plan) {
-
-//             $startDate = Carbon::now();
-
-//             $expiresDate = $startDate->copy()
-//                 ->addDays($plan->duration_days);
-//             $organizationSubscription = OrganizationSubscriptions::where(
-//                 'organization_id',
-//                 $organization->id
-//             )->first();
-
-
-//             if ($organizationSubscription) {
-
-//                 $organizationSubscription->update([
-//                     'subscription_plan_id' => $plan->id,
-//                     'starts_at'            => $startDate,
-//                     'expires_at'           => $expiresDate,
-//                     'monthly_photo_limit'  => $plan->monthly_photo_limit,
-//                     'monthly_photo_used'   => 0,
-//                     'max_employees'        => $plan->max_employees,
-//                 ]);
-
-//             } else {
-
-//                 $newSubscription = OrganizationSubscriptions::create([
-//                     'organization_id'       => $organization->id,
-//                     'subscription_plan_id'  => $plan->id,
-//                     'starts_at'             => $startDate,
-//                     'expires_at'            => $expiresDate,
-//                     'monthly_photo_limit'  => $plan->monthly_photo_limit,
-//                     'monthly_photo_used'   => 0,
-//                     'max_employees'        => $plan->max_employees,
-//                 ]);
-//             }
-//         }
-
-//         DB::commit();
-
-//     } catch (\Exception $e) {
-
-//         DB::rollBack();
-//     }
-
-//       ActivityLogger::log(
-//             'Update',
-//             'Organizations',
-//             'Updated organization: ' . $request->organization_name
-//         );
-
-//         return redirect()->back()->with('success', 'Organization updated successfully!');
-
-
-    
-// }
-
 public function updateOrganization(Request $request, $id)
 {
     $traceId = uniqid('org_update_');
@@ -531,8 +406,19 @@ public function updateOrganization(Request $request, $id)
 
     $request->validate([
         'organization_name'  => 'required|string|max:255',
+           'organization_email' => [
+                        'required',
+                        'email',
+                        'unique:users,email',
+                        'unique:admins,email',
+                    ],
         'mobile_number'      => 'nullable|numeric|digits_between:10,14',
-        'password'           => 'nullable|min:6',
+           'password' => [
+                    'required',
+                    'min:6',
+                    'confirmed',
+                    'regex:/^(?=.*[A-Za-z])(?=.*\d)(?=.*[^A-Za-z0-9])\S+$/',
+                ],
          'organization_logo' => [
                     'nullable',
                     'image',
@@ -543,6 +429,10 @@ public function updateOrganization(Request $request, $id)
     ], [
               'organization_logo.dimensions' =>
                 'Logo dimensions should be approximately 260 × 60 pixels (allowed range: 200–320 × 45–90 pixels).',
+                 'password.required' => 'Password is required.',
+                'password.min' => 'Password must be at least 6 characters.',
+                'password.confirmed' => 'Password and Confirm Password must be the same.',
+               'password.regex' => 'Password must contain at least one letter, one number, and one special character.',
         ]);
 
     // \Log::info("[$traceId] Validation passed", [
