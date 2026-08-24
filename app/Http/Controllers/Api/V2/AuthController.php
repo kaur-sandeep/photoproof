@@ -27,6 +27,7 @@ use Intervention\Image\Drivers\Gd\Driver;
 use App\Models\OrganizationSubscriptions;
 use App\Services\OrganizationPhotoLimitService;
 use Illuminate\Support\Facades\DB;
+use App\Models\Order;
 class AuthController extends Controller
 {
     // Register API
@@ -518,14 +519,16 @@ class AuthController extends Controller
             ->where('starts_at', '<=', now())
             ->whereDate('expires_at', '>=', today())
             ->first();
-      
+         $photoLimit = $subscription
+            ? $subscription->topup_photo_limit + $subscription->monthly_photo_limit
+            : 0;
 
         return response()->json([
             'status' => true,
             'photos' => $photos,
             'subscription' => [
                 'plan_name' => optional($subscription->plan)->name,
-                'photo_limit' => $subscription->monthly_photo_limit,
+                'photo_limit' => $photoLimit,
                 'photo_used' => $subscription->monthly_photo_used,
                 'billing_cycle' => $subscription->billing_cycle ?? 'monthly',
                 'starts_at' => $subscription->starts_at,
@@ -742,7 +745,7 @@ public function forgotPassword(Request $request)
             ],403);
 
         }
-
+        
         // 7. Generate OTP
         $otp = random_int(1000, 9999);
         EmployeeOtp::where('user_id', $user->id)
@@ -919,7 +922,9 @@ public function forgotPassword(Request $request)
                 ],403);
 
             }
-            
+                 $photoLimit = $subscription
+            ? $subscription->topup_photo_limit + $subscription->monthly_photo_limit
+            : 0;
             $EmployeeOtp->update([
                 'verified_at' => now(),
             ]);
@@ -961,11 +966,11 @@ public function forgotPassword(Request $request)
 
                 'subscription' => [
                     'plan_name' => optional($subscription->plan)->name,
-                    'photo_limit' => $subscription->monthly_photo_limit,
+                    'photo_limit' => $photoLimit,
                     'photo_used' => $subscription->monthly_photo_used,
                     'topup_limit' => $subscription->topup_photo_limit,
                     'topup_used' => $subscription->topup_photo_used,
-                    'remaining_photos' => max(0, $subscription->monthly_photo_limit - $subscription->monthly_photo_used) + max(0, $subscription->topup_photo_limit - $subscription->topup_photo_used),
+                    'remaining_photos' => max(0, $photoLimit - $subscription->monthly_photo_used),
                     'billing_cycle' => $subscription->billing_cycle ?? 'monthly',
                     'starts_at' => $subscription->starts_at,
                     'expires_at' => $subscription->expires_at,
@@ -1185,19 +1190,20 @@ public function forgotPassword(Request $request)
         ->where('state', 1)
         ->first();
 
-                
-        if ($owner && !empty($owner->fcm_token)) {
+        if (!$user->hasRole('owner')) {       
+            if ($owner && !empty($owner->fcm_token)) {
 
-            app(\App\Services\FcmService::class)->sendToToken(
-                $owner->fcm_token,
-                'New Photo Uploaded',
-                $user->name . ' uploaded a new photo.',
-                [
-                    'type' => 'photo_uploaded',
-                    'photo_random_id' => $photo->random_id,
-                    'employee_id' => $user->id,
-                ]
-            );
+                app(\App\Services\FcmService::class)->sendToToken(
+                    $owner->fcm_token,
+                    'New Photo Uploaded',
+                    $user->name . ' uploaded a new photo.',
+                    [
+                        'type' => 'photo_uploaded',
+                        'photo_random_id' => $photo->random_id,
+                        'employee_id' => $user->id,
+                    ]
+                );
+            }
         }
 
 
@@ -1256,17 +1262,21 @@ public function forgotPassword(Request $request)
             ->where('starts_at', '<=', now())
             ->whereDate('expires_at', '>=', today())
             ->first();
+            
+           $photoLimit = $subscription
+            ? $subscription->topup_photo_limit + $subscription->monthly_photo_limit
+            : 0;
         return response()->json([
             'status' => true,
             'message' => 'Photo uploaded successfully',
             'photo' => $photo,
            'subscription' => [
                     'plan_name' => optional($subscription->plan)->name,
-                    'photo_limit' => $subscription->monthly_photo_limit,
+                    'photo_limit' => $photoLimit,
                     'photo_used' => $subscription->monthly_photo_used,
                     'topup_limit' => $subscription->topup_photo_limit,
                     'topup_used' => $subscription->topup_photo_used,
-                    'remaining_photos' => max(0, $subscription->monthly_photo_limit - $subscription->monthly_photo_used) + max(0, $subscription->topup_photo_limit - $subscription->topup_photo_used),
+                    'remaining_photos' => max(0, $photoLimit - $subscription->monthly_photo_used),
                     'billing_cycle' => $subscription->billing_cycle ?? 'monthly',
                     'starts_at' => $subscription->starts_at,
                     'expires_at' => $subscription->expires_at,
@@ -1317,7 +1327,7 @@ public function forgotPassword(Request $request)
             ]);
         }
 
-        public function getUserProfile(Request $request)
+          public function getUserProfile(Request $request)
         {
             $user = $request->user();
 
@@ -1333,6 +1343,10 @@ public function forgotPassword(Request $request)
                     ->whereDate('expires_at', '>=', today())
                     ->first();
             }
+        
+           $photoLimit = $subscription
+            ? $subscription->topup_photo_limit + $subscription->monthly_photo_limit
+            : 0;
 
             return response()->json([
                 'status' => true,
@@ -1358,7 +1372,7 @@ public function forgotPassword(Request $request)
 
                 'subscription' => $subscription ? [
                     'plan_name' => optional($subscription->plan)->name,
-                    'photo_limit' => $subscription->monthly_photo_limit,
+                    'photo_limit' => $photoLimit,
                     'photo_used' => $subscription->monthly_photo_used,
                     'billing_cycle' => $subscription->billing_cycle ?? 'monthly',
                     'starts_at' => $subscription->starts_at,
@@ -1367,5 +1381,6 @@ public function forgotPassword(Request $request)
                 ] : null,
             ]);
         }
+
 
 }
