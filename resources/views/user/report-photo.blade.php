@@ -40,7 +40,7 @@
 									<div id="input-message" class="col-lg-12 input-message">
 										<textarea class="form-control message" name="message" rows="6" placeholder="Write your Comment here ..." required></textarea>
 									</div> 
-									  <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+									  <div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div>
 
 									<div class="col-lg-12 m-top-15 form-btn text-center">	
 										<button type="submit" class="btn btn-lightgreen submit">Submit</button>	

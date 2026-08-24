@@ -702,7 +702,7 @@
             </div> 
 
             <div class="col-lg-12 mb-3">
-                <div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div>
+                <div class="g-recaptcha" data-sitekey="{{config('services.recaptcha.site_key') }}"></div>
             </div>
 
             <div class="col-lg-12">

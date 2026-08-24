@@ -160,16 +160,33 @@ document.addEventListener("DOMContentLoaded", function () {
          }
          
          // Click on a gallery item → open lightbox
-         document.getElementById('galleryGrid').addEventListener('click', function(e) {
+    //      document.getElementById('galleryGrid').addEventListener('click', function(e) {
 
-            if (e.target.closest('.download-icon')) {
-        e.stopImmediatePropagation(); // stop ALL other handlers
-        return; // allow normal anchor behavior
-    }
+    //         if (e.target.closest('.download-icon')) {
+    //     e.stopImmediatePropagation(); // stop ALL other handlers
+    //     return; // allow normal anchor behavior
+    // }
 
-           var item = e.target.closest('.gallery-item');
-           if (item) openLightbox(items.indexOf(item));
-         });
+    //        var item = e.target.closest('.gallery-item');
+    //        if (item) openLightbox(items.indexOf(item));
+    //      });
+    const galleryGrid = document.getElementById('galleryGrid');
+
+if (galleryGrid) {
+    galleryGrid.addEventListener('click', function(e) {
+
+        if (e.target.closest('.download-icon')) {
+            e.stopImmediatePropagation();
+            return;
+        }
+
+        const item = e.target.closest('.gallery-item');
+
+        if (item) {
+            openLightbox(items.indexOf(item));
+        }
+    });
+}
          
          document.getElementById('lbClose').addEventListener('click', closeLightbox);
          

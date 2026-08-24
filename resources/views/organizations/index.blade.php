@@ -155,7 +155,7 @@
                         <h3 class="organization-section-title"><i class="bi bi-chat-left-text"></i> Additional Information</h3>
                         <div class="organization-form-grid">
                             <div class="organization-form-group full"><label for="message">Message</label><textarea id="message" name="message" placeholder="Tell us anything that will help us support your team" rows="4">{{ old('message') }}</textarea></div>
-                            <div class="organization-form-group full organization-captcha"><label>Security verification <span class="organization-required">*</span></label><div class="g-recaptcha" data-sitekey="{{ env('RECAPTCHA_SITE_KEY') }}"></div></div>
+                            <div class="organization-form-group full organization-captcha"><label>Security verification <span class="organization-required">*</span></label><div class="g-recaptcha" data-sitekey="{{ config('services.recaptcha.site_key') }}"></div></div>
                             <div class="organization-form-group full form-check">
                                 <!-- <label class="organization-terms">
                                     <input type="checkbox" name="terms" style="margin-right: 10px;" value="1" {{ old('terms') ? 'checked' : '' }}>
