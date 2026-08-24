@@ -686,6 +686,168 @@ public function forgotPassword(Request $request)
                 echo "v1 working";
     }
 
+
+    //  public function requestOtforfirsttimeuser(Request $request)
+    // {
+    //     // 1. Validate Email
+    //     $request->validate([
+    //         'email' => 'required|email',
+    //         'resend' => 'nullable|boolean',
+    //     ]);
+    //     // 2. Find User
+    //     $user = User::where('email', $request->email)->first();
+
+    //     if (!$user) {
+    //         return response()->json([
+    //             'message' => 'Employee not found.'
+    //         ],404);
+    //     }
+
+    //     // 3. Check Employee Role
+    //     if (!$user->hasAnyRole(['employee','owner'])) {
+    //         return response()->json([
+    //             'message'=>'Unauthorized.'
+    //         ],403);
+    //     }
+
+    //     // 4. Check User Active
+    //     if ($user->state != 1) {
+
+    //         return response()->json([
+    //             'message'=>'Your account is no longer active. Please contact the administrator for assistance.'
+    //         ],403);
+    //     }
+    
+
+    //     // 5. Check Organization Active
+    //     $organization = Organization::find($user->organization_id);
+    //     if (!$organization || $organization->state != 1) {
+    //         return response()->json([
+    //             'message'=>'Organization inactive.'
+    //         ],403);
+
+    //     }
+
+    //     // 6. Check Active Subscription
+
+    //     $subscription = OrganizationSubscriptions::where(
+    //             'organization_id',
+    //             $organization->id
+    //         )
+    //         ->where('state',1)
+    //         ->where('starts_at','<=',now())
+    //         ->whereDate('expires_at','>=',today())
+    //         ->first();
+
+    //     if (!$subscription){
+
+    //         return response()->json([
+    //             'message'=>'Organization subscription expired.'
+    //         ],403);
+
+    //     }
+        
+    //     $resend = $request->boolean('resend');
+
+    //     // Keep an active activation OTP when this is the initial request.
+    //     $otpData = DB::transaction(function () use ($user, $resend) {
+    //         User::whereKey($user->id)->lockForUpdate()->first();
+
+    //         $existingOtp = EmployeeOtp::where('user_id', $user->id)
+    //             ->whereNull('verified_at')
+    //             ->where('expires_at', '>', now())
+    //             ->latest()
+    //             ->first();
+
+    //         if (! $resend && $existingOtp) {
+    //             return null;
+    //         }
+
+    //         EmployeeOtp::where('user_id', $user->id)
+    //             ->whereNull('verified_at')
+    //             ->delete();
+
+    //         $otp = random_int(1000, 9999);
+
+    //         EmployeeOtp::create([
+    //             'user_id' => $user->id,
+    //             'otp' => $otp,
+    //             'expires_at' => now()->addMinutes(10),
+    //         ]);
+
+    //         return $otp;
+    //     });
+
+    //     if ($otpData === null) {
+    //         return response()->json([
+    //             'status' => true,
+    //             'first_time_user' => true,
+    //             'message' => 'OTP was already sent during account activation.',
+    //             'organization' => [
+    //                 'id' => $organization->id,
+    //                 'organization_name ' => $organization->organization_name,
+    //                 'organization_logo' => $organization->organization_logo
+    //                     ? asset('storage/' . $organization->organization_logo)
+    //                     : null,
+    //             ],
+    //         ]);
+    //     }
+
+    //     $otp = $otpData;
+
+    //     // 9. Send Email
+    //     $slot = "
+    //         <p>Hello {$user->name},</p>
+
+    //         <p>Your One-Time Password (OTP) for PhotoProof organization login is:</p>
+
+    //         <h2 style='font-size:30px;color:#2563eb;text-align:center;'>{$otp}</h2>
+
+    //         <p>This OTP is valid for <strong>10 minutes</strong>.</p>
+
+    //         <p>If you did not request this OTP, please ignore this email.</p>
+
+    //         ";
+
+   
+    //     try {
+
+    //             $user->notify(new CommonMailNotification(
+    //                 'Your PhotoProof Login OTP',
+    //                 $slot
+    //             ));
+
+    //             return response()->json([
+    //                 'status' => true,
+    //                 'first_time_user' => false,
+    //                 'message' => 'OTP has been sent to your registered email address.',
+    //                 'organization' => [
+    //                     'id' => $organization->id,
+    //                     'organization_name ' => $organization->organization_name ,
+    //                     'organization_logo' => $organization->organization_logo
+    //                     ? asset('storage/' . $organization->organization_logo)
+    //                     : null,
+    //                 ],
+    //             ]);
+
+    //         } catch (\Exception $e) {
+
+    //             \Log::error('OTP Email Error', [
+    //                 'email' => $user->email,
+    //                 'error' => $e->getMessage()
+    //             ]);
+
+    //             return response()->json([
+    //                 'status' => false,
+    //                 'message' => 'Unable to send OTP email.',
+    //                 'error' => $e->getMessage() // remove in production
+    //             ], 500);
+    //         }
+       
+    
+    // }
+
+
     
     public function requestOtp(Request $request)
     {
