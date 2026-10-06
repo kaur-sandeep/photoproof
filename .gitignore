@@ -18,6 +18,10 @@
 /public/storage
 /storage/*.key
 /storage/pail
+/photo-proof-moderation/.env
+/photo-proof-moderation/venv
+/photo-proof-moderation/models/*.pt
+/photo-proof-moderation/models/*.onnx
 /vendor
 Homestead.json
 Homestead.yaml

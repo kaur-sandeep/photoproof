@@ -28,6 +28,8 @@ use App\Models\OrganizationSubscriptions;
 use App\Services\OrganizationPhotoLimitService;
 use Illuminate\Support\Facades\DB;
 use App\Models\Order;
+use App\Models\PhotoModeration;
+use App\Services\ImageModerationService;
 class AuthController extends Controller
 {
     // Register API
@@ -244,6 +246,47 @@ class AuthController extends Controller
                 'message' => 'You have reached your photo upload limit.'
             ], 403);
         }
+
+        // The PHP upload temporary file is sent only to the configured local/private
+        // moderation service. Nothing is written to permanent storage before approval.
+        $moderationResult = app(ImageModerationService::class)->check($request->file('photo'));
+        $moderation = PhotoModeration::create([
+            'user_id' => $user->id,
+            'device_id' => $request->device_id,
+            'status' => $moderationResult['status'],
+            'reason' => $moderationResult['reason'],
+            'category' => $moderationResult['category'],
+            'confidence' => $moderationResult['confidence'],
+            'provider' => 'local',
+            'response' => $moderationResult['response'],
+        ]);
+
+      $isWeapon = ($moderationResult['category'] ?? null) === 'weapon';
+
+      if (! $moderationResult['allowed'] || $isWeapon) {
+
+            if ($moderationResult['status'] === 'failed') {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'We could not verify this image. Please try again later.',
+                    'code' => 'IMAGE_MODERATION_UNAVAILABLE',
+                ], 503);
+            }
+
+            if ($isWeapon) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'This image cannot be uploaded because it contains a weapon.',
+                    'code' => 'IMAGE_WEAPON_NOT_ALLOWED',
+                ], 422);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'This image cannot be uploaded because it contains prohibited content.',
+                'code' => 'IMAGE_NOT_ALLOWED',
+            ], 422);
+        }
         // Upload photo
         //$path = $request->file('photo')->store('photos', 'public'); // storage/app/public/photos
            // thumnil code start
@@ -309,6 +352,8 @@ class AuthController extends Controller
             'display_qrcode_flag' => $request->display_qrcode_flag,
             'meta_data'=>json_decode($request->meta_data)
         ]);
+
+        $moderation->update(['photo_detail_id' => $photo->id]);
         
         $ip = $request->ip();
         // $ip ='202.164.57.197';
@@ -1225,7 +1270,46 @@ public function forgotPassword(Request $request)
 
         $image->save(Storage::disk('public')->path($thumbnailPath));
        
-       
+         // The PHP upload temporary file is sent only to the configured local/private
+        // moderation service. Nothing is written to permanent storage before approval.
+        $moderationResult = app(ImageModerationService::class)->check($request->file('photo'));
+        $moderation = PhotoModeration::create([
+            'user_id' => $user->id,
+            'device_id' => $request->device_id,
+            'status' => $moderationResult['status'],
+            'reason' => $moderationResult['reason'],
+            'category' => $moderationResult['category'],
+            'confidence' => $moderationResult['confidence'],
+            'provider' => 'local',
+            'response' => $moderationResult['response'],
+        ]);
+       //echo"<pre>";print_r($moderationResult);die;
+       $isWeapon = ($moderationResult['category'] ?? null) === 'weapon';
+
+      if (! $moderationResult['allowed'] || $isWeapon) {
+
+            if ($moderationResult['status'] === 'failed') {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'We could not verify this image. Please try again later.',
+                    'code' => 'IMAGE_MODERATION_UNAVAILABLE',
+                ], 503);
+            }
+
+            if ($isWeapon) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'This image cannot be uploaded because it contains a weapon.',
+                    'code' => 'IMAGE_WEAPON_NOT_ALLOWED',
+                ], 422);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'This image cannot be uploaded because it contains prohibited content.',
+                'code' => 'IMAGE_NOT_ALLOWED',
+            ], 422);
+        }
        //end thumbnil
        
        
@@ -1234,7 +1318,7 @@ public function forgotPassword(Request $request)
         // shared organization balance are committed together under a row lock.
         $photo = null;
         try {
-        DB::transaction(function () use (&$photo, $request, $user, $path, $thumbnailPath) {
+        DB::transaction(function () use (&$photo, $request, $user, $path, $thumbnailPath,$moderation) {
         $photo = PhotoDetail::create([
             //'random_id' => Str::uuid(), // generate unique random id
             'random_id' =>$request->id, // generate unique random id
@@ -1271,6 +1355,7 @@ public function forgotPassword(Request $request)
             'meta_data'=>json_decode($request->meta_data)
             
         ]);
+          $moderation->update(['photo_detail_id' => $photo->id]);
         app(OrganizationPhotoLimitService::class)->consume($user, $photo);
         });
         } catch (\RuntimeException $exception) {

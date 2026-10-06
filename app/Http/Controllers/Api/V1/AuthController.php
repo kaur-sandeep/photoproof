@@ -18,6 +18,8 @@ use App\Models\PhotoUploadTrack;
 use Jenssegers\Agent\Agent;
 use App\Models\Setting;
 use App\Models\Notifications;
+use App\Models\PhotoModeration;
+use App\Services\ImageModerationService;
 
 class AuthController extends Controller
 {
@@ -216,6 +218,39 @@ class AuthController extends Controller
                 'message' => 'You have reached your photo upload limit.'
             ], 403);
         }
+        $moderationResult = app(ImageModerationService::class)->check($request->file('photo'));
+        $moderation = PhotoModeration::create([
+            'user_id' => $user->id, 'device_id' => $request->device_id,
+            'status' => $moderationResult['status'], 'reason' => $moderationResult['reason'],
+            'category' => $moderationResult['category'], 'confidence' => $moderationResult['confidence'],
+            'provider' => 'local', 'response' => $moderationResult['response'],
+        ]);
+          $isWeapon = ($moderationResult['category'] ?? null) === 'weapon';
+
+      if (! $moderationResult['allowed'] || $isWeapon) {
+
+            if ($moderationResult['status'] === 'failed') {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'We could not verify this image. Please try again later.',
+                    'code' => 'IMAGE_MODERATION_UNAVAILABLE',
+                ], 503);
+            }
+
+            if ($isWeapon) {
+                return response()->json([
+                    'status' => false,
+                    'message' => 'This image cannot be uploaded because it contains a weapon.',
+                    'code' => 'IMAGE_WEAPON_NOT_ALLOWED',
+                ], 422);
+            }
+
+            return response()->json([
+                'status' => false,
+                'message' => 'This image cannot be uploaded because it contains prohibited content.',
+                'code' => 'IMAGE_NOT_ALLOWED',
+            ], 422);
+        }
         // Upload photo
         $path = $request->file('photo')->store('photos', 'public'); // storage/app/public/photos
 
@@ -253,6 +288,7 @@ class AuthController extends Controller
             'display_qrcode_flag' => $request->display_qrcode_flag,
             'meta_data'=>json_decode($request->meta_data)
         ]);
+        $moderation->update(['photo_detail_id' => $photo->id]);
         
         $ip = $request->ip();
         // $ip ='202.164.57.197';
