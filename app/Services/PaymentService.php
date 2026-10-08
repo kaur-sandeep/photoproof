@@ -82,15 +82,14 @@ class PaymentService
             }
 
             if($order->amount != "0.00"){
-                $details = '<p>Payment for your order has been approved.</p>'
-                    .'<p><strong>Order number:</strong> '.e($order->order_number).'</p>'
+                $details = '<p><strong>Order number:</strong> '.e($order->order_number).'</p>'
                     .'<p><strong>Plan Name:</strong> '.e($itemName).'</p>'
                     .'<p><strong>Amount:</strong> $'.number_format((float) $order->amount, 2).'</p>';
 
                 if ($owner?->email) {
                     Notification::route('mail', $owner->email)->notify(new CommonMailNotification(
                         'Payment Approved - '.$order->order_number,
-                        '<p>Dear '.e($owner->name).',</p>'.$details
+                        '<p>Dear '.e($owner->name).',</p><p>The payment has been successfully received and the order has been approved.</p>'.$details
                     ));
                 }
 
@@ -99,7 +98,7 @@ class PaymentService
                 if ($emails) {
                     Notification::route('mail', $emails)->notify(new CommonMailNotification(
                         'Payment Approved - '.$order->order_number,
-                        '<p>Dear Admin,</p><p>The requested payment has been approved.</p>'
+                        '<p>Dear Admin,</p><p>The payment has been successfully received and the order has been approved.</p>'
                             .'<p><strong>Organization:</strong> '.e($organization?->organization_name ?? '--').'</p>'.$details
                     ));
                 }
