@@ -134,16 +134,12 @@ class OrganizationsController extends Controller
 
        $slot = '
             <p>Dear <strong>' . ($user->name ?? 'User') . '</strong>,</p>
-            <p>Welcome! Your account has been created successfully.</p>
-            <h3>Login Details</h3>';
-        $adminUrl = url('/admin/login');
+            <p>Thank you for creating your logistics account on the PhotoProof platform.</p>
+            <p>Your account is currently under review. One of our executives will review your account and activate it.</p>
+            <p>Once your account has been activated, you will be notified via email.</p>
+            <strong>Please find the below information submitted</strong>';
         if (!empty($user->email)) {
-            $slot .= '<p>
-                <strong>Login URL:</strong>
-                <a href="' . e($adminUrl) . '" target="_blank">
-                     Click here to login to portal
-                </a>
-            </p>
+            $slot .= '
             <p>
                 <strong>Username / Email:</strong> ' . e($user->email) . '
             </p>';
@@ -168,22 +164,6 @@ class OrganizationsController extends Controller
             $slot .= '
             <p><strong>Subscription Plan:</strong> ' . $plan->name . '</p>';
         }
-
-            $slot .= '
-                <hr>
-                <h3>Next Steps</h3>
-                <ul>
-                    <li>Log in using the credentials above.</li>
-                    <li>Invite your employees from the dashboard.</li>
-                </ul>
-                 <hr>
-
-                <h3>Download the Mobile App</h3>
-
-                <p>If you haven\'t already, download the Photo Proof mobile app:</p>
-                <p><a href="'.config('app.app_urls.android', '#').'">Download for Android</a> | <a href="'.config('app.app_urls.ios', '#').'">Download for iOS</a></p>
-
-                <hr>';
 
             $adminSlot = ' <p>Dear Admin,</p> 
             <p>A new company has been registered on the platform.</p>  <hr> <h3>Company Details</h3> '; 

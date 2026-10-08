@@ -700,10 +700,12 @@ public function updateOrganization(Request $request, $id)
 
                 <p>
                     Welcome! Your account has been activated successfully.
-                    You can now log in to your account and start using the portal.
+                    You can now log in to your account and add employees.
                 </p>
 
-                <h3>Account Details</h3>
+                <p>
+                    <strong>Click on the below link to login to the photoproof portal.</strong>
+                </p>
 
                 <p>
                     <strong>Login:</strong>
@@ -728,7 +730,21 @@ public function updateOrganization(Request $request, $id)
                 if (!empty($planName)) { 
                     $slot .= ' <p> <strong>Subscription Plan:</strong> ' . e($planName) . ' </p>'; 
                 } 
-                    $slot .= '<hr> <h3>Next Steps</h3> <ul> <li>Log in using your registered email address.</li>  <li>Invite your employees from the dashboard.</li> </ul> <p> Thank you for choosing our platform. </p>'; 
+                $slot .= '
+                <hr>
+                <h3>Next Steps</h3>
+                <ul>
+                    <li>Log in using you registered email address and password.</li>
+                    <li>Invite your employees from the dashboard.</li>
+                </ul>
+                 <hr>
+
+                <h3>Download the Mobile App</h3>
+
+                <p>If you haven\'t already, download the Photo Proof mobile app:</p>
+                <p><a href="'.config('app.app_urls.android', '#').'">Download for Android</a> | <a href="'.config('app.app_urls.ios', '#').'">Download for iOS</a></p>
+
+                <hr>';
                 try { 
                     Notification::route('mail', $user->email) ->notify( new CommonMailNotification( 'Your Account Has Been Activated', $slot ) );
                 
