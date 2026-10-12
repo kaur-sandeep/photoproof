@@ -22,6 +22,7 @@ use App\Models\Setting;
 use App\Services\OrderService;
 use App\Services\PaymentService;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Password;
 class OrganizationController extends Controller
 {
     public function index(){
@@ -650,6 +651,130 @@ public function updateOrganization(Request $request, $id)
     //     ]);
     // }
 
+    //commented code on 09/10/2026//
+//     public function updateStatus(Request $request)
+// {
+//     $request->validate([
+//         'id' => 'required',
+//         'status' => 'required|in:-1,0,1'
+//     ]);
+
+//     $organization = Organization::findOrFail($request->id);
+
+//     // ✅ Fixed: 'plan' relation exist nahi karti, 'subscription' hai
+//     if ($request->status == 1 && !$organization->subscription) {
+//         return response()->json([
+//             'success' => false,
+//             'message' => 'Please assign a plan to this organization before activating it.'
+//         ]);
+//     }
+
+//     $oldStatus = $organization->state;
+//     $organization->state = $request->status;
+//     $organization->save();
+
+//     $statusText = [
+//         -1 => 'Deleted',
+//         0  => 'Inactive',
+//         1  => 'Active',
+//     ];
+
+//     ActivityLogger::log(
+//         'Update',
+//         'Organizations',
+//         'Changed status of ' . $organization->organization_name .
+//         ' from ' . ($statusText[$oldStatus] ?? $oldStatus) .
+//         ' to ' . ($statusText[$request->status] ?? $request->status)
+//     );
+
+//     /* |-------------------------------------------------------------------------- | Send activation email |-------------------------------------------------------------------------- | Only send email when organization becomes Active. */
+//     if ($request->status == 1 && $oldStatus != 1) { 
+//         $user = User::where('organization_id', $organization->id) ->role('owner') ->first();
+
+//         if ($user && !empty($user->email)) {
+//                 $planName = '';
+//                 if ($organization->subscription && $organization->subscription->plan) { 
+//                 $planName = $organization->subscription->plan->name; 
+//                 } 
+//                 $adminUrl = url('/admin/login');
+//                 $slot = '
+//                 <p>Dear ' . e($user->name ?? 'User') . ',</p>
+
+//                 <p>
+//                     Welcome! Your account has been activated successfully.
+//                     You can now log in to your account and add employees.
+//                 </p>
+
+//               <strong>Click on the below link to login to the photoproof portal.</strong>
+
+//                 <p>
+//                     <strong>Login:</strong>
+//                     <a href="' . e($adminUrl) . '" target="_blank">
+//                         Click here to login to portal
+//                     </a>
+//                 </p>
+
+//                 <p>
+//                     <strong>Username / Email:</strong>
+//                     ' . e($user->email) . '
+//                 </p>
+
+//                 <p>
+//                     <strong>Organization Name:</strong>
+//                     ' . e($organization->organization_name) . '
+//                 </p>
+//             ';
+//                 if (!empty($user->phone_number)) { 
+//                     $slot .= ' <p> <strong>Phone Number:</strong> ' . e($user->phone_number) . ' </p>';
+//                 }
+//                 if (!empty($planName)) { 
+//                     $slot .= ' <p> <strong>Subscription Plan:</strong> ' . e($planName) . ' </p>'; 
+//                 } 
+//                     $slot .= '
+//                 <hr>
+//                 <h3>Next Steps</h3>
+//                 <ul>
+//                     <li>Log in using you registered email address and password.</li>
+//                     <li>Invite your employees from the dashboard.</li>
+//                 </ul>
+//                  <hr>
+
+//                 <h3>Download the Mobile App</h3>
+
+//                 <p>If you haven\'t already, download the Photo Proof mobile app:</p>
+//                 <p><a href="'.config('app.app_urls.android', '#').'">Download for Android</a> | <a href="'.config('app.app_urls.ios', '#').'">Download for iOS</a></p>
+
+//                 <hr>';
+//                 try { 
+//                     Notification::route('mail', $user->email) ->notify( new CommonMailNotification( 'Your Account Has Been Activated', $slot ) );
+                
+//                 } catch (\Exception $e) { 
+//                 // Email failure should not stop status update 
+                
+//                     \Log::error( 'Organization activation email failed: ' . $e->getMessage() ); 
+//                 } 
+//         } 
+//     }
+
+
+//     if($request->status == -1){
+//           return response()->json([
+//             'success' => true,
+//             'message' => 'Organization is deleted successfully'
+//         ]);
+//     }else{
+//          return response()->json([
+//             'success' => true,
+//             'message' => 'Organization status updated successfully'
+//         ]);
+//     }
+
+   
+// }
+
+
+
+
     public function updateStatus(Request $request)
 {
     $request->validate([
@@ -694,42 +819,41 @@ public function updateOrganization(Request $request, $id)
                 if ($organization->subscription && $organization->subscription->plan) { 
                 $planName = $organization->subscription->plan->name; 
                 } 
-                $adminUrl = url('/admin/login');
+                    $resetUrl = null;
+                    try {
+                        $token    = Password::broker()->createToken($user);
+                        $resetUrl = route('password.generate', [
+                            'token' => $token,
+                            'email' => $user->email,
+                        ]);
+                    } catch (\Throwable $e) {
+                        report($e);
+                    }
                 $slot = '
                 <p>Dear ' . e($user->name ?? 'User') . ',</p>
 
                 <p>
-                    Welcome! Your account has been activated successfully.
+                    Welcome! Your Photoproof account has been activated successfully.
                     You can now log in to your account and add employees.
                 </p>
-
-                <p>
-                    <strong>Click on the below link to login to the photoproof portal.</strong>
-                </p>
-
-                <p>
-                    <strong>Login:</strong>
-                    <a href="' . e($adminUrl) . '" target="_blank">
-                        Click here to login to portal
-                    </a>
-                </p>
-
                 <p>
                     <strong>Username / Email:</strong>
                     ' . e($user->email) . '
-                </p>
-
-                <p> 
-                    <strong>Organization Name:</strong>
-                    ' . e($organization->organization_name) . '
-                </p>
-            ';
+                </p>';
+                 if (!empty($organization->organization_name)) { 
+                    $slot .= '<p>
+                        <strong>Organization Name:</strong>
+                        ' . e($organization->organization_name) . '
+                    </p>
+                    ';
+                }
                 if (!empty($user->phone_number)) { 
                     $slot .= ' <p> <strong>Phone Number:</strong> ' . e($user->phone_number) . ' </p>';
                 }
                 if (!empty($planName)) { 
                     $slot .= ' <p> <strong>Subscription Plan:</strong> ' . e($planName) . ' </p>'; 
                 } 
+                
                 if($user->password !=null){
                 $slot .= '
                     <hr>
@@ -750,7 +874,35 @@ public function updateOrganization(Request $request, $id)
                         
                     </ul>';
                 }
-               
+                // $adminUrl = url('/admin/login');
+                //     $slot = '
+                //     <p>Dear ' . e($user->name ?? 'User') . ',</p>
+
+                //   <strong>Click on the below link to login to the photoproof portal.</strong>
+
+                //     <p>
+                //         <strong>Login:</strong>
+                //         <a href="' . e($adminUrl) . '" target="_blank">
+                //             Click here to login to portal
+                //         </a>
+                //     </p>';
+                                
+                    if ($resetUrl && $user->password == null) {
+                        $slot .= '
+                        <p>Please set your password using the button below, then you can log in with your email and new password.</p>
+                        <p>
+                            <a href="' . e($resetUrl) . '"
+                            style="display:inline-block;padding:10px 20px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:6px;">
+                                Generate Your Password
+                            </a>
+                        </p>
+                        <p style="font-size:12px;color:#666;">
+                            If the button does not work, copy and paste this link into your browser:<br>
+                            ' . e($resetUrl) . '
+                        </p>';
+                    }
+
+
                 $slot.= '
                  <hr>
 

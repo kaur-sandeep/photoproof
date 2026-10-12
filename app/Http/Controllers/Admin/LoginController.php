@@ -405,7 +405,8 @@ class LoginController extends Controller
             ->where('email', $request->email)
             ->delete();
 
-        return redirect()->route('admin.login')
+        //  return back()->with('success', 'Password reset successfully. You can now login from your app.');
+         return redirect()->route('admin.login')
             ->with('success', 'Password reset successfully.');
     }
 }
