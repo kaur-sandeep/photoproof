@@ -82,7 +82,7 @@
 
                       <div class="mt-3">
                           <img id="logoPreview"
-                              src="{{ $organization->organization_logo ? asset('storage/'.$organization->organization_logo) : '/user/images/no-images.png' }}"
+                              src="{{ $organization->organization_logo ? asset('storage/'.$organization->organization_logo) : asset('user/images/no-images.png') }}"
                               class="img-thumbnail"
                               style="width:120px;height:120px;object-fit:contain;">
                       </div>

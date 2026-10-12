@@ -45,7 +45,7 @@
                     <input type="text" name ="number" class="form-control" id="number" placeholder="Enter Number">
                   </div>
                   <div class="form-group">
-                    <label for="exampleInputFile">File input</label>
+                    <label for="exampleInputFile">Profile Image</label>
                     <div class="input-group">
                       <div class="custom-file">
                         <input type="file" name ="profile_image"class="custom-file-input" id="exampleInputFile">
