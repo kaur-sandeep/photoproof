@@ -802,10 +802,14 @@ $(document).ready(function() {
         processing: true,
         serverSide: true,
         ajax: window.APP_URL + '/admin/organizations/list/',
+        order: [],
 
         columns: [
             { data: 'organization_name', name: 'organization_name' },
             { data: 'organization_email', name: 'organization_email' },
+            { data: 'business_type', name: 'business_type' },
+            { data: 'contact_person_name', name: 'contact_person_name' },
+            { data: 'mobile_number', name: 'mobile_number' },
             { data: 'plan', name: 'plan' },
             { data: 'limit', name: 'limit'},
             { data: 'employee_count', name: 'employee_count' },
@@ -824,6 +828,9 @@ $(document).ready(function() {
        console.log('Data::', data);
         $('#m_name').html(data.organization_name);
         $('#m_email').html(data.organization_email);
+        $('#m_business_type').text(data.business_type);
+        $('#m_contact_person_name').text(data.contact_person_name);
+        $('#m_mobile_number').text(data.mobile_number);
         $('#m_plan').html(data.plan);
         $('#m_limit').html(data.limit);
         $('#m_employee').html(data.employee_count);

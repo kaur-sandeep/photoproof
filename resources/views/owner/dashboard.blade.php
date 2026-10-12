@@ -388,7 +388,7 @@
                             </div>
 
                             <div class="dashboard-user-date">
-                                {{ $user->created_at->format('d M Y') }}
+                                {{ \App\Helpers\DateTime::dateFormat($user->created_at, 'd M Y') }}
                             </div>
 
                         </div>
@@ -529,7 +529,7 @@
 
                                 <div class="dashboard-photo-date">
 
-                                    {{ $photo->created_at->format('d M Y, h:i A') }}
+                                    {{ \App\Helpers\DateTime::dateFormat($photo->created_at, 'd M Y, h:i A') }}
 
                                 </div>
 

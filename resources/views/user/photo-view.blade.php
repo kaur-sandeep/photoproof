@@ -215,7 +215,7 @@
                     <span>This photo is available for {{ $daysAvailable }} days.
 
 <p> @if(!empty($photo->word_api_date_time))
-                                  Uploaded on: {{$photo->word_api_date_time}}
+                                  Uploaded on: {{ \App\Helpers\DateTime::dateFormat($photo->word_api_date_time, 'd M Y, h:i A') }}
                                 @endif </p>
 
                     </span>

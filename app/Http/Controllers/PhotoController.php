@@ -14,6 +14,7 @@ use App\Notifications\CommonMailNotification;
 use App\Models\Notifications;
 use App\Models\Contact;
 use App\Models\Subscriptionplans;
+use App\Helpers\DateTime;
 class PhotoController extends Controller
 {
    public function searchForm()
@@ -382,7 +383,7 @@ public function contact_submit(Request $request)
 
     // Get location from IP (if you already have this function)
     $location = $this->getLocationFromIp($ip);
-    $currentDateTime = Carbon::now()->format('d M Y, h:i A');
+    $currentDateTime = DateTime::dateFormat(Carbon::now(), 'd M Y, h:i A');
     // ✅ Email content (same pattern as your code)
     $slot = '
         <p>Dear Admin,</p>

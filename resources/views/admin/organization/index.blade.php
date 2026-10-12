@@ -11,12 +11,6 @@
         vertical-align: top;
     }
 
-    /* Message column */
-    #organizationList td:nth-child(8),
-    #organizationList th:nth-child(8) {
-        max-width: 250px;
-        width: 250px;
-    }
 </style>
 
 <div class="container-fluid">
@@ -49,6 +43,9 @@
                         <!-- <th>#</th> -->
                         <th>Company Name</th>
                         <th>Email</th>
+                        <th>Business Type</th>
+                        <th>Contact Person Name</th>
+                        <th>Mobile Number</th>
                         <th>Plan Name</th>
                          <th>Monthly Photo Limit</th>
                         <!-- <th>Organization Code</th> -->
@@ -92,6 +89,21 @@
                     <tr>
                         <th>Email</th>
                         <td id="m_email"></td>
+                    </tr>
+
+                    <tr>
+                        <th>Business Type</th>
+                        <td id="m_business_type"></td>
+                    </tr>
+
+                    <tr>
+                        <th>Contact Person Name</th>
+                        <td id="m_contact_person_name"></td>
+                    </tr>
+
+                    <tr>
+                        <th>Mobile Number</th>
+                        <td id="m_mobile_number"></td>
                     </tr>
 
                     <tr>

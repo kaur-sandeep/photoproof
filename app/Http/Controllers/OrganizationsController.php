@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Notifications\CommonMailNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Helpers\ActivityLogger;
+use App\Helpers\DateTime;
 use App\Models\Setting;
 use App\Models\Notifications;
 use Illuminate\Support\Facades\Http;
@@ -226,11 +227,11 @@ class OrganizationsController extends Controller
                     $request->input('submitted_from') .
                     '</p>';
             }
-            $adminSlot .= ' <p><strong>Date and Time:</strong> ' . now()->format('d M Y, h:i A') . '</p> '; 
+            $adminSlot .= ' <p><strong>Date and Time:</strong> ' . DateTime::dateFormat(now(), 'd M Y, h:i A') . '</p> '; 
             if (!empty($request->ip())) { 
                 $adminSlot .= ' <p><strong>IP Address:</strong> ' . $request->ip() . '</p>'; } if (!empty($request->userAgent())) { $adminSlot .= ' <p><strong>Browser:</strong> ' . $request->userAgent() . '</p>'; }
 
-                $adminSlot .= ' <p><strong>Created At:</strong> ' . now()->format('d M Y, h:i A') . '</p> <hr>';
+                $adminSlot .= ' <p><strong>Created At:</strong> ' . DateTime::dateFormat(now(), 'd M Y, h:i A') . '</p> <hr>';
 
             // ✅ User ko uska content
             try {
@@ -752,7 +753,7 @@ public function storeV3(Request $request, OrderService $orders, PaymentService $
     $adminSlot .= '
         <p>
             <strong>Date and Time:</strong>
-            ' . now()->format('d M Y, h:i A') . '
+            ' . DateTime::dateFormat(now(), 'd M Y, h:i A') . '
         </p>
     ';
 
@@ -782,7 +783,7 @@ public function storeV3(Request $request, OrderService $orders, PaymentService $
     $adminSlot .= '
         <p>
             <strong>Created At:</strong>
-            ' . now()->format('d M Y, h:i A') . '
+            ' . DateTime::dateFormat(now(), 'd M Y, h:i A') . '
         </p>
 
         <hr>
@@ -982,10 +983,10 @@ public function create(Request $request, OrderService $orders, PaymentService $p
         . '<hr><h3>Cookie Information</h3>'
         . $row('Initial Landing Page', $request->input('initial_landing_page'))
         . $row('Submitted From', $request->input('submitted_from'))
-        . $row('Date and Time', now()->format('d M Y, h:i A'))
+        . $row('Date and Time', DateTime::dateFormat(now(), 'd M Y, h:i A'))
         . $row('IP Address', $request->ip())
         . $row('Browser', $request->userAgent())
-        . $row('Created At', now()->format('d M Y, h:i A'))
+        . $row('Created At', DateTime::dateFormat(now(), 'd M Y, h:i A'))
         . '<hr>';
 
     // User ko mail

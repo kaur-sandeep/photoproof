@@ -34,9 +34,9 @@ class OrganizationController extends Controller
 public function list(Request $request){
     $organizationId = $request->organization_id;
     $organizations = Organization::where('state', '!=', -1)
-    ->with('users:id,organization_id,email', 'subscription.plan')
+    ->with('users:id,organization_id,email,name,phone_number', 'subscription.plan')
     ->withCount(['users as employee_count', 'photoDetails as photo_count'])
-    ->orderBy('created_at', 'desc')
+    ->orderByDesc('id')
     ->get();
 
     return DataTables::of($organizations)
@@ -49,6 +49,15 @@ public function list(Request $request){
         })
         ->addColumn('organization_email', function ($organizations) {
             return optional($organizations->users->sortBy('created_at')->first())->email ?? '--';
+        })
+        ->addColumn('business_type', function ($organizations) {
+            return $organizations->business_type ?: '--';
+        })
+        ->addColumn('contact_person_name', function ($organizations) {
+            return optional($organizations->users->sortBy('created_at')->first())->name ?? '--';
+        })
+        ->addColumn('mobile_number', function ($organizations) {
+            return optional($organizations->users->sortBy('created_at')->first())->phone_number ?? '--';
         })
         // ->addColumn('organization_code', function ($organizations) {
         //     return 'org_'.$organizations->id ?? '--';
@@ -341,7 +350,7 @@ public function list(Request $request){
             if (!empty($getPlanDataById->name)) {
                  $adminSlot .= ' <p><strong>Subscription Plan:</strong> ' . $getPlanDataById->name . '</p>'; 
              } 
-                $adminSlot .= ' <p><strong>Created At:</strong> ' . now()->format('d M Y, h:i A') . '</p> <hr>';
+                $adminSlot .= ' <p><strong>Created At:</strong> ' . DateTime::dateFormat(now(), 'd M Y, h:i A') . '</p> <hr>';
 
         // ✅ User ko uska content
         try {

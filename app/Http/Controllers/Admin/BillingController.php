@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\DateTime;
 use App\Models\Order;
 use App\Models\Organization;
 use App\Models\OrganizationSubscriptions;
@@ -132,7 +133,7 @@ class BillingController extends Controller
             ->addColumn('email', fn (Order $order) => $order->organization?->users->sortBy('created_at')->first()?->email ?? '--')
             ->addColumn('item', fn (Order $order) => ucfirst($order->order_type).': '.($order->subscriptionPlan?->name ?? $order->topupPlan?->name ?? '--'))
             ->editColumn('amount', fn (Order $order) => '$'.number_format((float) $order->amount, 2))
-            ->editColumn('created_at', fn (Order $order) => $order->created_at->format('d M Y, h:i A'))
+            ->editColumn('created_at', fn (Order $order) => DateTime::dateFormat($order->created_at, 'd M Y, h:i A'))
             ->editColumn('status', fn (Order $order) => '<span class="badge bg-secondary">'.e(ucfirst($order->status)).'</span>')
             ->editColumn('payment_status', fn (Order $order) => '<span class="badge '.($order->payment_status === 'paid' ? 'bg-success' : 'bg-warning text-dark').'">'.e(ucfirst($order->payment_status)).'</span>')
             ->addColumn('actions', function (Order $order) {
@@ -159,8 +160,8 @@ class BillingController extends Controller
             ->addColumn('organization_name', fn (OrganizationSubscriptions $subscription) => $subscription->organization?->organization_name ?? '--')
             ->addColumn('email', fn (OrganizationSubscriptions $subscription) => $subscription->organization?->users->sortBy('created_at')->first()?->email ?? '--')
             ->addColumn('plan_name', fn (OrganizationSubscriptions $subscription) => $subscription->plan?->name ?? '--')
-            ->editColumn('starts_at', fn (OrganizationSubscriptions $subscription) => $subscription->starts_at->format('d M Y'))
-            ->editColumn('expires_at', fn (OrganizationSubscriptions $subscription) => $subscription->expires_at->format('d M Y'))
+            ->editColumn('starts_at', fn (OrganizationSubscriptions $subscription) => DateTime::dateFormat($subscription->starts_at, 'd M Y'))
+            ->editColumn('expires_at', fn (OrganizationSubscriptions $subscription) => DateTime::dateFormat($subscription->expires_at, 'd M Y'))
             ->addColumn('monthly_usage', fn (OrganizationSubscriptions $subscription) => $subscription->monthly_photo_used.'/'.$subscription->monthly_photo_limit)
             ->addColumn('topup_usage', fn (OrganizationSubscriptions $subscription) => $subscription->topup_photo_used.'/'.$subscription->topup_photo_limit)
             ->addColumn('subscription_status', function (OrganizationSubscriptions $subscription) {

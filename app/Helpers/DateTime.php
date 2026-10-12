@@ -2,17 +2,24 @@
 namespace App\Helpers;
 
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 
 class DateTime
 {
     
-    public static function dateFormat($date)
+    public static function dateFormat($date, $format = 'M d Y h:i:s A T')
     {
-        return $date
-            ? Carbon::parse($date)
-                ->setTimezone('Asia/Kolkata')
-                ->format('M d Y h:i:s A T')
-            : '-';
+        if (!$date) {
+            return '-';
+        }
+
+        // Database timestamps are stored as UTC without a timezone suffix.
+        // Reparse Carbon instances as UTC too, since their timezone follows app.php.
+        $value = $date instanceof \DateTimeInterface
+            ? $date->format('M d Y h:i:s A T')
+            : $date;
+
+        return Carbon::parse($value, 'UTC')
+            ->setTimezone('Asia/Kolkata')
+            ->format($format);
     }
 }

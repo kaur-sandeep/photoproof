@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
+use App\Helpers\DateTime;
 use App\Models\Order;
 use App\Models\Organization;
 use App\Models\Subscriptionplans;
@@ -53,7 +54,7 @@ class SubscriptionController extends Controller
             ->editColumn('amount', fn (Order $order) => '$'.number_format((float) $order->amount, 2))
             ->editColumn('status', fn (Order $order) => '<span class="badge bg-secondary">'.e(ucfirst($order->status)).'</span>')
             ->editColumn('payment_status', fn (Order $order) => '<span class="badge '.($order->payment_status === 'paid' ? 'bg-success' : 'bg-warning text-dark').'">'.e(ucfirst($order->payment_status)).'</span>')
-            ->editColumn('created_at', fn (Order $order) => $order->created_at->format('d M Y, h:i A'))
+            ->editColumn('created_at', fn (Order $order) => DateTime::dateFormat($order->created_at, 'd M Y, h:i A'))
             ->orderColumn('item', fn ($query, $direction) => $query->orderByRaw("COALESCE((SELECT name FROM subscription_plans WHERE subscription_plans.id = orders.subscription_plan_id), (SELECT name FROM topup_plans WHERE topup_plans.id = orders.topup_plan_id)) {$direction}"))
             ->rawColumns(['amount', 'status', 'payment_status'])
             ->toJson();
