@@ -237,7 +237,7 @@ class OrganizationsController extends Controller
             try {
                 Notification::route('mail', $user->email)
                     ->notify(new CommonMailNotification(
-                        'Welcome to Our Portal - Account Created Successfully',
+                        'Welcome to Photoproof - Account Created Successfully',
                         $slot
                     ));
             } catch (\Exception $e) {
@@ -800,7 +800,7 @@ public function storeV3(Request $request, OrderService $orders, PaymentService $
 
         Notification::route('mail', $user->email)
             ->notify(new CommonMailNotification(
-                'Welcome to Our Portal - Account Created Successfully',
+                'Welcome to Photoproof - Account Created Successfully',
                 $slot
             ));
 
@@ -993,7 +993,7 @@ public function create(Request $request, OrderService $orders, PaymentService $p
     try {
         Notification::route('mail', $user->email)
             ->notify(new CommonMailNotification(
-                'Welcome to Our Portal - Account Created Successfully',
+                'Welcome to Photoproof - Account Created Successfully',
                 $slot
             ));
     } catch (\Throwable $e) {

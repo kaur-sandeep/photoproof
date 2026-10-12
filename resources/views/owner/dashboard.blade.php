@@ -543,7 +543,7 @@
 
                             <i class="fas fa-images"></i>
 
-                            <div>
+                            <div style="text-align: center; padding: 10px;">
                                 No photos uploaded yet.
                             </div>
 

@@ -24,7 +24,7 @@
     <div class="col-md-4">
         <div class="photo-stat-card stat-limit">
             <div class="stat-icon">
-                <i class="fas fa-images"></i>
+                <i class="bi bi-images" aria-hidden="true"></i>
             </div>
 
             <div class="stat-content">
@@ -39,7 +39,7 @@
     <div class="col-md-4">
         <div class="photo-stat-card stat-used">
             <div class="stat-icon">
-                <i class="fas fa-cloud-upload-alt"></i>
+                <i class="bi bi-cloud-arrow-up-fill" aria-hidden="true"></i>
             </div>
 
             <div class="stat-content">
@@ -54,7 +54,7 @@
     <div class="col-md-4">
         <div class="photo-stat-card stat-remaining">
             <div class="stat-icon">
-                <i class="fas fa-chart-pie"></i>
+                <i class="bi bi-pie-chart-fill" aria-hidden="true"></i>
             </div>
 
             <div class="stat-content">

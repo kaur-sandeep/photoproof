@@ -356,7 +356,7 @@ public function list(Request $request){
         try {
             Notification::route('mail', $user->email)
                 ->notify(new CommonMailNotification(
-                    'Welcome to Our Portal - Account Created Successfully',
+                    'Welcome to Photoproof - Account Created Successfully',
                     $slot
                 ));
         } catch (\Exception $e) {
