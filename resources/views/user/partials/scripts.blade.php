@@ -47,3 +47,5 @@ document.querySelectorAll('.faq-question').forEach(function(q) {
 });
 </script>
 
+<script src="{{ asset('js/password-toggle.js') }}"></script>
+

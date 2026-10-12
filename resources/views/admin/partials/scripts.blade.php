@@ -95,6 +95,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
 <!-- <script src="{{ asset('admin/js/datatable.js') }}"></script> -->
 
+<script src="{{ asset('js/password-toggle.js') }}"></script>
+
 
 
 
