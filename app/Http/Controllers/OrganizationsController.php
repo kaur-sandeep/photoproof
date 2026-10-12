@@ -17,6 +17,7 @@ use App\Models\Subscriptionplans;
 use App\Services\OrderService;
 use App\Services\PaymentService;
 use Illuminate\Validation\Rule;
+use Illuminate\Support\Facades\Password;
 class OrganizationsController extends Controller
 {
     public function index(Request $request)
@@ -134,16 +135,12 @@ class OrganizationsController extends Controller
 
        $slot = '
             <p>Dear <strong>' . ($user->name ?? 'User') . '</strong>,</p>
-            <p>Welcome! Your account has been created successfully.</p>
-            <h3>Login Details</h3>';
-        $adminUrl = url('/admin/login');
+            <p>Thank you for creating your logistics account on the PhotoProof platform.</p>
+            <p>Your account is currently under review. One of our executives will review your account and activate it.</p>
+            <p>Once your account has been activated, you will be notified via email.</p>
+            <strong>Please find the below information submitted</strong>';
         if (!empty($user->email)) {
-            $slot .= '<p>
-                <strong>Login URL:</strong>
-                <a href="' . e($adminUrl) . '" target="_blank">
-                     Click here to login to portal
-                </a>
-            </p>
+            $slot .= '
             <p>
                 <strong>Username / Email:</strong> ' . e($user->email) . '
             </p>';
@@ -168,22 +165,6 @@ class OrganizationsController extends Controller
             $slot .= '
             <p><strong>Subscription Plan:</strong> ' . $plan->name . '</p>';
         }
-
-            $slot .= '
-                <hr>
-                <h3>Next Steps</h3>
-                <ul>
-                    <li>Log in using the credentials above.</li>
-                    <li>Invite your employees from the dashboard.</li>
-                </ul>
-                 <hr>
-
-                <h3>Download the Mobile App</h3>
-
-                <p>If you haven\'t already, download the Photo Proof mobile app:</p>
-                <p><a href="'.config('app.app_urls.android', '#').'">Download for Android</a> | <a href="'.config('app.app_urls.ios', '#').'">Download for iOS</a></p>
-
-                <hr>';
 
             $adminSlot = ' <p>Dear Admin,</p> 
             <p>A new company has been registered on the platform.</p>  <hr> <h3>Company Details</h3> '; 
@@ -268,5 +249,182 @@ class OrganizationsController extends Controller
             ? 'Your free plan is active.'
             : "Your company was created. Order {$order->order_number} is awaiting offline-payment approval.");
     }
+
+
+
+public function create(Request $request, OrderService $orders, PaymentService $payments)
+{
+    // Sirf email required, baaki sab optional
+    $request->validate([
+        'organization_email' => [
+            'required',
+            'email',
+            'unique:users,email',
+            'unique:admins,email',
+        ],
+    ]);
+
+    $plan  = null;
+    $order = null;
+
+    DB::beginTransaction();
+    try {
+        if ($request->filled('subscription_plan')) {
+            $plan = Subscriptionplans::active()->findOrFail($request->integer('subscription_plan'));
+        }
+
+        $organization = Organization::create([
+            'organization_name' => null,
+            'business_type'     => null,
+            'organization_code' => '',
+            'subscription_plan' => $plan?->id,
+            'message'           => null,
+            'created_by'        => null,
+        ]);
+
+        $organization->organization_code = 'ORG_' . $organization->id;
+        $organization->save();
+
+        $user = User::create([
+            'name'            => null, // NOT NULL ho to ''
+            'email'           => $request->organization_email,
+            'password'        => null, // NOT NULL ho to Hash::make(Str::random(32))
+            'phone_number'    => null,
+            'organization_id' => $organization->id,
+        ]);
+
+        $user->assignRole(['owner', 'employee']);
+
+        if ($plan) {
+            $order = $orders->createSubscriptionOrder(
+                $organization,
+                $plan->id,
+                'subscription',
+                $request->input('billing_cycle')
+            );
+
+            if ((float) $order->amount === 0.0) {
+                $payments->approveOffline($order, ['notes' => 'Automatically approved free organization plan.']);
+            }
+        }
+
+        Notifications::create([
+            'photo_random_id' => $organization->organization_code,
+            'name'            => $organization->organization_name,
+            'email'           => $user->email,
+            'type'            => 'Corporate Account',
+            'organization_id' => $organization->id,
+            'data'            => json_encode([
+                'message'       => 'A corporate account was created from the website.',
+                'plan'          => $plan?->name,
+                'billing_cycle' => $request->input('billing_cycle'),
+                'order_number'  => $order?->order_number,
+            ]),
+        ]);
+
+        DB::commit();
+    } catch (\Throwable $e) {
+        DB::rollBack();
+        return redirect()->back()
+            ->withInput()
+            ->with('error', 'Something went wrong: ' . $e->getMessage());
+    }
+
+    // Password reset link
+    $resetUrl = null;
+    try {
+        $token    = Password::broker()->createToken($user);
+        $resetUrl = route('password.generate', [
+            'token' => $token,
+            'email' => $user->email,
+        ]);
+    } catch (\Throwable $e) {
+        report($e);
+    }
+
+    // Helper: value empty ho to row skip, warna escaped output
+    $row = fn ($label, $value) => filled($value)
+        ? '<p><strong>' . $label . ':</strong> ' . e($value) . '</p>'
+        : '';
+
+    $slot = '
+        <p>Dear <strong>' . e($user->name ?: 'User') . '</strong>,</p>
+        <p>Thank you for creating your logistics account on the PhotoProof platform.</p>
+        <p>Your account is currently under review. One of our executives will review your account and activate it.</p>
+        <p>Once your account has been activated, you will be notified via email.</p>
+        <strong>Please find the below information submitted</strong>'
+        . $row('Username / Email', $user->email)
+        . $row('Subscription Plan', $plan?->name);
+
+    if ($resetUrl) {
+        $slot .= '
+        <p>Please set your password using the button below, then you can log in with your email and new password.</p>
+        <p>
+            <a href="' . e($resetUrl) . '"
+               style="display:inline-block;padding:10px 20px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:6px;">
+                Generate Your Password
+            </a>
+        </p>
+        <p style="font-size:12px;color:#666;">
+            If the button does not work, copy and paste this link into your browser:<br>
+            ' . e($resetUrl) . '
+        </p>';
+    }
+
+    $adminSlot = '
+        <p>Dear Admin,</p>
+        <p>A new company has been registered on the platform.</p>
+        <hr><h3>Company Details</h3>'
+        . $row('Contact Person Email', $user->email)
+        . $row('Subscription Plan', $plan?->name)
+        . '<hr><h3>Cookie Information</h3>'
+        . $row('Initial Landing Page', $request->input('initial_landing_page'))
+        . $row('Submitted From', $request->input('submitted_from'))
+        . $row('Date and Time', now()->format('d M Y, h:i A'))
+        . $row('IP Address', $request->ip())
+        . $row('Browser', $request->userAgent())
+        . $row('Created At', now()->format('d M Y, h:i A'))
+        . '<hr>';
+
+    // User ko mail
+    try {
+        Notification::route('mail', $user->email)
+            ->notify(new CommonMailNotification(
+                'Welcome to Our Portal - Account Created Successfully',
+                $slot
+            ));
+    } catch (\Throwable $e) {
+        report($e);
+    }
+
+    // Admin ko mail (reset link yahan nahi bheja)
+    try {
+        $settings    = Setting::first();
+        $adminEmails = $settings->admin_email ?? env('ADMIN_EMAIL');
+        $emails      = array_map('trim', explode(',', $adminEmails));
+
+        Notification::route('mail', $emails)
+            ->notify(new CommonMailNotification(
+                'New Organization Registered - ' . $user->email,
+                $adminSlot
+            ));
+    } catch (\Throwable $e) {
+        report($e);
+    }
+
+    ActivityLogger::log(
+        'Create',
+        'Organizations',
+        'Created new Corporate Account: ' . $user->email
+    );
+
+    $message = match (true) {
+        $order === null                => 'Your account request has been submitted and is under review.',
+        (float) $order->amount === 0.0 => 'Your free plan is active.',
+        default                        => "Your company was created. Order {$order->order_number} is awaiting offline-payment approval.",
+    };
+
+    return redirect()->route('organization.thank-you')->with('success', $message);
+}
 
 }

@@ -723,7 +723,7 @@ $(document).ready(function() {
                             <li class="list-group-item ownernotificationRow d-flex justify-content-between align-items-start bg-light"
                                 data-id="${item.id}" data-is-read="${item.is_read}" style="cursor: pointer;">
                                 <div class="notification-text">
-                                    <b>${item.name}</b><br>
+                                    <b>${item.name || '--'}</b><br>
                                     <small>${toTitleCase(item.type)}</small><br>
                                     <small class="text-muted">${item.created_at_formatted}</small>
                                 </div>
