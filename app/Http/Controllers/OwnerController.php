@@ -1278,15 +1278,20 @@ public function markAsRead($id)
 
 
 public function unreadCount(Request $request,$id){
-   
- $notification = Notifications::findOrFail($id);
-  
+
+    $org_id = (int) User::findOrFail(Auth::id())->organization_id;
+    $notification = Notifications::where('organization_id', $org_id)
+        ->where('state', '!=', -1)
+        ->findOrFail($id);
+
     $notification->is_read = 1;
     $notification->save();
-    $newCount = Notifications::where('is_read', false)
-                            ->orderBy('created_at', 'desc')
-                            // ->take(5)
-                            ->count();  // Count unread notifications
+
+    $newCount = Notifications::where('organization_id', $org_id)
+        ->where('state', '!=', -1)
+        ->where('is_read', 0)
+        ->count();
+
     return response()->json(['newCount' => $newCount]);
 }
 

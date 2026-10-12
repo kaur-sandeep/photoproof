@@ -63,7 +63,7 @@
             </ul>
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a href="{{ route('owner.notifications', ['notification_type' => 'upload photo']) }}"
+                <a href="{{ route('owner.notifications') }}"
                 class="nav-link text-white {{ request()->routeIs('owner.notifications*') ? 'active' : '' }}">
                     <i class="bi bi-bell me-2"></i>
                     Notifications

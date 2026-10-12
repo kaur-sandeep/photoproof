@@ -704,6 +704,7 @@ $(document).ready(function() {
         $.ajax({
             url: window.APP_URL + '/owner/notifications/unread', // ✅ owner route pe fix kar (apna actual route daal)
             type: 'GET',
+            cache: false,
             success: function(data) {
                 // ✅ Update badge count
                 let count = data.length;

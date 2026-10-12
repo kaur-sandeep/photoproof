@@ -46,7 +46,9 @@ class PhotoNotificationController extends Controller
     public function markAsRead($id)
 {
     // $notification = PhotoReport::findOrFail($id);
-    $notification = Notifications::findOrFail($id);
+    $notification = Notifications::whereNull('organization_id')
+        ->where('state', '!=', -1)
+        ->findOrFail($id);
     $notification->is_read = 1;
     $notification->save();
 
@@ -234,15 +236,19 @@ return DataTables::of($notifications)
 }
 
 public function unreadCount(Request $request,$id){
-   
- $notification = Notifications::findOrFail($id);
-  
+
+    $notification = Notifications::whereNull('organization_id')
+        ->where('state', '!=', -1)
+        ->findOrFail($id);
+
     $notification->is_read = 1;
     $notification->save();
-    $newCount = Notifications::where('is_read', false)
-                            ->orderBy('created_at', 'desc')
-                            // ->take(5)
-                            ->count();  // Count unread notifications
+
+    $newCount = Notifications::whereNull('organization_id')
+        ->where('state', '!=', -1)
+        ->where('is_read', 0)
+        ->count();
+
     return response()->json(['newCount' => $newCount]);
 }
 }
