@@ -700,7 +700,7 @@
             <div class="col-lg-12 mb-3">
                 <textarea class="form-control" name="message" rows="6" placeholder="Write your message...*" required>{{ old('message') }}</textarea>
             </div> 
-
+                       
             <div class="col-lg-12 mb-3">
                 <div class="g-recaptcha" data-sitekey="{{config('services.recaptcha.site_key') }}"></div>
             </div>

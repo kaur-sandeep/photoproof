@@ -717,7 +717,7 @@ public function updateOrganization(Request $request, $id)
                     ' . e($user->email) . '
                 </p>
 
-                <p>
+                <p> 
                     <strong>Organization Name:</strong>
                     ' . e($organization->organization_name) . '
                 </p>
