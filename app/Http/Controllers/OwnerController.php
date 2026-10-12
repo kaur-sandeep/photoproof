@@ -37,7 +37,6 @@ public function index()
 
     $users = User::where('state', '!=', -1)
         ->where('organization_id', $org_id)
-        ->where('id', '!=', $id)
         ->orderBy('created_at', 'desc')
         ->get();
 
@@ -95,7 +94,6 @@ public function index()
 
     $latestUsers = User::where('state', '!=', -1)
         ->where('organization_id', $org_id)
-        ->where('id', '!=', $id)
         ->orderBy('created_at', 'desc')
         ->take(10)
         ->get();
