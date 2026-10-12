@@ -730,13 +730,28 @@ public function updateOrganization(Request $request, $id)
                 if (!empty($planName)) { 
                     $slot .= ' <p> <strong>Subscription Plan:</strong> ' . e($planName) . ' </p>'; 
                 } 
+                if($user->password !=null){
                 $slot .= '
-                <hr>
-                <h3>Next Steps</h3>
-                <ul>
-                    <li>Log in using you registered email address and password.</li>
-                    <li>Invite your employees from the dashboard.</li>
-                </ul>
+                    <hr>
+                    <h3>Next Steps</h3>
+                    <ul>
+                        <li>Log in using you registered email address and password.</li>
+                        <li>Invite your employees from the dashboard.</li>
+                        
+                    </ul>';
+                }else{
+                    $slot .= '
+                    <hr>
+                    <h3>Next Steps</h3>
+                    <ul>
+                        <li>Log in using you registered email address and password.</li>
+                        <li>Invite your employees from the dashboard.</li>
+                        <li>Please Complete Your profile from profile section.</li>
+                        
+                    </ul>';
+                }
+               
+                $slot.= '
                  <hr>
 
                 <h3>Download the Mobile App</h3>

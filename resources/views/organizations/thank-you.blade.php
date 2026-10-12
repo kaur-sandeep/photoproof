@@ -30,7 +30,7 @@
 <section class="organization-thank-you">
     <div class="organization-thank-you-card">
         <div class="organization-thank-you-icon"><i class="bi bi-check2"></i></div>
-       <h1>Thank You! Your Registration Has Been Submitted</h1>
+       <h1>Thank You! Your Registration Has Been Submitted.</h1>
         <p>
             Your registration request has been submitted successfully and is currently under review.
             Our administrator will review your request and contact you shortly once your account has been approved.

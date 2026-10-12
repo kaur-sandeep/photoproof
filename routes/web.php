@@ -29,6 +29,28 @@ Route::get('/', function () {
 Route::get('/pricing', function () {
     return view('user.pricing', ['plans' => Subscriptionplans::active()->orderBy('monthly_price')->get()]);
 })->name('pricing');
+// Route::get('/logistic', function () {
+//     return view('landingpage');})->name('landing_page');
+
+Route::get('/logistic', function (\Illuminate\Http\Request $request) {
+    $plans = \App\Models\Subscriptionplans::active()->orderBy('monthly_price')->get();
+
+    $freePlan = $plans->firstWhere('monthly_price', 0) ?? $plans->first();
+
+    $planParam = $request->query('plan'); // sirf URL query se
+
+    $selectedPlan = $planParam
+        ? ($plans->firstWhere('id', (int) $planParam)
+            ?? $plans->firstWhere('slug', $planParam)
+            ?? $freePlan)
+        : $freePlan;
+
+    $billingCycle = $request->input('billing_cycle', 'monthly');
+    abort_unless(in_array($billingCycle, \App\Models\Subscriptionplans::BILLING_CYCLES, true), 404);
+
+    return view('landingpage', compact('plans', 'selectedPlan', 'billingCycle'));
+})->name('landing_page');
+
  Route::get('/owner/employee/activate/{id}', [OwnerController::class, 'activateEmployee'])
     ->middleware('signed')
     ->name('owner.employee.activate');
@@ -153,6 +175,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/reset/password', [LoginController::class, 'resetPassword'])->name('admin.reset.password');
     Route::get('/link/expired', [LoginController::class, 'expireLink'])->name('admin.password.expired');
     Route::get('/reset-password', [LoginController::class, 'showUserResetForm'])->name('password.reset');
+     Route::get('/generate-password', [LoginController::class, 'showUserResetForm'])->name('password.generate');
     Route::post('/reset-password', [LoginController::class, 'resetPasswordUser'])->name('password.update');
     Route::get('/photo-search', [PhotoController::class, 'searchForm'])->name('photo.search.form');
     Route::get('/', [PhotoController::class, 'searchForm']);
@@ -172,6 +195,7 @@ Route::prefix('admin')->group(function () {
         ->name('plans');
     Route::get('/organization', [OrganizationsController::class, 'index'])->name('organization');
     Route::post('/organization/store', [OrganizationsController::class, 'store'])->name('organization.store');
+    Route::post('/organization/create', [OrganizationsController::class, 'create'])->name('organization.create');
     Route::get('/organization/thank-you', [OrganizationsController::class, 'thankYou'])->name('organization.thank-you');
     Route::get('/admin/organizations/{id}', [OrganizationController::class, 'show'])
     ->name('admin.organizations.show');
