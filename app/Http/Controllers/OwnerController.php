@@ -766,7 +766,7 @@ if ($remainingForChart > 0) {
 
         return response()->json([
             'success' => true,
-            'message' => 'Organization status updated successfully'
+            'message' => 'Organization status updated successfully.'
         ]);
     }
 

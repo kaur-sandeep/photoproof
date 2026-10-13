@@ -16,7 +16,7 @@ class DataTableController extends Controller
     public function getData(Request $request, $user_id)
     {
         // Fetch photos for the specific user
-        $query = Photo::where('user_id', $user_id);  // Assuming the 'user_id' is stored in the photos table
+        $query = Photo::where('user_id', $user_id)->orderByDesc('id');
 
         // Filter columns if necessary
         if ($request->has('columns')) {

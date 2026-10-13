@@ -356,7 +356,7 @@ public function list(Request $request){
         try {
             Notification::route('mail', $user->email)
                 ->notify(new CommonMailNotification(
-                    'Welcome to Photoproof - Account Created Successfully',
+                    'PhotoProof - Account Created',
                     $slot
                 ));
         } catch (\Exception $e) {
@@ -923,7 +923,7 @@ public function updateOrganization(Request $request, $id)
 
                 <hr>';
                 try { 
-                    Notification::route('mail', $user->email) ->notify( new CommonMailNotification( 'Your Account Has Been Activated', $slot ) );
+                    Notification::route('mail', $user->email) ->notify( new CommonMailNotification( 'PhotoProof - Account Activated', $slot ) );
                 
                 } catch (\Exception $e) { 
                 // Email failure should not stop status update 
@@ -937,12 +937,12 @@ public function updateOrganization(Request $request, $id)
     if($request->status == -1){
           return response()->json([
             'success' => true,
-            'message' => 'Organization is deleted successfully'
+            'message' => 'Organization is deleted successfully.'
         ]);
     }else{
          return response()->json([
             'success' => true,
-            'message' => 'Organization status updated successfully'
+            'message' => 'Organization status updated successfully.'
         ]);
     }
 

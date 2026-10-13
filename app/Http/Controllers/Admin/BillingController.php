@@ -25,7 +25,7 @@ class BillingController extends Controller
 
     public function plansData()
     {
-        return DataTables::of(Subscriptionplans::query()->withCount([
+        return DataTables::of(Subscriptionplans::query()->orderByDesc('id')->withCount([
             'orders as purchasers_count' => fn ($query) => $query->where('payment_status', 'paid'),
         ]))
             ->editColumn('monthly_price', fn (Subscriptionplans $plan) => '$'.number_format((float) $plan->monthly_price, 2))
@@ -84,7 +84,7 @@ class BillingController extends Controller
     public function topups() { return view('admin.billing.topups'); }
     public function topupsData()
     {
-        return DataTables::eloquent(TopupPlan::query()->withCount([
+        return DataTables::eloquent(TopupPlan::query()->orderByDesc('id')->withCount([
             'orders as purchasers_count' => fn ($query) => $query->where('payment_status', 'paid'),
         ]))
             ->editColumn('price', fn (TopupPlan $topup) => '$'.number_format((float) $topup->price, 2))
@@ -125,6 +125,7 @@ class BillingController extends Controller
     public function ordersData(Request $request)
     {
         $orders = Order::query()->with(['organization.users:id,organization_id,email', 'subscriptionPlan:id,name', 'topupPlan:id,name'])
+            ->orderByDesc('id')
             ->when($request->filled('plan'), fn ($query) => $query->where('subscription_plan_id', $request->integer('plan')))
             ->when($request->filled('topup'), fn ($query) => $query->where('topup_plan_id', $request->integer('topup')));
 
@@ -156,7 +157,7 @@ class BillingController extends Controller
 
     public function subscriptionsData()
     {
-        return DataTables::eloquent(OrganizationSubscriptions::query()->with(['organization.users:id,organization_id,email', 'plan:id,name']))
+        return DataTables::eloquent(OrganizationSubscriptions::query()->with(['organization.users:id,organization_id,email', 'plan:id,name'])->orderByDesc('id'))
             ->addColumn('organization_name', fn (OrganizationSubscriptions $subscription) => $subscription->organization?->organization_name ?? '--')
             ->addColumn('email', fn (OrganizationSubscriptions $subscription) => $subscription->organization?->users->sortBy('created_at')->first()?->email ?? '--')
             ->addColumn('plan_name', fn (OrganizationSubscriptions $subscription) => $subscription->plan?->name ?? '--')
