@@ -129,7 +129,7 @@ class OrganizationsController extends Controller
                 'photo_random_id' => $organization->organization_code,
                 'name' => $organization->organization_name,
                 'email' => $user->email,
-                'type' => 'Corporate Account',
+                'type' => 'Corporate Account Created',
                 'organization_id' => $organization->id,
                 'data' => json_encode([
                     'message' => 'A corporate account was created from the website.',
@@ -479,7 +479,7 @@ public function storeV3(Request $request, OrderService $orders, PaymentService $
             'photo_random_id' => $organization->organization_code,
             'name'            => $organization->organization_name,
             'email'           => $user->email,
-            'type'            => 'Corporate Account',
+            'type'            => 'Corporate Account Created',
             'organization_id' => $organization->id,
 
             'data' => json_encode([
@@ -932,7 +932,7 @@ public function create(Request $request, OrderService $orders, PaymentService $p
             'photo_random_id' => $organization->organization_code,
             'name'            => $organization->organization_name,
             'email'           => $user->email,
-            'type'            => 'Corporate Account',
+            'type'            => 'Corporate Account Created',
             'organization_id' => $organization->id,
             'data'            => json_encode([
                 'message'       => 'A corporate account was created from the website.',

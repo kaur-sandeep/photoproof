@@ -1198,7 +1198,7 @@ if ($remainingForChart > 0) {
             $photo = PhotoDetail::where('random_id', $notifications->photo_random_id)->first();
             $photoUrl = $photo ? asset('storage/' . ($photo->thumbnail ?: $photo->photo)) : '';
             $avatarUrl = $notificationUser && $notificationUser->profile_image ? asset('storage/' . $notificationUser->profile_image) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
-            $name = $notifications->name ?: 'Someone';
+            $name = $notifications->name ?: '';
             $message = $data['message'] ?? 'New activity was recorded.';
             $type = ucwords($notifications->type ?: 'Notification');
             $date = DateTime::dateFormat($notifications->created_at);

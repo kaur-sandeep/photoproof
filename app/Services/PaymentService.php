@@ -72,7 +72,7 @@ class PaymentService
             if ($organization) {
                 Notifications::create([
                     'photo_random_id' => $order->order_number,
-                    'name' => 'Payment Approved',
+                    'name' => $organization?->organization_name ?? 'Organization',
                     'email' => $owner?->email ?? '',
                     'type' => 'Payment Approved',
                     'organization_id' => $organization->id,
