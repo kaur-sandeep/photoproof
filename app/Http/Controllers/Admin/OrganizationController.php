@@ -844,8 +844,22 @@ public function updateOrganization(Request $request, $id)
                 <p>
                     Welcome! Your Photoproof account has been activated successfully.
                     You can now log in to your account and add employees.
-                </p>
-                <p>
+                </p>';
+                       if ($resetUrl && $user->password == null) {
+                        $slot .= '
+                        <p>Please set your password using the button below, then you can log in with your email and password.</p>
+                        <p>
+                            <a href="' . e($resetUrl) . '"
+                            style="display:inline-block;padding:10px 20px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:6px;">
+                                Generate Your Password
+                            </a>
+                        </p>
+                        <p style="font-size:12px;color:#666;">
+                            If the button does not work, copy and paste this link into your browser:<br>
+                            ' . e($resetUrl) . '
+                        </p>';
+                    }
+                $slot .= '<p>
                     <strong>Username / Email:</strong>
                     ' . e($user->email) . '
                 </p>';
@@ -862,20 +876,7 @@ public function updateOrganization(Request $request, $id)
                 if (!empty($planName)) { 
                     $slot .= ' <p> <strong>Subscription Plan:</strong> ' . e($planName) . ' </p>'; 
                 } 
-                  if ($resetUrl && $user->password == null) {
-                        $slot .= '
-                        <p>Please set your password using the button below, then you can log in with your email and password.</p>
-                        <p>
-                            <a href="' . e($resetUrl) . '"
-                            style="display:inline-block;padding:10px 20px;background:#2563eb;color:#ffffff;text-decoration:none;border-radius:6px;">
-                                Generate Your Password
-                            </a>
-                        </p>
-                        <p style="font-size:12px;color:#666;">
-                            If the button does not work, copy and paste this link into your browser:<br>
-                            ' . e($resetUrl) . '
-                        </p>';
-                    }
+           
 
                 
                 if($user->password !=null){
