@@ -58,7 +58,7 @@
                     <small id="confirmPasswordError" class="text-danger"></small>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+                <button type="submit" class="btn btn-primary w-100">Generate Password</button>
             </form>
             @endif
         </div>

@@ -200,18 +200,46 @@ class LoginController extends Controller
     public function sendPasswordRestLink(Request $request)
     {
         $request->validate([
-            'email' => 'required|email|exists:admins,email',
+            'email' => 'required|email',
         ]);
 
         try {
             $email = $request->email;
+            $owner = \App\Models\User::where('email', $email)->first();
+
+            // Owner accounts are stored in the users table; admin accounts use
+            // the separate admins table and the legacy reset form below.
+            if ($owner && $owner->hasRole('owner')) {
+                $token = Str::random(60);
+                DB::table('password_reset_tokens')->where('email', $email)->delete();
+                DB::table('password_reset_tokens')->insert([
+                    'email' => $email,
+                    'token' => Hash::make($token),
+                    'created_at' => now(),
+                ]);
+
+                $resetUrl = url('/reset-password?token='.$token.'&email='.urlencode($email));
+                $slot = '<p>Hello '.$email.',</p>'
+                    .'<p>Please click the button below to reset your password:</p>'
+                    .'<p><a href="'.$resetUrl.'" class="button">Reset Password</a></p>'
+                    .'<p>If the button does not work, copy this link:</p><p>'.$resetUrl.'</p>';
+                $owner->notify(new CommonMailNotification('Reset Your Password', $slot));
+
+                return redirect()->route('admin.login')
+                    ->with('success', 'Password reset link sent successfully to your email.');
+            }
+
+            $admin = Admin::where('email', $email)->first();
+            if (!$admin) {
+                return back()->withInput()->with('error', 'The email address does not exist.');
+            }
+
             $token = $this->generateResetToken($email);
             $resetUrl = url("/password/reset/{$token}?email={$email}");
             // Mail::send('admin.emails.passwordreset', ['url' => $resetUrl], function ($message) use ($email) {
             //     $message->to($email)
             //             ->subject('Password Reset Link');
             // });
-            $admin = Admin::where('email', $request->email)->first();
             $slot = '
             <p>Hello '.$email.',</p>
             <p>Please click the button below to Reset your Password:</p>
@@ -398,6 +426,9 @@ class LoginController extends Controller
         }
 
         $user = \App\Models\User::where('email', $request->email)->first();
+        if (!$user || !$user->hasRole('owner')) {
+            return redirect('/link/expired');
+        }
         $user->password = \Hash::make($request->password);
         $user->save();
 
