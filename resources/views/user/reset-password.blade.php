@@ -22,7 +22,9 @@
                     </div>
         <div class="card-body">
 
-            <h4 class="text-center mb-4">Generate Password</h4>
+            <h4 class="text-center mb-4">
+                {{ $hasPassword ? 'Reset Password' : 'Generate Password' }}
+            </h4>
 
             @if(session('success'))
                 <div style="color: green;">
@@ -45,20 +47,38 @@
 
                 <input type="hidden" name="token" value="{{ $token }}">
                 <input type="hidden" name="email" value="{{ $email }}">
-
+                  @if (!$hasPassword)
                 <div class="mb-3">
-                    <label style="color:#000;">New Password</label>
+                    <label style="color:#000;">Company Name</label>
+                    <input type="organization_name" name="organization_name" id="organization_name" class="form-control">
+                </div>
+                  <div class="mb-3">
+                    <label style="color:#000;">Business Type</label>
+                    <input type="business_type" name="business_type" id="business_type" class="form-control">
+                </div>
+                  <div class="mb-3">
+                    <label style="color:#000;">Contact Person Name</label>
+                    <input type="owner_name" name="owner_name" id="owner_name" class="form-control">
+                </div>
+
+                 <div class="mb-3">
+                    <label style="color:#000;">Phone Number</label>
+                    <input type="mobile_number" name="mobile_number" id="mobile_number" class="form-control">
+                </div>
+                @endif
+                <div class="mb-3">
+                    <label style="color:#000;">New Password <span style="color: red;">*</span></label>
                     <input type="password" name="password" id="password" class="form-control">
                     <small id="passwordError" class="text-danger"></small>
                 </div>
 
                 <div class="mb-3">
-                    <label style="color:#000;">Confirm Password</label>
+                    <label style="color:#000;">Confirm Password <span style="color: red;">*</span></label>
                     <input type="password" name="password_confirmation" id="confirmPassword" class="form-control">
                     <small id="confirmPasswordError" class="text-danger"></small>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100">Generate Password</button>
+                 <button type="submit" class="btn btn-primary w-100">Generate Password</button>
             </form>
             @endif
         </div>

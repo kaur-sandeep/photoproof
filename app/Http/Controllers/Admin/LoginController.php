@@ -407,7 +407,9 @@ class LoginController extends Controller
             abort(404);
         }
 
-        return view('user.reset-password', compact('token', 'email'));
+        $hasPassword = \App\Models\User::where('email', $email)->value('password') !== null;
+
+        return view('user.reset-password', compact('token', 'email', 'hasPassword'));
     }
     public function resetPasswordUser(Request $request)
     {
