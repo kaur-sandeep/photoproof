@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const response = await fetch(notificationsUrl, {
                 headers: { 'Accept': 'application/json' },
                 credentials: 'same-origin',
-                cache: 'no-store'
+                 cache: 'no-store'
             });
             if (!response.ok) throw new Error('Unable to load notifications.');
 

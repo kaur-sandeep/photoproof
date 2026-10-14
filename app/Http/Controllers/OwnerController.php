@@ -252,45 +252,175 @@ if ($remainingForChart > 0) {
         return view('owner.profile', compact('user','organization', 'subscription', 'scheduledRenewals'));
     }
 
-     public function profileUpdate(Request $request)
-    {
+    //  public function profileUpdate(Request $request)
+    // {
         
+    //     $owner = Auth::guard('web')->user();
+
+    //     // Validation
+    //     $request->validate([
+    //         // 'name'   => 'required|string|max:255',
+    //         // 'number' => 'required|string|min:10|max:15',
+    //         'image' => 'image|mimes:jpg,jpeg,png|max:2048',
+    //     ]);
+
+    //     // Update fields
+    //     $owner->name = $request->name;
+    //     $owner->phone_number = $request->number;
+
+    //     // If email is readonly, no need to update
+    //     if ($request->filled('email')) {
+    //         $owner->email = $request->email;
+    //     }
+    //     // Handle image upload
+    //     if ($request->hasFile('image')) {
+
+    //     // Delete old image
+    //       if ($owner->profile_image && \Storage::disk('public')->exists($owner->profile_image)) {
+    //             \Storage::disk('public')->delete($owner->profile_image);
+    //         }
+
+    //         $path = $request->file('image')->store('profiles', 'public');
+            
+    //         // Save only filename
+    //         $owner->profile_image = $path;
+    //     }
+
+        
+    //     $owner->save();
+
+    //     return redirect()->back()->with('success', 'Profile updated successfully!');
+        
+    // }
+
+    //      public function profileUpdate(Request $request)
+    // {
+        
+    //     $owner = Auth::guard('web')->user();
+
+    //     // Validation
+    //     $request->validate([
+    //         // 'name'   => 'required|string|max:255',
+    //         // 'number' => 'required|string|min:10|max:15',
+    //         'image' => 'image|mimes:jpg,jpeg,png|max:2048',
+    //         'phone_number'        => 'nullable|numeric|digits_between:10,14',
+    //     ]);
+
+    //     // Update fields
+    //     $owner->name = $request->owner_name;
+    //     $owner->phone_number = $request->phone_number;
+
+    //     // If email is readonly, no need to update
+    //     if ($request->filled('email')) {
+    //         $owner->email = $request->email;
+    //     }
+    //     // Handle image upload
+    //     if ($request->hasFile('image')) {
+
+    //     // Delete old image
+    //       if ($owner->profile_image && \Storage::disk('public')->exists($owner->profile_image)) {
+    //             \Storage::disk('public')->delete($owner->profile_image);
+    //         }
+
+    //         $path = $request->file('image')->store('profiles', 'public');
+            
+    //         // Save only filename
+    //         $owner->profile_image = $path;
+    //     }
+
+        
+    //     $owner->save();
+
+    //      $organizationId = $owner->organization_id;
+
+    //         $updateOrgData = [
+    //             'organization_name' => $request->organization_name,
+    //             'business_type'     => $request->business_type,
+    //         ];
+
+    //         // Update organizations table using the Organization model
+    //         Organization::where('id', $organizationId)
+    //             ->update($updateOrgData);
+
+    //     return redirect()->back()->with('success', 'Profile updated successfully!');
+        
+    // }
+
+    public function profileUpdate(Request $request)
+    {
         $owner = Auth::guard('web')->user();
 
         // Validation
         $request->validate([
-            // 'name'   => 'required|string|max:255',
-            // 'number' => 'required|string|min:10|max:15',
-            'image' => 'image|mimes:jpg,jpeg,png|max:2048',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'org_logo' => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'phone_number' => 'nullable|numeric|digits_between:10,14',
         ]);
 
-        // Update fields
-        $owner->name = $request->name;
-        $owner->phone_number = $request->number;
+        // Update owner fields
+        $owner->name = $request->owner_name;
+        $owner->phone_number = $request->phone_number;
 
-        // If email is readonly, no need to update
         if ($request->filled('email')) {
             $owner->email = $request->email;
         }
-        // Handle image upload
+
+        // Upload profile image separately
         if ($request->hasFile('image')) {
 
-        // Delete old image
-          if ($owner->profile_image && \Storage::disk('public')->exists($owner->profile_image)) {
+            // Delete old profile image
+            if (
+                $owner->profile_image &&
+                \Storage::disk('public')->exists($owner->profile_image)
+            ) {
                 \Storage::disk('public')->delete($owner->profile_image);
             }
 
-            $path = $request->file('image')->store('profiles', 'public');
-            
-            // Save only filename
-            $owner->profile_image = $path;
+            $profileImagePath = $request->file('image')
+                ->store('profiles', 'public');
+
+            $owner->profile_image = $profileImagePath;
         }
 
-        
         $owner->save();
 
-        return redirect()->back()->with('success', 'Profile updated successfully!');
-        
+        // Update organization separately
+        $organizationId = $owner->organization_id;
+
+        $updateOrgData = [
+            'organization_name' => $request->organization_name,
+            'business_type' => $request->business_type,
+        ];
+
+        // Only update logo when a new logo is uploaded
+        if ($request->hasFile('org_logo')) {
+
+            $organization = Organization::find($organizationId);
+
+            // Delete old organization logo
+            if (
+                $organization &&
+                $organization->organization_logo &&
+                \Storage::disk('public')->exists(
+                    $organization->organization_logo
+                )
+            ) {
+                \Storage::disk('public')->delete(
+                    $organization->organization_logo
+                );
+            }
+
+            $organizationLogoPath = $request->file('org_logo')
+                ->store('organization_logos', 'public');
+
+            $updateOrgData['organization_logo'] = $organizationLogoPath;
+        }
+
+        Organization::where('id', $organizationId)
+            ->update($updateOrgData);
+
+        return redirect()->back()
+            ->with('success', 'Profile updated successfully!');
     }
 
     public function changePassword(){
@@ -535,10 +665,16 @@ if ($remainingForChart > 0) {
             ->delete();
 
         // Save new OTP
+        // EmployeeOtp::create([
+        //     'user_id'    => $employee->id,
+        //     'otp'        => $otp,
+        //     'expires_at' => now()->addYears(5),
+        // ]);
+
         EmployeeOtp::create([
             'user_id'    => $employee->id,
             'otp'        => $otp,
-            'expires_at' => now()->addYears(5),
+            'expires_at' => now()->addMinutes(20),
         ]);
 
         ActivityLogger::log(
@@ -766,7 +902,7 @@ if ($remainingForChart > 0) {
 
         return response()->json([
             'success' => true,
-            'message' => 'Organization status updated successfully.'
+            'message' => 'Organization status updated successfully'
         ]);
     }
 
@@ -1151,6 +1287,8 @@ if ($remainingForChart > 0) {
             $browser = $data['browser'] ?? '';
             $platform = $data['platform'] ?? '';
             $deviceType = $data['deviceType'] ?? '';
+            $planName = $data['item'] ?? '';
+            $amount = $data['amount'] ?? '';
 
             if (!empty($data['country']) && !empty($data['region']) && !empty($data['city']) && !empty($data['zip'])) {
                 $location = implode(',', [$data['country'], $data['region'], $data['city'], $data['zip']]);
@@ -1186,6 +1324,8 @@ if ($remainingForChart > 0) {
                     data-platform="'.$platform.'"
                     data-devicetype="'.$deviceType.'"
                     data-location="'.$location.'"
+                    data-planname="'.$planName.'"
+                    data-amount="'.$amount.'"
                     data-bs-toggle="modal"
                     data-bs-target="#ownerNotificationModal">
                     View
@@ -1199,6 +1339,8 @@ if ($remainingForChart > 0) {
             $photoUrl = $photo ? asset('storage/' . ($photo->thumbnail ?: $photo->photo)) : '';
             $avatarUrl = $notificationUser && $notificationUser->profile_image ? asset('storage/' . $notificationUser->profile_image) : 'https://cdn-icons-png.flaticon.com/512/149/149071.png';
             $name = $notifications->name ?: '';
+            $owner_name = $notifications->owner_name ?: 'Owner';
+            $phone_number = $notifications->phone_number ?: '';
             $message = $data['message'] ?? 'New activity was recorded.';
             $type = ucwords($notifications->type ?: 'Notification');
             $date = DateTime::dateFormat($notifications->created_at);
@@ -1206,6 +1348,11 @@ if ($remainingForChart > 0) {
             $browser = $data['browser'] ?? '';
             $platform = $data['platform'] ?? '';
             $deviceType = $data['deviceType'] ?? '';
+            $planName = !empty($data['item'])
+                ? $data['item']
+                : ($data['plan'] ?? '--');
+
+            $amount = $data['amount'] ?? '--';
             $location = !empty($data['country']) && !empty($data['region']) && !empty($data['city']) && !empty($data['zip'])
                 ? implode(', ', [$data['country'], $data['region'], $data['city'], $data['zip']])
                 : '';
@@ -1217,7 +1364,7 @@ if ($remainingForChart > 0) {
             return '<article class="owner-notification-item'.$unreadClass.'">
                 <img src="'.e($avatarUrl).'" alt="'.e($name).'" class="notification-avatar">
                 <div class="notification-copy">
-                    <div class="notification-message">'.e($name).' '.e($type).'</div>
+                    <div class="notification-message dxfgdfg">'.e($name).' '.e($type).'</div>
                     <time class="notification-date">'.e($date).'</time>
                 </div>
                 <div class="notification-side">
@@ -1225,6 +1372,8 @@ if ($remainingForChart > 0) {
                     <button type="button" class="notification-view-btn ownerviewNotification"
                         data-id="'.e($notifications->id).'"
                         data-name="'.e($name).'"
+                        data-owner-name="'.e($owner_name).'"
+                        data-phone-number="'.e($phone_number).'"
                         data-email="'.e($notifications->email).'"
                         data-message="'.e($message).'"
                         data-image="'.e($photoUrl).'"
@@ -1235,6 +1384,8 @@ if ($remainingForChart > 0) {
                         data-platform="'.e($platform).'"
                         data-devicetype="'.e($deviceType).'"
                         data-location="'.e($location).'"
+                        data-planname="'.e($planName).'"
+                        data-amount="'.e($amount).'"
                         data-bs-toggle="modal" data-bs-target="#ownerNotificationModal">View details</button>
                 </div>
             </article>';
@@ -1277,6 +1428,18 @@ public function markAsRead($id)
 }
 
 
+// public function unreadCount(Request $request,$id){
+   
+//  $notification = Notifications::findOrFail($id);
+  
+//     $notification->is_read = 1;
+//     $notification->save();
+//     $newCount = Notifications::where('is_read', false)
+//                             ->orderBy('created_at', 'desc')
+//                             // ->take(5)
+//                             ->count();  // Count unread notifications
+//     return response()->json(['newCount' => $newCount]);
+// }
 public function unreadCount(Request $request,$id){
 
     $org_id = (int) User::findOrFail(Auth::id())->organization_id;

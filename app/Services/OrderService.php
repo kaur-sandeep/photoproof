@@ -37,7 +37,7 @@ class OrderService
         return DB::transaction(function () use ($organization, $type, $plan, $topup, $billingCycle) {
             $sequence = str_pad((string) (Order::whereDate('created_at', today())->lockForUpdate()->count() + 1), 5, '0', STR_PAD_LEFT);
             $order = Order::create([
-                'order_number' => 'PP-ORD-'.now()->setTimezone('Asia/Kolkata')->format('Ymd').'-'.$sequence,
+               'order_number' => 'PP-ORD-'.now()->setTimezone('Asia/Kolkata')->format('Ymd').'-'.$sequence,
                 'organization_id' => $organization->id,
                 'subscription_plan_id' => $plan?->id,
                 'topup_plan_id' => $topup?->id,

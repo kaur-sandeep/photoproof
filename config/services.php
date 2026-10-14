@@ -37,9 +37,13 @@ return [
     'firebase' => [
         'project_id' => env('FIREBASE_PROJECT_ID'),
     ],
-    'recaptcha' => [
+      'recaptcha' => [
         'site_key' => env('RECAPTCHA_SITE_KEY'),
         'secret_key' => env('RECAPTCHA_SECRET_KEY'),
+    ],
+     'recaptcha_v3' => [
+        'site_key' => env('RECAPTCHA_SITE_KEY_V3'),
+        'secret_key' => env('RECAPTCHA_SECRET_KEY_V3'),
     ],
 
 ];

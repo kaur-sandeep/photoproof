@@ -14,7 +14,9 @@ class Notifications extends Model
         'type',
         'data',
         'organization_id',
-        'is_read'
+        'is_read',
+        'owner_name',
+        'phone_number'
     ];
 
 

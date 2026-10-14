@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\V2\InstallController;
     Route::post('/upload_photo', [AuthController::class, 'uploadPhoto']);
    
     Route::post('/update-profile', [AuthController::class, 'updateProfile']);
+    Route::post('/update-owner-profile', [AuthController::class, 'updateOwnerProfile']);
     Route::get('/plans', [PlanController::class, 'plans'])->name('plans');
     Route::get('/test_version', [AuthController::class, 'testVersion']);
     Route::post('/track-install', [InstallController::class, 'trackInstall']);

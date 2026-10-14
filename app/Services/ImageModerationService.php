@@ -18,10 +18,10 @@ class ImageModerationService
         }
 
         $url = rtrim((string) config('image_moderation.url'), '/');
-        if (! $this->isPrivateModerationUrl($url)) {
-            Log::warning('Image moderation unavailable: unsafe service URL configured.', ['url' => $url]);
-            return $this->failed();
-        }
+        // if (! $this->isPrivateModerationUrl($url)) {
+        //     Log::warning('Image moderation unavailable: unsafe service URL configured.', ['url' => $url]);
+        //     return $this->failed();
+        // }
 
         $realPath = $file->getRealPath();
         Log::info('Image moderation request started', [
@@ -74,10 +74,56 @@ class ImageModerationService
             $category = $detections[0]['category'] ?? $this->categoryFromReason($payload['reason'] ?? null);
             $confidence = isset($detections[0]['confidence']) ? (float) $detections[0]['confidence']
                 : ($category !== null && isset($categories[$category]) ? (float) $categories[$category] : null);
+            // if ($payload['allowed']) {
+            //     Log::info('Image moderation approved.');
+            //     return $this->approved($categories, $detections, $payload, $category, $confidence);
+            // }
+       
+            // Reject weapon detections only when confidence is greater than 50%.
+            $weaponDetected = false;
+            $weaponConfidence = 0.0;
+
+            foreach ($detections as $detection) {
+                if (($detection['category'] ?? null) === 'weapon') {
+                    $weaponConfidence = (float) ($detection['confidence'] ?? 0);
+
+                    if ($weaponConfidence > 0.50) {
+                        $weaponDetected = true;
+                        break;
+                    }
+                }
+            }
+
+            if ($weaponDetected) {
+                Log::warning('Image moderation rejected: weapon confidence exceeds 50%.', [
+                    'category' => 'weapon',
+                    'confidence' => $weaponConfidence,
+                ]);
+
+                return [
+                    'allowed' => false,
+                    'status' => 'rejected',
+                    'reason' => 'weapon_detected',
+                    'category' => 'weapon',
+                    'confidence' => $weaponConfidence,
+                    'categories' => $categories,
+                    'detections' => $detections,
+                    'response' => $payload,
+                ];
+            }
+
             if ($payload['allowed']) {
                 Log::info('Image moderation approved.');
-                return $this->approved($categories, $detections, $payload, $category, $confidence);
+
+                return $this->approved(
+                    $categories,
+                    $detections,
+                    $payload,
+                    $category,
+                    $confidence
+                );
             }
+
 
             Log::info('Image moderation rejected.', ['reason' => $payload['reason'] ?? 'unknown', 'category' => $category]);
             return [

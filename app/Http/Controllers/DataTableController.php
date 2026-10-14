@@ -17,7 +17,6 @@ class DataTableController extends Controller
     {
         // Fetch photos for the specific user
         $query = Photo::where('user_id', $user_id)->orderByDesc('id');
-
         // Filter columns if necessary
         if ($request->has('columns')) {
             $columns = explode(',', $request->input('columns'));

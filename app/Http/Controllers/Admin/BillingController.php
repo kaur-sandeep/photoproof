@@ -124,8 +124,7 @@ class BillingController extends Controller
 
     public function ordersData(Request $request)
     {
-        $orders = Order::query()->with(['organization.users:id,organization_id,email', 'subscriptionPlan:id,name', 'topupPlan:id,name'])
-            ->orderByDesc('id')
+        $orders = Order::query()->with(['organization.users:id,organization_id,email', 'subscriptionPlan:id,name', 'topupPlan:id,name'])->orderByDesc('id')
             ->when($request->filled('plan'), fn ($query) => $query->where('subscription_plan_id', $request->integer('plan')))
             ->when($request->filled('topup'), fn ($query) => $query->where('topup_plan_id', $request->integer('topup')));
 

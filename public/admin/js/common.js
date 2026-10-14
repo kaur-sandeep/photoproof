@@ -704,7 +704,7 @@ $(document).ready(function() {
         $.ajax({
             url: window.APP_URL + '/owner/notifications/unread', // ✅ owner route pe fix kar (apna actual route daal)
             type: 'GET',
-            cache: false,
+             cache: false,
             success: function(data) {
                 // ✅ Update badge count
                 let count = data.length;
@@ -799,7 +799,7 @@ $(document).ready(function() {
 
 
 $(document).ready(function() {
-    let table = $('#organizationList').DataTable({
+     let table = $('#organizationList').DataTable({
         processing: true,
         serverSide: true,
         ajax: window.APP_URL + '/admin/organizations/list/',
@@ -822,7 +822,7 @@ $(document).ready(function() {
         ] 
     });
 
-    $('#organizationList').on('click', '.view-organization', function () {
+   $('#organizationList').on('click', '.view-organization', function () {
         
         // Get complete row data from DataTable
         let data = table.row($(this).closest('tr')).data();
@@ -1790,6 +1790,8 @@ $(document).on('click', '.viewNotification', function () {
     // Toggle fields
     toggleField(button.data('name'), 'name', 'row_name');
     toggleField(button.data('email'), 'email', 'row_email');
+    toggleField(button.attr('data-planname'), 'plan_name', 'row_plan_name');
+    toggleField(button.attr('data-amount'), 'amount', 'row_amount');
     toggleField(button.data('message'), 'message', 'row_message');
     toggleField(button.data('browser'), 'browser', 'row_browser');
     toggleField(button.data('platform'), 'platform', 'row_platform');
@@ -1802,6 +1804,17 @@ $(document).on('click', '.viewNotification', function () {
     // Show Image
     toggleImage(button.data('image'), 'reported_image', 'row_image');
 
+     var type = String(button.data('type') || '').trim().toLowerCase();
+
+    if (type === 'Upload Photo' || type === 'upload_photo') {
+        $('#row_plan_name').hide();
+        $('#row_amount').hide();
+    } else {
+        // Dusre types ke liye wapas dikhao (modal reuse hota hai to ye zaroori hai)
+        if (button.data('plan_name')) $('#row_plan_name').show();
+        if (button.data('amount')) $('#row_amount').show();
+    }
+    
     $('#shwonotificationModal').modal('show');
 });
 
@@ -1840,6 +1853,10 @@ $(document).on('click', '.ownerviewNotification', function () {
     });
     // Toggle fields
     toggleField(button.data('name'), 'name', 'row_name');
+    toggleField(button.attr('data-owner-name'), 'owner_name', 'row_owner_name');
+    toggleField(button.attr('data-phone-number'), 'phone_number', 'row_phone_number');
+    toggleField(button.attr('data-planname'), 'plan_name', 'row_plan_name');
+    toggleField(button.attr('data-amount'), 'amount', 'row_amount');
     toggleField(button.data('email'), 'email', 'row_email');
     toggleField(button.data('message'), 'message', 'row_message');
     toggleField(button.data('browser'), 'browser', 'row_browser');
@@ -1852,6 +1869,13 @@ $(document).on('click', '.ownerviewNotification', function () {
 
     // Show Image
     toggleImage(button.data('image'), 'reported_image', 'row_image');
+
+    var type = String(button.data('type') || '').trim().toLowerCase();
+    if (type === 'upload photo') {
+    $('#row_plan_name, #row_amount').addClass('force-hide');
+    } else {
+        $('#row_plan_name, #row_amount').removeClass('force-hide');
+    }
 
 });
 

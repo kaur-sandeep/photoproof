@@ -45,7 +45,6 @@ class PaymentService
 
     private function sendApprovalNotifications(Order $order): void
     {
-        
         try {
             $organization = $order->organization;
             $owner = $organization?->users->sortBy('created_at')->first();
@@ -72,7 +71,7 @@ class PaymentService
             if ($organization) {
                 Notifications::create([
                     'photo_random_id' => $order->order_number,
-                    'name' => $organization?->organization_name ?? 'Organization',
+                    'name' =>  $organization?->organization_name ?? 'Organization',
                     'email' => $owner?->email ?? '',
                     'type' => 'Payment Approved',
                     'organization_id' => $organization->id,
@@ -80,7 +79,6 @@ class PaymentService
                     'is_read' => false,
                 ]);
             }
-
             if($order->amount != "0.00"){
                 $details = '<p><strong>Order number:</strong> '.e($order->order_number).'</p>'
                     .'<p><strong>Plan Name:</strong> '.e($itemName).'</p>'
@@ -103,7 +101,6 @@ class PaymentService
                     ));
                 }
             }
-          
         } catch (\Throwable $exception) {
             // Payment approval must remain successful even if a notification provider is unavailable.
             report($exception);

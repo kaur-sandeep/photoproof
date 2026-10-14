@@ -110,6 +110,16 @@
             <span id="location" class="detail-value"></span>
           </div>
 
+            <div id="row_plan_name" class="detail-row detail-row">
+            <span class="detail-label">Plan Name</span>
+            <span id="plan_name" class="detail-value"></span>
+          </div>
+
+           <div id="row_amount" class="detail-row detail-row">
+            <span class="detail-label">Amount</span>
+            <span id="amount" class="detail-value"></span>
+          </div>
+
         </div>
 
         <div id="row_image" class="text-center mb-3 image-preview-wrapper">

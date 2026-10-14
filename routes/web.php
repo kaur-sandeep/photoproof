@@ -16,7 +16,10 @@ use App\Http\Controllers\Admin\BillingController;
 use App\Http\Controllers\Owner\SubscriptionController as OwnerSubscriptionController;
 use Illuminate\Support\Facades\URL;
 use App\Models\Subscriptionplans;
-
+use Illuminate\Support\Facades\Request;
+use Illuminate\Support\Facades\Route;
+Route::redirect('/admin', '/login', 302);
+Route::redirect('/admin/', '/login', 302);
 Route::get('/', function () {
     return view('user.search', [
         'freeOrganizationPlan' => Subscriptionplans::active()
@@ -31,7 +34,6 @@ Route::get('/pricing', function () {
 })->name('pricing');
 // Route::get('/logistic', function () {
 //     return view('landingpage');})->name('landing_page');
-
 Route::get('/logistic', function (\Illuminate\Http\Request $request) {
     $plans = \App\Models\Subscriptionplans::active()->orderBy('monthly_price')->get();
 
@@ -54,10 +56,9 @@ Route::get('/logistic', function (\Illuminate\Http\Request $request) {
  Route::get('/owner/employee/activate/{id}', [OwnerController::class, 'activateEmployee'])
     ->middleware('signed')
     ->name('owner.employee.activate');
-Route::prefix('admin')->group(function () {
     Route::get('/login', [LoginController::class, 'showLogin'])->name('admin.login');
     Route::post('/login', [LoginController::class, 'login']);
-
+Route::prefix('admin')->group(function () {
     Route::middleware('auth:admin')->group(function () {
         Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('admin.dashboard');
         Route::get('/billing/plans', [BillingController::class, 'plans'])->name('admin.billing.plans');
@@ -175,7 +176,7 @@ Route::prefix('admin')->group(function () {
     Route::post('/reset/password', [LoginController::class, 'resetPassword'])->name('admin.reset.password');
     Route::get('/link/expired', [LoginController::class, 'expireLink'])->name('admin.password.expired');
     Route::get('/reset-password', [LoginController::class, 'showUserResetForm'])->name('password.reset');
-     Route::get('/generate-password', [LoginController::class, 'showUserResetForm'])->name('password.generate');
+    Route::get('/generate-password', [LoginController::class, 'showUserResetForm'])->name('password.generate');
     Route::post('/reset-password', [LoginController::class, 'resetPasswordUser'])->name('password.update');
     Route::get('/photo-search', [PhotoController::class, 'searchForm'])->name('photo.search.form');
     Route::get('/', [PhotoController::class, 'searchForm']);
@@ -194,6 +195,8 @@ Route::prefix('admin')->group(function () {
     Route::get('/plans', [PlanController::class, 'plans'])
         ->name('plans');
     Route::get('/organization', [OrganizationsController::class, 'index'])->name('organization');
+    Route::get('/logistics', [OrganizationsController::class, 'logistics'])->name('organization.logistics');
+    Route::post('/organization/store-v3', [OrganizationsController::class, 'storeV3'])->name('organization.store-v3');
     Route::post('/organization/store', [OrganizationsController::class, 'store'])->name('organization.store');
     Route::post('/organization/create', [OrganizationsController::class, 'create'])->name('organization.create');
     Route::get('/organization/thank-you', [OrganizationsController::class, 'thankYou'])->name('organization.thank-you');

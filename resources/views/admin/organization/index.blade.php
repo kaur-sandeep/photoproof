@@ -85,26 +85,26 @@
                         <th>Company Name</th>
                         <td id="m_name"></td>
                     </tr>
-                     <tr>
+                      <tr>
                         <th>Contact Person Name</th>
                         <td id="m_contact_person_name"></td>
                     </tr>
-
                     <tr>
                         <th>Email</th>
                         <td id="m_email"></td>
                     </tr>
-                    
                       <tr>
                         <th>Mobile Number</th>
                         <td id="m_mobile_number"></td>
                     </tr>
+
                     <tr>
                         <th>Business Type</th>
                         <td id="m_business_type"></td>
                     </tr>
 
-                   
+                  
+
                     <tr>
                         <th>Plan</th>
                         <td id="m_plan"></td>

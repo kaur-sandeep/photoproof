@@ -224,6 +224,7 @@ class AuthController extends Controller
         } else {
             
             $user = User::where('email', $request->email)->first();
+
             if (!$user) {
                 $user = User::create([
                     'name' => $request->display_name,
@@ -231,6 +232,13 @@ class AuthController extends Controller
                     'password' => bcrypt('guest123'), // temporary password
                     'plan_id' => \App\Models\Plan::where('name', 'Free')->first()->id
                 ]);
+            }else{
+                 if ($user->state != 1) {
+
+                    return response()->json([
+                        'message'=>'Your account is no longer active. Please contact the administrator for assistance.'
+                    ],403);
+                }
             }
         }
         // $photoCount = \App\Models\PhotoDetail::where('user_id', $user->id)->count();
@@ -250,6 +258,7 @@ class AuthController extends Controller
         // The PHP upload temporary file is sent only to the configured local/private
         // moderation service. Nothing is written to permanent storage before approval.
         $moderationResult = app(ImageModerationService::class)->check($request->file('photo'));
+        //echo"<pre>";print_r($moderationResult);die; // Debugging line to inspect the moderation result
         $moderation = PhotoModeration::create([
             'user_id' => $user->id,
             'device_id' => $request->device_id,
@@ -263,7 +272,8 @@ class AuthController extends Controller
 
       $isWeapon = ($moderationResult['category'] ?? null) === 'weapon';
 
-      if (! $moderationResult['allowed'] || $isWeapon) {
+      if (! $moderationResult['allowed']) {
+     // if (! $moderationResult['allowed'] || $isWeapon) {
 
             if ($moderationResult['status'] === 'failed') {
                 return response()->json([
@@ -273,17 +283,17 @@ class AuthController extends Controller
                 ], 503);
             }
 
-            if ($isWeapon) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'This image cannot be uploaded because it contains a weapon.',
-                    'code' => 'IMAGE_WEAPON_NOT_ALLOWED',
-                ], 422);
-            }
+            // if ($isWeapon) {
+            //     return response()->json([
+            //         'status' => false,
+            //         'message' => 'This image cannot be uploaded because it contains a weapon.',
+            //         'code' => 'IMAGE_WEAPON_NOT_ALLOWED',
+            //     ], 422);
+            // }
 
             return response()->json([
                 'status' => false,
-                'message' => 'This image cannot be uploaded because it contains prohibited content.',
+                'message' => 'This image cannot be uploaded because it contains prohibited content. Please try other image.',
                 'code' => 'IMAGE_NOT_ALLOWED',
             ], 422);
         }
@@ -636,6 +646,9 @@ public function forgotPassword(Request $request)
 
     public function updateProfile(Request $request)
     {
+         $request->validate([
+            'profile_image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
         $user = User::where('email', $request->email)->first();
         $imagePath=null;
         if ($request->hasFile('profile_image')) {
@@ -1155,7 +1168,7 @@ public function forgotPassword(Request $request)
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'mobile' => $user->mobile,
+                    'mobile' => $user->mobile ?? $user->phone_number,
                     'user_types' => $user->getRoleNames(),
                      'profile_image' => $user->profile_image
                                     ? asset('storage/' . $user->profile_image)
@@ -1286,8 +1299,7 @@ public function forgotPassword(Request $request)
        //echo"<pre>";print_r($moderationResult);die;
        $isWeapon = ($moderationResult['category'] ?? null) === 'weapon';
 
-      if (! $moderationResult['allowed'] || $isWeapon) {
-
+      if (! $moderationResult['allowed'] ) {
             if ($moderationResult['status'] === 'failed') {
                 return response()->json([
                     'status' => false,
@@ -1295,18 +1307,18 @@ public function forgotPassword(Request $request)
                     'code' => 'IMAGE_MODERATION_UNAVAILABLE',
                 ], 503);
             }
-
-            if ($isWeapon) {
-                return response()->json([
-                    'status' => false,
-                    'message' => 'This image cannot be uploaded because it contains a weapon.',
-                    'code' => 'IMAGE_WEAPON_NOT_ALLOWED',
-                ], 422);
-            }
+             $moderationMessage = json_encode($moderationResult);
+            // if ($isWeapon) {
+            //     return response()->json([
+            //         'status' => false,
+            //         'message' => 'This image cannot be uploaded because it contains a weapon.dgdgf'. $moderationMessage,
+            //         'code' => 'IMAGE_WEAPON_NOT_ALLOWED',
+            //     ], 422);
+            // }
 
             return response()->json([
                 'status' => false,
-                'message' => 'This image cannot be uploaded because it contains prohibited content.',
+                'message' => 'This image cannot be uploaded because it contains prohibited content. Please try other image.',
                 'code' => 'IMAGE_NOT_ALLOWED',
             ], 422);
         }
@@ -1601,7 +1613,7 @@ public function forgotPassword(Request $request)
                     'id' => $user->id,
                     'name' => $user->name,
                     'email' => $user->email,
-                    'mobile' => $user->mobile,
+                    'mobile' => $user->mobile ?? $user->phone_number,
                     'user_types' => $user->getRoleNames(),
                     'profile_image' => $user->profile_image
                         ? asset('storage/' . $user->profile_image)
@@ -1628,6 +1640,102 @@ public function forgotPassword(Request $request)
                 ] : null,
             ]);
         }
+
+            public function updateOwnerProfile(Request $request)
+    {
+        $request->validate([
+            'owner_name'        => 'nullable|string|max:255',
+            'phone_number'      => 'nullable|numeric|digits_between:10,14',
+            'organization_name' => 'nullable|string|max:255',
+            'business_type'     => 'nullable|string|max:255',
+            'image'             => 'nullable|image|mimes:jpg,jpeg,png,webp|max:5120',
+        ]);
+
+        $user = User::where('email', $request->email)->first();
+
+        // 1. User mila ya nahi (role check se pehle)
+        if (!$user) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'User not found.',
+            ], 404);
+        }
+
+        // 2. Role check: sirf owner ka data update hoga
+        if ($user->getRoleNames()->first() !== 'owner') {
+            return response()->json([
+                'status'  => false,
+                'message' => 'Only owner profile can be updated.',
+            ], 403);
+        }
+
+        DB::beginTransaction();
+
+        try {
+            // ---------- USERS TABLE ----------
+            if ($request->filled('owner_name')) {
+                $user->name = $request->owner_name;
+            }
+
+            if ($request->filled('phone_number')) {
+                $user->phone_number = $request->phone_number;
+            }
+
+            $imageFile = $request->file('image');
+
+            if ($imageFile) {
+                // purani image delete
+                if ($user->profile_image && Storage::disk('public')->exists($user->profile_image)) {
+                    Storage::disk('public')->delete($user->profile_image);
+                }
+
+                $user->profile_image = $imageFile->store('profiles', 'public');
+            }
+
+        
+
+            $user->save();
+
+            // ---------- ORGANIZATIONS TABLE ----------
+            $orgData = [];
+
+            if ($request->filled('organization_name')) {
+                $orgData['organization_name'] = $request->organization_name;
+            }
+
+            if ($request->filled('business_type')) {
+                $orgData['business_type'] = $request->business_type;
+            }
+
+            if (!empty($orgData) && $user->organization_id) {
+                Organization::where('id', $user->organization_id)->update($orgData);
+            }
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \Log::error('Update Owner Profile Error: ' . $e->getMessage());
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'Something went wrong while updating profile.',
+            ], 500);
+        }
+
+        // response ke liye full image URL
+        $user->profile_image = $user->profile_image
+            ? asset('storage/' . $user->profile_image)
+            : null;
+
+        $organization = Organization::find($user->organization_id);
+
+        return response()->json([
+            'status'       => true,
+            'message'      => 'Profile updated successfully',
+            'user'         => $user,
+            'organization' => $organization,
+        ]);
+    }
 
 
 }

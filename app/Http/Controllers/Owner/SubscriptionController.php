@@ -1,9 +1,8 @@
 <?php
 
 namespace App\Http\Controllers\Owner;
-
-use App\Http\Controllers\Controller;
 use App\Helpers\DateTime;
+use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Models\Organization;
 use App\Models\Subscriptionplans;
@@ -42,7 +41,7 @@ class SubscriptionController extends Controller
         return view('owner.subscription.orders');
     }
 
-    public function ordersData(Request $request)
+     public function ordersData(Request $request)
     {
         $orders = $this->organization($request)->orders()
             ->with(['subscriptionPlan:id,name', 'topupPlan:id,name'])

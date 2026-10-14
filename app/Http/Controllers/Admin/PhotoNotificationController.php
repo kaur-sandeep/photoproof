@@ -54,7 +54,6 @@ class PhotoNotificationController extends Controller
 
     return response()->json(['status' => 'success']);
 }
-
     public function notifications()
     {
         // $notifications = PhotoReport::orderBy('created_at', 'desc')->paginate(10);
@@ -177,6 +176,8 @@ return DataTables::of($notifications)
         $message = $message_data ? Str::limit($message_data, 100, '...') : '--';
         $browser = $data['browser']?? '';
         $platform = $data['platform']?? '';
+        $planName = $data['item'] ?? '';
+        $amount = $data['amount'] ?? '';
          $deviceType = $data['deviceType']?? '';
             if (!empty( $data['country']) && 
                 !empty( $data['region']) && 
@@ -225,6 +226,8 @@ return DataTables::of($notifications)
                 data-platform="'.$platform.'"
                 data-devicetype="'.$deviceType.'"
                 data-location="'.$location.'"
+                data-planname="'.$planName.'"
+                data-amount="'.$amount.'"   
                 data-bs-toggle="modal"
                 data-bs-target="#shwonotificationModal">
                 View
@@ -235,6 +238,18 @@ return DataTables::of($notifications)
     ->make(true);
 }
 
+// public function unreadCount(Request $request,$id){
+   
+//  $notification = Notifications::findOrFail($id);
+  
+//     $notification->is_read = 1;
+//     $notification->save();
+//     $newCount = Notifications::where('is_read', false)
+//                             ->orderBy('created_at', 'desc')
+//                             // ->take(5)
+//                             ->count();  // Count unread notifications
+//     return response()->json(['newCount' => $newCount]);
+// }
 public function unreadCount(Request $request,$id){
 
     $notification = Notifications::whereNull('organization_id')

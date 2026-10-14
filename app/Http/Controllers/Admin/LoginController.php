@@ -196,8 +196,7 @@ class LoginController extends Controller
         return view('admin.forgot-password');
     }
 
-
-    public function sendPasswordRestLink(Request $request)
+public function sendPasswordRestLink(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
@@ -240,6 +239,48 @@ class LoginController extends Controller
             //     $message->to($email)
             //             ->subject('Password Reset Link');
             // });
+            $slot = '
+            <p>Hello '.$email.',</p>
+            <p>Please click the button below to Reset your Password:</p>
+            <p>
+                <a href="'.$resetUrl.'" class="button">Reset Password</a>
+            </p>
+            <p>If button does not work, copy this link:</p>
+            <p>'.$resetUrl.'</p>
+        ';
+
+        $admin->notify(new CommonMailNotification(
+            'Reset Your Password',
+            $slot
+        ));
+        return redirect()->route('admin.login')
+            ->with('success', 'Password reset link sent successfully to your email.');
+
+        } catch (\Exception $e) {
+           
+            Log::error('Password reset mail failed: ' . $e->getMessage());
+
+            return redirect()->route('admin.forgot-password')
+            ->with('error', 'Email server error. Unable to send reset link.');
+        }
+    }
+    
+
+    public function sendPasswordRestLinkbkkkkkkkkk(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email|exists:admins,email',
+        ]);
+
+        try {
+            $email = $request->email;
+            $token = $this->generateResetToken($email);
+            $resetUrl = url("/password/reset/{$token}?email={$email}");
+            // Mail::send('admin.emails.passwordreset', ['url' => $resetUrl], function ($message) use ($email) {
+            //     $message->to($email)
+            //             ->subject('Password Reset Link');
+            // });
+            $admin = Admin::where('email', $request->email)->first();
             $slot = '
             <p>Hello '.$email.',</p>
             <p>Please click the button below to Reset your Password:</p>
@@ -406,18 +447,71 @@ class LoginController extends Controller
         if (!$token || !$email) {
             abort(404);
         }
-
         $hasPassword = \App\Models\User::where('email', $email)->value('password') !== null;
 
         return view('user.reset-password', compact('token', 'email', 'hasPassword'));
     }
-    public function resetPasswordUser(Request $request)
+    // public function resetPasswordUser(Request $request)
+    // {
+    //     $request->validate([
+    //         'email' => 'required|email',
+    //         'token' => 'required',
+    //         'password' => 'required|min:6|confirmed'
+    //     ]);
+
+    //     $record = \DB::table('password_reset_tokens')
+    //         ->where('email', $request->email)
+    //         ->first();
+
+    //     if (!$record || !\Hash::check($request->token, $record->token)) {
+    //         return redirect('/link/expired');
+    //     }
+
+    //     $user = \App\Models\User::where('email', $request->email)->first();
+    //     $user->password = \Hash::make($request->password);
+    //     $user->save();
+
+    //     \DB::table('password_reset_tokens')
+    //         ->where('email', $request->email)
+    //         ->delete();
+
+    //     //  return back()->with('success', 'Password reset successfully. You can now login from your app.');
+    //      return redirect()->route('admin.login')
+    //         ->with('success', 'Password reset successfully.');
+    // }
+
+
+     public function resetPasswordUser(Request $request)
     {
         $request->validate([
             'email' => 'required|email',
             'token' => 'required',
             'password' => 'required|min:6|confirmed'
         ]);
+
+       $updateuserData = [
+            'name'         => $request->owner_name,
+            'phone_number' => $request->mobile_number,
+        ];
+
+        $user = User::where('email', $request->email)->first();
+
+        if ($user) {
+            // Update users table
+            $user->update($updateuserData);
+
+            // Get organization_id from users table
+            $organizationId = $user->organization_id;
+
+            $updateOrgData = [
+                'organization_name' => $request->organization_name,
+                'business_type'     => $request->business_type,
+            ];
+
+            // Update organizations table using the Organization model
+            Organization::where('id', $organizationId)
+                ->update($updateOrgData);
+        }
 
         $record = \DB::table('password_reset_tokens')
             ->where('email', $request->email)
@@ -428,18 +522,21 @@ class LoginController extends Controller
         }
 
         $user = \App\Models\User::where('email', $request->email)->first();
-        if (!$user || !$user->hasRole('owner')) {
+
+        //added by sandeep
+         if (!$user || !$user->hasRole('owner')) {
             return redirect('/link/expired');
         }
+
+        //end
+
         $user->password = \Hash::make($request->password);
         $user->save();
 
         \DB::table('password_reset_tokens')
             ->where('email', $request->email)
             ->delete();
-
-        //  return back()->with('success', 'Password reset successfully. You can now login from your app.');
          return redirect()->route('admin.login')
-            ->with('success', 'Password reset successfully.');
+            ->with('success', 'Password Generated successfully.');
     }
 }

@@ -26,7 +26,9 @@
             </div>
             <div class="modal-body notification-modal-body">
                 <div class="notification-details-grid">
-                    <div id="row_name" class="detail-row"><span class="detail-label">Name</span><span id="name" class="detail-value"></span></div>
+                    <div id="row_name" class="detail-row"><span class="detail-label">Company Name</span><span id="name" class="detail-value"></span></div>
+                     <div id="row_owner_name" class="detail-row"><span class="detail-label">Owner Name</span><span id="owner_name" class="detail-value"></span></div>
+                    <div id="row_phone_number" class="detail-row"><span class="detail-label">Phone Number</span><span id="phone_number" class="detail-value"></span></div>
                     <div id="row_email" class="detail-row"><span class="detail-label">Email</span><span id="email" class="detail-value"></span></div>
                     <div id="row_browser" class="detail-row"><span class="detail-label">Browser</span><span id="browser" class="detail-value"></span></div>
                     <div id="row_platform" class="detail-row"><span class="detail-label">Platform</span><span id="platform" class="detail-value"></span></div>
@@ -35,6 +37,8 @@
                     <div id="row_date" class="detail-row"><span class="detail-label">Date &amp; time</span><span id="date" class="detail-value"></span></div>
                     <div id="row_type" class="detail-row"><span class="detail-label">Notification type</span><span id="type" class="detail-value badge-type"></span></div>
                     <div id="row_location" class="detail-row detail-row-full"><span class="detail-label">Location</span><span id="location" class="detail-value"></span></div>
+                    <div id="row_plan_name" class="detail-row"><span class="detail-label">Plan Name</span><span id="plan_name" class="detail-value"></span></div>
+                    <div id="row_amount" class="detail-row"><span class="detail-label">Amount</span><span id="amount" class="detail-value"></span></div>
                 </div>
                 <div id="row_image" class="image-preview-wrapper">
                     <div class="image-preview-card"><img id="reported_image" src="" alt="Related photo" class="reported-image"></div>
@@ -79,6 +83,9 @@
 .detail-row-full { grid-column:1 / -1; }
 .detail-label { color:#8a94a3; font-size:.69rem; font-weight:700; letter-spacing:.05em; text-transform:uppercase; }
 .detail-value { color:#293344; font-size:.92rem; overflow-wrap:anywhere; }
+.force-hide {
+    display: none !important;
+}
 .badge-type { width:fit-content; padding:.16rem .55rem; border-radius:999px; background:#e8edff; color:#4058c9; font-size:.78rem; font-weight:600; }
 .image-preview-wrapper { display:flex; justify-content:center; }
 .image-preview-card { max-width:100%; padding:7px; background:#fafafa; border:1px solid #e5e7eb; border-radius:10px; }

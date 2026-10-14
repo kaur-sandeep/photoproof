@@ -399,7 +399,7 @@
                         </div>
 
                         <p class="otp-expiry">
-                            This OTP is valid for <strong>20 minutes</strong>.
+                            This OTP is valid for <strong id="otp-countdown">20:00 minutes</strong>.
                         </p>
 
                         <div class="otp-instruction">
@@ -534,4 +534,35 @@
     </div>
 </section>
 
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const countdown = document.getElementById('otp-countdown');
+
+    if (!countdown) return;
+
+    let remaining = 20 * 60; // 20 minutes in seconds
+    let timer = null;
+
+    function updateCountdown() {
+        const minutes = Math.floor(remaining / 60);
+        const seconds = remaining % 60;
+
+        countdown.textContent =
+            String(minutes).padStart(2, '0') + ':' +
+            String(seconds).padStart(2, '0') + ' minutes';
+
+        if (remaining <= 0) {
+            countdown.textContent = 'Expired';
+            countdown.style.color = '#f87171';
+            clearInterval(timer);
+            return;
+        }
+
+        remaining--;
+    }
+
+    updateCountdown();
+    timer = setInterval(updateCountdown, 1000);
+});
+</script>
 @endsection

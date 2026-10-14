@@ -42,6 +42,7 @@
                     <label for="owner_name">Contact Person Name <span class="text-danger"></span></label>
                     <input type="text" name ="owner_name" class="form-control" id="owner_name" placeholder="Enter Contact Person Name" value="{{ $user_data->name ?? '' }}">  
                   </div>
+                  
                   <div class="form-group col-md-4  mb-4">
                     <label for="mobile_number">Mobile  Number <span class="text-danger"></span></label>
                     <input type="text" name ="mobile_number" class="form-control" id="mobile_number" placeholder="Enter Mobile Number" value="{{ $user_data->phone_number}}">
@@ -50,6 +51,17 @@
                     <label for="organization_email">Contact Person Email Address <span class="text-danger">*</span></label>
                     <input type="email" name ="organization_email" class="form-control" id="organization_email" placeholder="Enter Contact Person Email" value="{{ $user_data->email}}" readonly  >
                   </div>
+
+                   <div class="form-group col-md-4  mb-4">
+                    <label for="password">Password</label>
+                      <input type="password" name="password" id="password" placeholder="Enter Password" class="form-control">
+                  </div>
+
+                   <div class="form-group col-md-4  mb-4">
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" name="confirm_password" id="confirm_password" placeholder="Enter Confirm Password" class="form-control">
+                  </div>
+                  
 
                   <div class="form-group col-md-4  mb-4">
                     <label for="subscription_plan">Subscription Plan<span class="text-danger">*</span></label>

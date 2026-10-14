@@ -21,11 +21,13 @@
                     <img src="/user/images/logo-white.png" width="200" height="" alt="header-logo">
                     </div>
         <div class="card-body">
-
-            <h4 class="text-center mb-4">
-                {{ $hasPassword ? 'Reset Password' : 'Generate Password' }}
-            </h4>
-
+              
+              @if ($hasPassword)
+                    <h4 class="text-center mb-4">Reset Password</h4>
+                @else
+                    <h5 class="text-center mb-4" style="color:#000000c9;">Please complete the below information and set password.</h5>
+                @endif
+            
             @if(session('success'))
                 <div style="color: green;">
                     {{ session('success') }}
@@ -47,24 +49,24 @@
 
                 <input type="hidden" name="token" value="{{ $token }}">
                 <input type="hidden" name="email" value="{{ $email }}">
-                  @if (!$hasPassword)
-                <div class="mb-3">
-                    <label style="color:#000;">Company Name</label>
-                    <input type="organization_name" name="organization_name" id="organization_name" class="form-control">
-                </div>
-                  <div class="mb-3">
-                    <label style="color:#000;">Business Type</label>
-                    <input type="business_type" name="business_type" id="business_type" class="form-control">
-                </div>
-                  <div class="mb-3">
-                    <label style="color:#000;">Contact Person Name</label>
-                    <input type="owner_name" name="owner_name" id="owner_name" class="form-control">
-                </div>
+                @if (!$hasPassword)
+                    <div class="mb-3">
+                        <label style="color:#000;">Company Name</label>
+                        <input type="organization_name" name="organization_name" id="organization_name" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label style="color:#000;">Business Type</label>
+                        <input type="business_type" name="business_type" id="business_type" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label style="color:#000;">Contact Person Name</label>
+                        <input type="owner_name" name="owner_name" id="owner_name" class="form-control">
+                    </div>
 
-                 <div class="mb-3">
-                    <label style="color:#000;">Phone Number</label>
-                    <input type="mobile_number" name="mobile_number" id="mobile_number" class="form-control">
-                </div>
+                    <div class="mb-3">
+                        <label style="color:#000;">Phone Number</label>
+                        <input type="mobile_number" name="mobile_number" id="mobile_number" class="form-control">
+                    </div>
                 @endif
                 <div class="mb-3">
                     <label style="color:#000;">New Password <span style="color: red;">*</span></label>
@@ -77,8 +79,8 @@
                     <input type="password" name="password_confirmation" id="confirmPassword" class="form-control">
                     <small id="confirmPasswordError" class="text-danger"></small>
                 </div>
-
-                 <button type="submit" class="btn btn-primary w-100">Generate Password</button>
+                     
+                 <button type="submit" class="btn btn-primary w-100">Submit</button>
             </form>
             @endif
         </div>
